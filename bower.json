@@ -1,0 +1,87 @@
+{
+  "name": "catfooddb",
+  "version": "1.0.1",
+  "homepage": "http://catfooddb.com",
+  "authors": [
+    "Tammy D <support@catfooddb.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "checklist-model": "~0.1.3",
+    "underscore": "~1.7.0",
+    "angular": "1.2.22",
+    "angular-resource": "~1.2.22",
+    "angular-route": "1.2.22",
+    "bootstrap": "3.1.1",
+    "angular-sanitize": "1.2.22",
+    "sprintf": "~1.0.2",
+    "angular-bootstrap": "~0.11.2"
+  },
+  "resolutions": {
+    "angular": "1.2.22"
+  },
+  "exportsOverride": {
+    "jquery": {
+      "js": [
+        "dist/*.min.js",
+        "dist/*map"
+      ]
+    },
+    "angular": {
+      "js": [
+        "**/*.min.js",
+        "**/*map"
+      ],
+      "css": "**/*.css"
+    },
+    "angular-*": {
+      "js": [
+        "**/*.min.js",
+        "**/*map"
+      ],
+      "css": "**/*.css"
+    },
+    "bootstrap": {
+      "js": [
+        "**/*.min.js",
+        "**/*map"
+      ],
+      "css": "**/*.css"
+    },
+    "angular-bootstrap": {
+      "js": [
+        "*.min.js",
+        "*map"
+      ]
+    },
+    "angular-route": {
+      "js": [
+        "*.min.js",
+        "*map"
+      ]
+    },
+    "underscore": {
+      "js": [
+        "*min.js",
+        "*map"
+      ]
+    },
+    "sprintf": {
+      "js": [
+        "dist/*.min.js",
+        "dist/*map"
+      ]
+    },
+    "*": {
+      "js": "*.js"
+    }
+  }
+}

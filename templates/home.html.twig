@@ -1,0 +1,48 @@
+{% extends "page_jumbo_template.html.twig" %}
+
+{% block pageContainerClasses%} container container-home main{% endblock %}
+
+{% block mainContent %}
+  
+  {#<h2>Featured Posts</h2>#}
+  <div>
+    {% include "partials/home-carousel.html.twig" %}
+    
+  </div>
+  
+  <hr />
+  
+  <h2>Cat Food Reviews</h2>
+
+  <div class="well" style="padding-top: 8px; padding-bottom:8px;">
+    <h4 style="text-align: left;">Recent Site Updates:</h4>
+    <ul>
+      <li><b>New! </b>Pricing data added for over 900 products! <a href="/blog/cat-food-prices">More details in this post!</a></li>
+      <li>Added <a href="/brand/trader joe's">Trader Joe's</a>, <a href="/brand/rayne">Rayne</a> and <a href="/brand/bench%20&%20field">Bench & Field</a> brand cat food reviews.</li>
+    </ul>
+  </div>
+  
+  <hr />
+  <h3 style="text-align:center">Popular Brands</h3>
+  <hr />
+  
+  {% include "partials/brand-list.html.twig" with {
+  'brands': popular
+  } only
+  %}
+  
+  <hr />
+  <h3 style="text-align:center">All Brands</h3>
+    <hr />
+
+    {% include "partials/brand-list.html.twig" with {
+    'brands': brands
+    } only
+  %}
+
+
+  <hr />
+
+
+
+{% endblock %}

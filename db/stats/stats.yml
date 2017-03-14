@@ -1,0 +1,68 @@
+dry:
+    mean:
+        carbohydrates: 34.663370562745
+        fat: 17.016008554143
+        protein: 37.225028654075
+        fibre: 5.5123896892319
+        calories: 359.50427002514
+        other: 5.5832025398047
+        moisture: 9.278687150838
+    median:
+        carbohydrates: 35.092804405545
+        fat: 16.947363443009
+        protein: 35.869565217391
+        fibre: 4.5454545454545
+        calories: 358.86925
+        other: 4.3180569430569
+        moisture: !!float 10
+    max:
+        carbohydrates: 80.056818181818
+        fat: !!float 30
+        protein: 55.555555555556
+        fibre: 17.717391304348
+        calories: 429.195
+        other: 22.96
+        moisture: !!float 20
+    min:
+        carbohydrates: 11.844444444444
+        fat: 1.5909090909091
+        protein: 11.363636363636
+        fibre: 0.58866813833701
+        calories: 272.95
+        other: !!float 0
+        moisture: !!float 0
+    count: 358
+wet:
+    mean:
+        carbohydrates: 17.68403839537
+        fat: 19.383193013607
+        protein: 46.755264130178
+        fibre: 6.4775957084731
+        calories: 81.303526644737
+        other: 10.14721401553
+        moisture: 79.431276315789
+    median:
+        carbohydrates: 17.302777777778
+        fat: 19.460146168779
+        protein: 45.454545454545
+        fibre: 5.5555555555556
+        calories: 79.325
+        other: 11.421052631579
+        moisture: 78.57
+    max:
+        carbohydrates: 45.238095238095
+        fat: 43.181818181818
+        protein: 86.111111111111
+        fibre: 23.076923076923
+        calories: 159.89
+        other: 169.53360655738
+        moisture: !!float 87
+    min:
+        carbohydrates: !!float 0
+        fat: 2.6277675276753
+        protein: 17.518450184502
+        fibre: 0.41152263374486
+        calories: 44.65
+        other: !!float 0
+        moisture: !!float 66
+    count: 760

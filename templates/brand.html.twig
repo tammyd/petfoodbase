@@ -1,0 +1,144 @@
+{% extends "page_template.html.twig" %}
+
+{% set title = brand.official_name  ~ " Cat Food Reviews" %}
+
+{% set midPageAmazon = false %}
+{% if (wet|length) > 5 %}
+  {% if (dry|length) > 5 %}
+    {% set midPageAmazon = true %}
+  {% endif %}
+{% endif %}
+
+{% block preContainerContent %}
+
+  {% include 'partials/jumbotron.html.twig' with
+    {
+      'stats': stats ,
+      'search': '&nbsp;',
+      'search_modifiers': 'style="display:none"'
+    }
+  only %}
+
+{% endblock %}
+
+{% block pageContainerClasses %} container main {% endblock %}
+
+{% block mainContent %}
+
+    <h1>{{ title }}</h1>
+    <hr/>
+
+    <div class="row">
+      <div class="col-sm-4 main">
+        {% if brand['url'] %}
+          <a rel="nofollow" href="{{ brand['url'] }}" target="_blank">
+            <img class="img-responsive img-brand center-block" src="/img/brands/{{ img }}.png" alt="{{ title }}" title="{{ title }}" />
+          </a>
+        {% else %}
+          <img class="img-responsive img-brand center-block" src="/img/brands/{{ img }}.png" alt="{{ title }}" title="{{ title }}" />
+        {% endif %}
+      </div>
+      <div class="col-sm-8 main">
+        {% if brand.info is empty or template %}
+          <div class="brand-info" style="padding-bottom: 10px">
+            {% include template  %}
+          </div>
+        {% else %}
+          <p>{{ brand.info | default | raw }}</p>
+        {% endif %}
+        {% if brand.shop %}
+          <div class="pull-right"><a class="amazon-product" rel="nofollow" data-type="button" data-label="{{ brand.official_name }}" href="{{ brand.shop }}"><button class="btn btn-amazon" type="submit">Shop for {{ brand.official_name }} Cat Food at Amazon</button></a></div>
+        {% endif %}
+
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-12">
+
+        <h3>{{ brand.official_name }} Review Summary</h3>
+
+        <p>With {{ brandInfo.num_total }} varieties reviewed producing an average score of {{ brandInfo.avg_total_score | round(1) }} / 10
+          paws, {{ brand.official_name }} is {{ brandInfo.avg_total_score | brand_rating("", "cat food brand") }}
+          when compared to the others in our database.
+          You can find more information on CatFoodDB's rating system by <a href="/brand/{{ brandInfo.brand }}#ratings">clicking here</a>.
+        </p>
+
+
+        <p>Click on any product below for our in-depth, fact-based, unbiased cat food review!</p>
+
+
+      </div>
+    </div>
+
+
+    <hr/>
+
+    {% if wet %}
+    <div class="row">
+      {% include "partials/product-list.html.twig" with {
+        'title': brand.official_name ~ " Products — Wet",
+        'products': wet,
+        'className': 'col-md-12'
+      } only
+      %}
+    </div>
+    {% endif %}
+
+    {% if midPageAmazon %}
+      <div class="ad">
+        {% include 'partials/amazon.html.twig' %}
+        <hr>
+      </div>
+    {% endif %}
+
+    {% if dry %}
+    <div class="row">
+      {% include "partials/product-list.html.twig" with {
+      'title': brand.official_name ~ " Products — Dry",
+      'products': dry,
+      'className': 'col-md-12'
+      } only
+      %}
+    </div>
+    {% endif %}
+
+  <hr>
+
+  {# Moved ads here#}
+  {% if not midPageAmazon %}
+    <div class="ad">
+      {% include 'partials/amazon.html.twig' %}
+      <hr>
+    </div>
+  {% endif %}
+
+  <div class="row">
+    <div class="col-md-12">
+    <h3 id="ratings">About Our Ratings</h3>
+
+    <p>At CatFoodDB, we calculate two ratings for each product. These values are then combined to create the the overall product score.</p>
+
+    <p>The first rating is based on the product's ingredient list. Each cat food product is assigned a value from
+      <span style='white-space:nowrap'>{{ 1 | paws("ingredients-paws") }}</span> (low) to <span style='white-space:nowrap'>{{ 5 | paws("ingredients-paws") }}</span> (high)
+      paws. Generally speaking, higher ratings are rewarded to those products that contain quality proteins and limit
+      the amount of cheap fillers in their most plentiful ingredients.</p>
+
+    <p>The second rating is based on our analysis of the product's published nutritional information.
+      Higher rated products will contain more protein and fewer carbohydrates than average.
+      Each product is assigned a score from <span style='white-space:nowrap'>{{ 1 | paws("nutrition-paws") }}</span> to
+      <span style='white-space:nowrap'{{ 5 | paws("nutrition-paws") }}</span> paws based on this nutritional analysis.</p>
+
+    <p>Finally, the nutrition and ingredient ratings are added together to create a score ranging from 1 - 10 paws for the evaluated product.</p>
+
+    </div>
+  </div>
+
+  <hr>
+
+
+
+{% endblock %}
+
+{% block amazonAds %}
+{% endblock %}

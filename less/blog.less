@@ -1,0 +1,46 @@
+@import "bootstrap/variables.less";
+@import "variables.less";
+@import "bootstrap/mixins.less";
+
+
+
+.img-blog-preview {
+  margin: 6px 10px 10px 0;
+  max-height: 200px;
+  float: left;
+  .img-responsive()
+}
+
+#img-blog-left {
+  border:none;
+  border-radius: 0;
+  float:left;
+  max-width:50%;
+  max-height: 200px;
+  margin: 10px 0 0 0;
+  padding:0px 20px 10px 0;
+  .img-responsive();
+
+}
+
+.blog-center {
+  &-xs {
+    @media (max-width: @screen-xs-max) {
+      .center-block();
+      text-align: center;
+    }
+  }
+}
+
+.list-item {
+  &-padded-text {
+    padding-top: 10px;
+  }
+
+  p {
+    line-height: 1.25;
+    padding-top: 4px;
+  }
+}
+
+

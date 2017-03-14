@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+
+<html lang="en" {% block htmlTagContents %}{% endblock %}>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <base href="{{ seo['siteUrl'] }}" />
+
+    {% block meta %}
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <meta name="description" content="{% block description %}{{ seo['description'] }}{{ description }}{% endblock %}">
+      <link rel="canonical" href="{{ seo['url'] }}" />
+    {% endblock %}
+
+    {% block twitter %}
+      <meta name="twitter:card" content="summary">
+      <meta name="twitter:site" content="{{ seo['twitter'] }}">
+      <meta name="twitter:title" content="{{ seo['title'] }}">
+      <meta name="twitter:description" content="{{ seo['description'] }}">
+      <meta name="twitter:creator" content="{{ seo['twitter'] }}" />
+      <meta name="twitter:image" content="{{ seo['siteImage'] }}" />
+    {% endblock %}
+
+    {% block facebook %}
+      <meta property="og:title" content="{{ seo['title'] }}" />
+      <meta property="og:type" content="website" />
+      <meta property="og:description" content="{{ seo['description'] }}" />
+      <meta property="og:image" content="{{ seo['siteImage'] }}" />
+      <meta property="og:url" content="{{ seo['url'] }}" />
+      <meta property="og:site_name" content="{{ seo['shortTitle'] }}" />
+      {%  if seo['type'] %}
+        <meta property="og:type" content="{{ seo['type'] }}" />
+      {% endif %}
+    {% endblock %}
+
+    {% block sumome %}
+      {#<script src="//load.sumome.com/" data-sumo-site-id="db8fcfb6f22d7c733e5acc3cd9a2cad0152bf637d5c2f2a85ff809976e225f9c" async="async"></script>#}
+    {% endblock %}
+
+    <meta name="p:domain_verify" content="c81bee7298b40492cf9694a8ab8d8aed"/>
+  
+    <title>{% block title %}{{ seo['shortTitle'] }}{% endblock %}</title>
+
+
+    <link href="/css/app.css" rel="stylesheet">
+    <link href="/css/theme.css" rel="stylesheet">
+    {#<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800,300italic,400italic,600italic,700italic,800italic' rel='stylesheet' type='text/css'>#}
+    <link href='https://fonts.googleapis.com/css?family=Maven+Pro:400,500,900,700' rel='stylesheet' type='text/css'>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type='text/css'>
+
+    <link rel="shortcut icon" href="/img/favicon/favicon.ico">
+    <link rel="icon" sizes="16x16 32x32 64x64" href="/img/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="196x196" href="/img/favicon/favicon-196.png">
+    <link rel="icon" type="image/png" sizes="160x160" href="/img/favicon/favicon-160.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/img/favicon/favicon-96.png">
+    <link rel="icon" type="image/png" sizes="64x64" href="/img/favicon/favicon-64.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon/favicon-16.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/img/favicon/favicon-152.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/img/favicon/favicon-144.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/img/favicon/favicon-120.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/img/favicon/favicon-114.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon/favicon-76.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/img/favicon/favicon-72.png">
+    <link rel="apple-touch-icon" href="/img/favicon/favicon-57.png">
+
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    {% block header_javascript %}
+    {% endblock %}
+
+</head>
+
+<body {% block bodyTagContents %}{% endblock %}>
+
+{% block header %}
+  {% include 'partials/header.html.twig' %}
+{% endblock %}
+
+<!-- Begin page content -->
+{% block content %}
+
+{% endblock %}
+
+{% block footer %}
+  {% include 'partials/footer.html.twig' with {'url': url, 'title': shortTitle }%}
+{% endblock %}
+
+
+{% block footer_javascripts %}
+<script src="/vendor/js/jquery/jquery.min.js"></script>
+<script src="/vendor/js/bootstrap/bootstrap.min.js"></script>
+<script src="/vendor/js/angular/angular.min.js"></script>
+<script src="/vendor/js/angular-route/angular-route.min.js"></script>
+<script src="/vendor/js/angular-resource/angular-resource.min.js"></script>
+<script src="/vendor/js/angular-sanitize/angular-sanitize.min.js"></script>
+<script src="/vendor/js/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+
+<script src="/vendor/js/underscore/underscore-min.js"></script>
+<script src="/vendor/js/sprintf/sprintf.min.js"></script>
+<script src="/vendor/js/checklist-model/checklist-model.js"></script>
+<script src="/js/app.js"></script>
+{% endblock %}
+
+{% block scripts %}
+  {% include 'partials/ga.html.twig' %}
+
+
+
+{% endblock %}
+{% block jsonld %}
+  {% include 'partials/json-ld.html.twig' %}
+{% endblock %}
+</body>
+</html>

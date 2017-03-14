@@ -1,0 +1,49 @@
+{
+    "name": "tammydca/PetFoodBase",
+    "version": "0.0.1",
+    "authors": [
+        {
+            "name": "Tammy D",
+            "email": "tammyd@catfooddb.com"
+        }
+    ],
+    "repositories": [
+        {
+            "url": "git@github.com:tammyd/micrometa.git",
+            "type": "vcs"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "monolog/monolog": "1.*",
+        "slim/slim": "2.*",
+        "slim/views": "0.*",
+        "twig/twig": "1.*",
+		"components/bootstrap" : "^3.3",
+        "jswhetstone/twig-extension" : "dev-master",
+        "vrana/notorm": "dev-master",
+        "symfony/class-loader": "2.5.*",
+        "symfony/serializer": "2.5.*",
+        "symfony/console": "3.*",
+        "exeu/apai-io": "~2.0",
+        "phpunit/phpunit": "*",
+
+        "vdb/php-spider": "0.2",
+        "symfony/yaml": "^3.0",
+        "symfony/var-dumper": "^3.0",
+        "fabpot/goutte": "^3.1",
+        "symfony/filesystem": "^3.1",
+        "symfony/stopwatch": "^3.1",
+        "doctrine/cache": "^1.6",
+        "mnapoli/front-yaml": "^1.5",
+        "vlucas/phpdotenv": "^2.2",
+        "twig/extensions": "^1.3",
+        "khill/lavacharts": "^3.0",
+        "tammyd/micrometa": "^1.0"
+    },
+    "config":{
+        "github-oauth":{
+            "github.com":"e754827ae971f0c51f957054e89ed715e1ba9348"
+        }
+    }
+}

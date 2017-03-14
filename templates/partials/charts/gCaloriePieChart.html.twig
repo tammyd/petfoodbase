@@ -1,0 +1,66 @@
+{% set ccId = "caloriePie"~chartId %}
+{% set data = "data"~ccId  %}
+{% set options = "options"~ccId %}
+{% set ftn =  "ftn"~ccId %}
+{% set chart =  "chart"~ccId %}
+
+{% if class is not defined %}
+  {% set class='pie-chart' %}
+{% endif %}
+
+{% if legendAlign is not defined %}
+  {% set legendAlign='right' %}
+{% endif %}
+
+{% if width is defined %}
+  {% set widthProp = "width: "~width~"px;" %}
+{% endif %}
+{% if height is defined %}
+  {% set heightProp = "height: "~height~"px;" %}
+{% endif %}
+
+
+{#{% include 'partials/charts/gChartVariables.html.twig' with {'namespace':'caloriePie'} %}#}
+
+
+<script type="text/javascript">
+//  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback({{ ftn }});
+  function {{ ftn }}() {
+
+    var data{{ ccId }} = google.visualization.arrayToDataTable([
+      ['Type', 'Calories'],
+      ['Calories From Carbs',     {{ calories['carbohydrates'] }}],
+      ['Calories From Fat',      {{ calories['fat'] }}],
+      ['Calories From Protein',  {{ calories['protein'] }}],
+    ]);
+
+    var {{ options }} = {
+      legend: {
+        position: '{{ legendAlign }}',
+        alignment: 'center',
+      },
+      chartArea: {
+        left: 6,
+        top: 0,
+        width:  '100%',
+        height: '100%'
+      },
+      enableInteractivity: 'true',
+      colors: ['#A94441', '#8a6d3b', '#3e3354'],
+      pieSliceTextStyle: {
+        fontSize: 14
+      },
+      tooltip: {
+        ignoreBounds: false
+      },
+      
+    };
+
+    var {{ chart }} = new google.visualization.PieChart(document.getElementById('{{ ccId }}'));
+
+    {{ chart }}.draw({{ data }}, {{ options }});
+  }
+  
+</script>
+<div id="{{ ccId }}" class="{{ class }}"  style="{{ widthProp }} {{ heightProp }}"></div>

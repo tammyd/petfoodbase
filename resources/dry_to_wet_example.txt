@@ -1,0 +1,24 @@
+calories_can = 516.72
+protein = 39.0
+ash = 7.96
+carbs = 27.02
+fiber = 1.14
+fat = 22.2
+can_oz = 4.6
+/////////
+grams_per_oz=28.3495
+g_can = grams_per_oz × can_oz
+calories_100g = calories_can × 100/g_can
+total = fat + fiber + carbs + ash + protein
+
+calories_100g_dry = protein × 3.5 + carbs × 3.5 + fat × 8.5
+percent_caloric = calories_100g / calories_100g_dry
+
+wet_protein = percent_caloric × protein
+wet_ash =  percent_caloric × ash
+wet_fiber = percent_caloric × fiber
+wet_carbs = percent_caloric × carbs
+wet_fat = percent_caloric × fat
+wet_moisture = 100 - wet_carbs - wet_fiber - wet_ash - wet_protein -  wet_fat
+
+

@@ -1,0 +1,164 @@
+#!/usr/bin/env php
+<?php
+
+require 'vendor/autoload.php';
+require 'includes/autoload.php'; //autoload our classes
+
+// dependency injection container
+$app = require 'includes/services.php';
+$config = $app->container->get('config');
+
+
+use Symfony\Component\Console\Application;
+use PetFoodDB\Command\LookupAmazonImage;
+Use PetFoodDB\Command\LookupAmazonProduct;
+Use PetFoodDB\Command\Tools\LookupAmazonPrice;
+use PetFoodDB\Command\Scrapers\ScrapeFancyFeastCommand;
+use PetFoodDB\Command\Scrapers\ScrapeFriskiesCommand;
+use PetFoodDB\Command\UpdateRecordCommand;
+use PetFoodDB\Command\DataCheckerCommand;
+use PetFoodDB\Command\ReparseBrokenCommand;
+use \PetFoodDB\Command\ReparseBrandCommand;
+use PetFoodDB\Command\Scrapers\ScapePurinaOneCommand;
+use PetFoodDB\Command\Scrapers\Scrape9LivesCommand;
+use PetFoodDB\Command\Scrapers\ScrapeBlueBuffaloCommand;
+use PetFoodDB\Command\Scrapers\ScrapeWhiskasCommand;
+use PetFoodDB\Command\Scrapers\ScrapeNaturalBalanceCommand;
+use PetFoodDB\Command\Scrapers\ScrapeRoyalCaninCommand;
+use PetFoodDB\Command\Scrapers\ScrapeIamsCommand;
+use PetFoodDB\Command\Scrapers\ScrapeWellnessWetCommand;
+use PetFoodDB\Command\Scrapers\ScrapeWellnessDryCommand;
+use PetFoodDB\Command\Scrapers\ScrapeWellnessTreatsCommand;
+use PetFoodDB\Command\Scrapers\ScrapeOrijenCommand;
+use PetFoodDB\Command\Scrapers\ScrapeGreeniesCommand;
+use PetFoodDB\Command\Scrapers\ScrapeAcanaCommand;
+use PetFoodDB\Command\Scrapers\ScrapeCaliforniaNaturalCommand;
+use PetFoodDB\Command\Scrapers\ScrapeInnovaCommand;
+use PetFoodDB\Command\Scrapers\ScrapeEvoCommand;
+use PetFoodDB\Command\Scrapers\ScrapeHealthWiseCommand;
+use PetFoodDB\Command\Scrapers\ScrapeCanidaeCommand;
+use PetFoodDB\Command\Scrapers\ScrapeDiamondCommand;
+use PetFoodDB\Command\Scrapers\ScrapePurinaProPlanCommand;
+use PetFoodDB\Command\Scrapers\ScrapeMerrickPurrfectBistroCommand;
+use PetFoodDB\Command\Scrapers\ScrapeMerrickClassicCommand;
+use PetFoodDB\Command\Scrapers\ScrapeMerricBGCommand;
+use PetFoodDB\Command\Scrapers\ScrapeTasteOfTheWildCommand;
+use PetFoodDB\Command\Scrapers\ScrapeCastorPolluxCommand;
+use PetFoodDB\Command\Scrapers\ScrapeCatChowCommand;
+use PetFoodDB\Command\Scrapers\ScrapeEukanubaCommand;
+use PetFoodDB\Command\Scrapers\ScrapeMeowMixCommand;
+use PetFoodDB\Command\Scrapers\ScrapeTechnicalCommand;
+use PetFoodDB\Command\Scrapers\ScrapeNaturesVarietyCommand;
+use PetFoodDB\Command\Scrapers\ScrapeByNatureCommand;
+use PetFoodDB\Command\CreateSitemapCommand;
+use PetFoodDB\Command\Scrapers\ScrapePetcureanCommand;
+use PetFoodDB\Command\Scrapers\ScrapeNutroCommand;
+use PetFoodDB\Command\Scrapers\ScrapeFirstMateCommand;
+use PetFoodDB\Command\InitDBCommand;
+
+
+$application = new Application();
+$application->add(new InitDBCommand($app->container));
+$application->add(new LookupAmazonImage($app->container));
+$application->add(new LookupAmazonProduct($app->container));
+$application->add(new LookupAmazonPrice($app->container));
+$application->add(new CreateSitemapCommand($app->container));
+
+if ($config['scrapers.enabled']) {
+    $application->add(new ScrapeFancyFeastCommand($app->container));
+    $application->add(new ScrapeFriskiesCommand($app->container));
+    $application->add(new UpdateRecordCommand($app->container));
+    $application->add(new DataCheckerCommand($app->container));
+    $application->add(new ReparseBrokenCommand($app->container));
+    $application->add(new ReparseBrandCommand($app->container));
+    $application->add(new ScapePurinaOneCommand($app->container));
+    $application->add(new Scrape9LivesCommand($app->container));
+    $application->add(new ScrapeBlueBuffaloCommand($app->container));
+    $application->add(new ScrapeWhiskasCommand($app->container));
+    $application->add(new ScrapeNaturalBalanceCommand($app->container));
+    $application->add(new ScrapeIamsCommand($app->container));
+    $application->add(new ScrapeRoyalCaninCommand($app->container));
+    $application->add(new ScrapeWellnessWetCommand($app->container));
+    $application->add(new ScrapeWellnessDryCommand($app->container));
+    $application->add(new ScrapeWellnessTreatsCommand($app->container));
+    $application->add(new ScrapeOrijenCommand($app->container));
+    $application->add(new ScrapeGreeniesCommand($app->container));
+    $application->add(new ScrapeAcanaCommand($app->container));
+    $application->add(new ScrapeCaliforniaNaturalCommand($app->container));
+    $application->add(new ScrapeInnovaCommand($app->container));
+    $application->add(new ScrapeEvoCommand($app->container));
+    $application->add(new ScrapeHealthWiseCommand($app->container));
+    $application->add(new ScrapeCanidaeCommand($app->container));
+    $application->add(new ScrapeDiamondCommand($app->container));
+    $application->add(new ScrapePurinaProPlanCommand($app->container));
+    $application->add(new ScrapeMerrickPurrfectBistroCommand($app->container));
+    $application->add(new ScrapeMerrickClassicCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeMerrickBackCountryCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeMerrickLICommand($app->container));
+    $application->add(new ScrapeMerricBGCommand($app->container));
+    $application->add(new ScrapeTasteOfTheWildCommand($app->container));
+    $application->add(new ScrapeCastorPolluxCommand($app->container));
+    $application->add(new ScrapeCatChowCommand($app->container));
+    $application->add(new ScrapeEukanubaCommand($app->container));
+    $application->add(new ScrapeMeowMixCommand($app->container));
+    $application->add(new ScrapeTechnicalCommand($app->container));
+    $application->add(new ScrapeNaturesVarietyCommand($app->container));
+    $application->add(new ScrapeByNatureCommand($app->container));
+    $application->add(new ScrapePetcureanCommand($app->container));
+    $application->add(new ScrapeNutroCommand($app->container));
+    $application->add(new ScrapeFirstMateCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeWeruvaCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapePurinaBeyondNatural($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeShebaCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeSolidGoldCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeAvodermCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeNutrishCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeSimplyNourishCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeWysongCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeChickenSoupCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeSoulisticCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeFussieCatCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeApplawsCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeEvangersCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeNaturesRecipeCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeDavesCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeFreshpetCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapePurinaOne($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeVerusCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeWholeEarthFarmsCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapePurinaProPlanVetCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeKohaCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\SCrapePetGuardCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapePreciseCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeScienceDietCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeIdealBalanceCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeHillsPrescriptionDietCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeHillsHealthyAdvantageCommand($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeMio9Command($app->container));
+    $application->add(new \PetFoodDB\Command\Scrapers\ScrapeLuvSomeCommand($app->container));
+}
+$application->add(new \PetFoodDB\Command\CombineDBCommand($app->container));
+$application->add(new \PetFoodDB\Command\Tools\ListTopIngredientsCommand($app->container));
+$application->add(new \PetFoodDB\Command\DoAnalysisCommand($app->container));
+$application->add(new \PetFoodDB\Command\Tools\ListKeywords($app->container));
+$application->add(new \PetFoodDB\Command\FindDBDuplicatesCommand($app->container));
+$application->add(new \PetFoodDB\Command\Tools\ReportCommand($app->container));
+$application->add(new \PetFoodDB\Command\Tools\SearchAnalysisCommand($app->container));
+$application->add(new \PetFoodDB\Command\Tools\NewAlgoTestCommand($app->container));
+$application->add(new \PetFoodDB\Command\Tools\IngredientCounterCommand($app->container));
+$application->add(new \PetFoodDB\Command\Tools\IngredientSearchCommand($app->container));
+$application->add(new \PetFoodDB\Command\Tools\SearchToolCommand($app->container));
+$application->add(new \PetFoodDB\Command\Tools\BulkKeywordCommand($app->container));
+$application->add(new \PetFoodDB\Command\Tools\LinkScraperCommand($app->container));
+$application->add(new \PetFoodDB\Command\Tools\BulkPriceLookupCommand($app->container));
+$application->add(new \PetFoodDB\Command\Tools\BrandRatingCommand($app->container));
+$application->add(new \PetFoodDB\Command\Tools\ProductComparisonCommand($app->container));
+$application->add(new \PetFoodDB\Command\Tools\InfoCommand($app->container));
+$application->add(new \PetFoodDB\Command\Tools\ProductContainsCommand($app->container));
+$application->add(new \PetFoodDB\Command\Tools\SchemaParseCommand($app->container));
+$application->add(new \PetFoodDB\Command\Tools\GetShopPricesCommand($app->container));
+$application->add(new \PetFoodDB\Command\Tools\UpdatePriceCommand($app->container));
+
+$application->add(new \PetFoodDB\Command\ScrapeAllCommand($app->container));
+$application->run();
+ 

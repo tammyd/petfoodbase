@@ -1,0 +1,22 @@
+User-agent: Googlebot
+Disallow:
+
+User-agent: yahoo
+Disallow:
+
+User-agent: msnbot
+Disallow:
+
+User-agent: baiduspider
+Disallow:
+
+User-agent: Yandex
+Disallow:
+
+User-agent: Browsershots
+Disallow:
+
+User-agent: *
+Disallow: /data/
+
+Sitemap: http://catfooddb.com/sitemap

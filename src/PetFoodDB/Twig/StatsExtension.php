@@ -1,0 +1,155 @@
+<?php
+
+
+namespace PetFoodDB\Twig;
+
+use PetFoodDB\Service\NewAnalysisService;
+
+class StatsExtension extends \Twig_Extension
+{
+    /**
+     * @var \Slim\Slim
+     */
+    protected $app;
+
+    public function __construct(\Slim\Slim $app)
+    {
+        $this->app = $app;
+    }
+
+    public function getName()
+    {
+        return "statsExtensions";
+    }
+
+
+    public function getFilters()
+    {
+        return [
+            new \Twig_SimpleFilter('carb_display', [$this, 'carbDisplay'], ['is_safe'=>[true]]),
+            new \Twig_SimpleFilter('protein_display', [$this, 'proteinDisplay'], ['is_safe'=>[true]]),
+            new \Twig_SimpleFilter('calorie_explaination', [$this, 'caloriesDisplay'], ['is_safe'=>[true]]),
+            new \Twig_SimpleFilter('moisture_explaination', [$this, 'moistureDisplay'], ['is_safe'=>[true]]),
+            new \Twig_SimpleFilter('stat_display', [$this, 'statDisplay'], ['is_safe'=>[true]]),
+            new \Twig_SimpleFilter('inferior', [$this, 'wrapInferior'], ['is_safe'=>[true]]),
+            new \Twig_SimpleFilter('allergen', [$this, 'wrapAllergen'], ['is_safe'=>[true]]),
+            new \Twig_SimpleFilter('quality', [$this, 'wrapQuality'], ['is_safe'=>[true]])
+        ];
+    }
+
+    protected function displayChoser($diff, $phrases) {
+        $div1 = NewAnalysisService::STAT_ABOVE_AVERAGE_SD;
+        $div2 = NewAnalysisService::STAT_SIG_ABOVE_SD;
+
+        $average = $phrases[0];
+        $slightlyAbove = $phrases[1];
+        $slightlyBelow = $phrases[-1];
+        $significantlyAbove = $phrases[2];
+        $significantlyBelow = $phrases[-2];
+
+        $abs = abs($diff);
+
+        if ($abs <= $div1) {
+            $rating = $average;
+        } elseif ($abs <= $div2) {
+            $rating = $diff > 0 ? $slightlyAbove : $slightlyBelow;
+        } else {
+            $rating = $diff > 0 ? $significantlyAbove : $significantlyBelow;
+        }
+
+
+        return $rating;
+    }
+
+    public function carbDisplay($value) {
+
+        $phrases = [
+            -2 => $this->wrapWithClass("significantly fewer carbohydrates than average", "rating bold text-orig-success"),
+            -1 => $this->wrapWithClass("fewer carbohydrates than average", "rating text-orig-success"),
+            0 => $this->wrapWithClass("an average amount of carbohydrates", "rating"),
+            1 => $this->wrapWithClass("more carbohydrates than average", "rating text-danger"),
+            2 => $this->wrapWithClass("significantly more carbohydrates than average", "rating bold text-danger")
+        ];
+
+        return $this->displayChoser($value, $phrases, true);
+    }
+
+    public function proteinDisplay($value) {
+
+        $phrases = [
+            -2 => $this->wrapWithClass("significantly less protein than average", "rating bold text-danger"),
+            -1 => $this->wrapWithClass("less protein than average", "rating text-danger"),
+            0 => $this->wrapWithClass("an average amount of protein", "rating"),
+            1 => $this->wrapWithClass("more protein than average", "rating text-orig-success"),
+            2 => $this->wrapWithClass("significantly more protein than average", "rating bold text-orig-success")
+        ];
+
+        return $this->displayChoser($value, $phrases);
+    }
+
+    public function moistureDisplay($value) {
+
+        $phrases = [
+            -2 => $this->wrapWithClass("less moisture than average", "rating text-warning"),
+            -1 => $this->wrapWithClass("less moisture than average", "rating text-warning"),
+            0 => $this->wrapWithClass("an average amount of moisture", "rating"),
+            1 => $this->wrapWithClass("more moisture than average", "rating"),
+            2 => $this->wrapWithClass("more moisture than average", "rating")
+        ];
+
+        return $this->displayChoser($value, $phrases);
+    }
+
+    public function statDisplay($value, $stat) {
+
+        $phrases = [
+            -2 => $this->wrapWithClass("significantly less $stat than average", "rating"),
+            -1 => $this->wrapWithClass("less $stat than average", "rating"),
+            0 => $this->wrapWithClass("an average amount of $stat", "rating"),
+            1 => $this->wrapWithClass("more $stat than average", "rating"),
+            2 => $this->wrapWithClass("significantly more $stat than average", "rating")
+        ];
+
+        return $this->displayChoser($value, $phrases);
+    }
+
+    protected function wrapWithClass($text, $class) {
+        return sprintf("<span class='%s'>%s</span>", $class, $text);
+    }
+
+
+    public function caloriesDisplay($value) {
+
+        $phrases = [
+            -2 => $this->wrapWithClass("considerably fewer calories", "rating"),
+            -1 => $this->wrapWithClass("fewer calories", "rating"),
+            0 => $this->wrapWithClass("an average amount of calories", "rating"),
+            1 => $this->wrapWithClass("a few more calories", "rating"),
+            2 => $this->wrapWithClass("considerably more calories", "rating")
+        ];
+
+        return $this->displayChoser($value, $phrases);
+    }
+
+    public function wrapQuality($text) {
+        return sprintf("<span class='text-orig-success'>%s</span>", $text);
+    }
+
+    public function wrapInferior($text) {
+        return sprintf("<span class='text-danger'>%s</span>", $text);
+    }
+
+    public function wrapAllergen($text) {
+        return sprintf("<span class='text-warning'>%s</span>", $text);
+    }
+    
+
+
+
+
+
+
+
+
+
+}

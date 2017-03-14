@@ -1,0 +1,48 @@
+{% extends "page_template.html.twig" %}
+
+{% block pageContainerClasses%}  container container-product main {% endblock %}
+
+
+{% block mainContent %}
+
+  {% include 'partials/heading_image.html.twig' %}
+
+  <div class="row" style="">
+    <div class="col-lg-12">
+      <hr />
+      <h2>CatFoodDB Blog</h2>
+      <h4>Site news, articles and other musings from the human behind CatFoodDB</h4>
+
+      <hr />
+    </div>
+  </div>
+
+  <div class="row">
+
+    {% for blogPost in posts %}
+      {#todo: use vertical columns instead of horizontal#}
+      <div class="col-sm-6">
+        <div class="panel panel-default product-list">
+          <div class="panel-heading">
+            <h4><a href="{{ blogPost.post.url }}">{{ blogPost.post.title }}</a></h4>
+          </div>
+          <div class="panel-body panel-site-update">
+            <a href="{{ blogPost.post.url }}"><img class="img-responsive img-blog-preview" src="{{ blogPost.post.preview }}"></a>
+
+            {{ blogPost.post.html  | striptags | truncate(300) }} <a href="{{ blogPost.post.url }}" class="text-muted">More...</a>
+            <hr style="margin-top:5px; margin-bottom: 10px;">
+          </div>
+        </div>
+      </div>
+
+      {% if loop.index0 % 2 == 1 and loop.last == false %}
+        </div><div class="row">
+      {% endif %}
+
+    {% endfor %}
+
+
+  </div>
+
+
+{% endblock %}

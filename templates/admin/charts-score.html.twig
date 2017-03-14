@@ -1,0 +1,51 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+<div class="container-fluid" style="padding-top:30px; padding-bottom:30px;">
+  <div class="row">
+
+    <div class="col-md-6">
+      <h2>Dry Products - Data Breakdown</h2>
+
+      <div id="div01" style="height:250px">
+        {{ linechart(dry_nutrition_score_chart, 'div01')|raw }}
+      </div>
+      <div id="div02" style="height:250px">
+        {{ linechart(dry_ingredient_score_chart, 'div02')|raw }}
+      </div>
+      <div id="div03" style="height:250px">
+        {{ linechart(dry_score_chart, 'div03')|raw }}
+      </div>
+    </div>
+
+
+    <div class="col-md-6">
+      <h2>Wet Products - Data Breakdown</h2>
+
+      <div id="div1" style="height:250px">
+        {{ linechart(wet_nutrition_score_chart, 'div1')|raw }}
+      </div>
+      <div id="div2" style="height:250px">
+        {{ linechart(wet_ingredient_score_chart, 'div2')|raw }}
+      </div>
+      <div id="div3" style="height:250px">
+        {{ linechart(wet_score_chart, 'div3')|raw }}
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <h2> All Products</h2>
+
+      <div id="all" style="height:250px">
+        {{ linechart(all_score_chart, 'all')|raw }}
+      </div>
+
+    </div>
+
+  </div>
+
+
+
+</div>
+
+{% endblock %}

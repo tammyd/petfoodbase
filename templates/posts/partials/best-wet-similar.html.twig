@@ -1,0 +1,13 @@
+{% spaceless %}
+  {%- if (similar) -%}
+    <p>Other varieties from {{ product.brand }} that have very similar characteristics to this product include
+      {% for other in similar %}
+        {% if similar|length > 1 and loop.last %}
+          and <a href="{{ other | catfood_url  }}" title="{{ other.displayName }}">{{ other.flavor }}</a>
+        {% elseif (not loop.last) %}
+          <a href="{{ other | catfood_url  }}" title="{{ other.displayName }}">{{ other.flavor }}</a>,
+        {% endif %}
+      {% endfor %}
+      .</p>
+  {%- endif -%}
+{% endspaceless %}

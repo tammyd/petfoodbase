@@ -1,0 +1,33 @@
+{% extends "base.html.twig" %}
+
+{% block header_javascript %}
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript">
+    google.charts.load("current", {packages:["corechart"]});
+    google.charts.setOnLoadCallback(drawBrandHistogram);
+    function drawBrandHistogram() {
+      var data = google.visualization.arrayToDataTable(
+              {{ brandJson | raw }}
+      );
+
+      var options = {
+        title: 'Average Brand Scores',
+        legend: { position: 'none' },
+        histogram: { bucketSize: 0.25 }
+      };
+
+      var chart = new google.visualization.Histogram(document.getElementById('brand_score'));
+      chart.draw(data, options);
+    }
+
+  </script>
+{% endblock %}
+
+{% block content %}
+  <div class="container" style="padding-top:30px; padding-bottom:30px;">
+    <div class="row">
+      <h2>Band Score Breakdown</h2>
+      <div id="brand_score" style="height: 500px;"></div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends "page_template.html.twig" %}
+
+{% block preContainerContent %}
+
+  {% include 'partials/jumbotron.html.twig' with {'stats': stats } only %}
+
+{% endblock %}

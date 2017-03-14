@@ -1,0 +1,17 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+  <div class="container" style="padding-top:30px; padding-bottom:30px;">
+    <div class="row">
+      <h1>Admin Top Lists</h1>
+      <hr>
+      <ul>
+        <li>{{ "/admin/top/wet" | url("Top Wet") }}</li>
+        <li>{{ "/admin/top/dry" | url("Top Dry") }}</li>
+      </ul>
+    
+    </div>
+  
+  </div>
+
+{% endblock %}

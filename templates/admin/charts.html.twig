@@ -1,0 +1,18 @@
+{% extends "base.html.twig" %}
+
+{% block content %}
+  <div class="container" style="padding-top:30px; padding-bottom:30px;">
+    <div class="row">
+      <h1>Admin Charts</h1>
+      <hr>
+      <ul>
+        <li>{{ "/admin/charts/products" | url("Product Scores") }}</li>
+        <li>{{ "/admin/charts/brands" | url("Brand Scores") }}</li>
+        <li>{{ "/admin/charts/breakdowns" | url("Protein & Carb % Breakdowns") }}</li>
+      </ul>
+
+    </div>
+
+  </div>
+
+{% endblock %}

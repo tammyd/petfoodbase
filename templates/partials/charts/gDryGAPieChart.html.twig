@@ -1,0 +1,68 @@
+{% set ccId = "dryPie"~chartId %}
+{% set data = "data"~ccId  %}
+{% set options = "options"~ccId %}
+{% set ftn =  "ftn"~ccId %}
+{% set chart =  "chart"~ccId %}
+
+{% if class is not defined %}
+  {% set class='pie-chart' %}
+{% endif %}
+
+{% if legendAlign is not defined %}
+  {% set legendAlign='right' %}
+{% endif %}
+
+{% if width is defined %}
+  {% set widthProp = "width: "~width~"px;" %}
+{% endif %}
+{% if height is defined %}
+  {% set heightProp = "height: "~height~"px;" %}
+{% endif %}
+
+{#{% include 'partials/charts/gChartVariables.html.twig' with {'namespace':'dryPie'}#}
+
+{% set fat = dry['fat'] | round(1) %}
+{% set carbs = dry['carbohydrates'] | round(1) %}
+{% set fibre = dry['fibre'] | round(1) %}
+{% set protein = dry['protein'] | round(1) %}
+{% set other = dry['other'] | round(1) %}
+
+<script type="text/javascript">
+  google.charts.load('current', {'packages':['corechart']});
+  google.charts.setOnLoadCallback({{ ftn }});
+  function {{ ftn }}() {
+
+    var data{{ ccId }} = google.visualization.arrayToDataTable([
+      ['Nutrient', 'Percent'],
+      ['{{ carbs | round(1) }}% Carbs',     {{ carbs }}],
+      ['{{ fat | round(1) }}% Fat',      {{ fat }}],
+      ['{{ protein | round(1) }}% Protein',  {{ protein }}],
+      ['{{ fibre | round(1) }}% Fiber',  {{ fibre }}],
+      ['{{ other | round(1) }}% Ash',  {{ other }}]
+    ]);
+
+    var {{ options }} = {
+      legend: {
+        position: '{{ legendAlign }}',
+        alignment: 'center',
+      },
+      chartArea: {
+        left: 6,
+        top: 0,
+        width:  '100%', height: '100%'
+      },
+      enableInteractivity: 'true',
+      colors: ['#A94441', '#8a6d3b', '#3e3354', '#666666', '#f05d21'],
+      pieSliceTextStyle: {
+        fontSize: 14
+      },
+      tooltip: {trigger: 'selection', text:'value'}
+    };
+
+    var {{ chart }} = new google.visualization.PieChart(document.getElementById('{{ ccId }}'));
+
+    {{ chart }}.draw({{ data }}, {{ options }});
+  }
+  
+</script>
+<div id="{{ ccId }}" class="{{ class }}" style="{{ widthProp }} {{ heightProp }}"></div>

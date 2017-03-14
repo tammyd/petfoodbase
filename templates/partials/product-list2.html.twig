@@ -1,0 +1,83 @@
+<div class="{{ className }} product-list">
+  <div class="panel panel-app product-list">
+  <div class="panel-heading">
+    <a class="brand-anchor" name="{{ title }}"></a>
+    <a class="panel-title" name="{{ title }}"><h2 style="margin: 0px; padding: 0px; font-size: 24px;">{{ title }}</h2></a>
+  </div>
+
+  <div class="product-list list-view listings" >
+    {% for product in products %}
+      {% set amazonUrl = product.purchaseUrl %}
+      {% set allergenTypes = product.getExtraData('allergenData')['specificAllergens'] %}
+      {% set nutrition = product.getExtraData('stats')['nutrition_rating'] %}
+      {% set ingredients = product.getExtraData('stats')['ingredients_rating'] %}
+      {% set nutToolTip = nutrition ~ " out of 5 paws based on the product's nutritional analysis below" %}
+      {% set ingToolTop = ingredients ~ " out of 5 paws based on the prodyct's ingredient analysis" %}
+      {% set reviewUrl =  "/product/" ~ product.productPath %}
+
+      <div class="row listing-row">
+        <div class="col-xs-3 col-sm-2">
+          {% if amazonUrl %} <a href="{{ amazonUrl }}">{% endif %}
+          <img src="{{ product | catfood_image }}" alt="{{ product.displayName }}" title="{{ product.displayName }}" class="thumbnail img-responsive product-preview" />
+          {% if amazonUrl %}</a>{% endif %}
+        </div>
+        <div class="col-xs-9 col-sm-10">
+          <div class="col-sm-10 col-xs-12">
+            <a href="{{ reviewUrl }}" title="{{ product.displayName }}"><h3 style="text-align: left; margin: 0; padding: 0; font-size: 20px;">{{ product.displayName }}</h3></a>
+          </div>
+          <div class="col-sm-2 hidden-xs col-no-hoz-padding">
+              <a href="{{ reviewUrl }}">
+                <button class="btn btn-sm btn-info btn-block pull-right"><b>Full Review</b></button>
+              </a>
+          </div>
+          <div class="col-xs-6 col-sm-5">
+            <b>Ingredients: </b><span class="nowrap" style="cursor: pointer" data-toggle="tooltip" data-placement="right" data-delay="0" title="{{ ingToolTop }}">{{ ingredients | paws("ingredients-paws") }}</span>
+          </div>
+          <div class="col-xs-6 col-sm-5">
+            <b>Nutrition: </b> <span class="nowrap" style="cursor: pointer" data-toggle="tooltip" data-placement="right" data-delay="0" title="{{ nutToolTip }}">{{ nutrition | paws("nutrition-paws") }}</span>
+          </div>
+          <div class="col-sm-2 hidden-xs col-no-hoz-padding">&nbsp;</div>
+
+          <div class="col-xs-6 col-sm-5">
+            <b>Potential Allergens:</b> <span class="text-muted">
+              {% if allergenTypes %}
+                {{  allergenTypes | commaList }}
+              {% else %}
+                None
+              {% endif %}
+              </span>
+          </div>
+          <div class="col-xs-6 col-sm-5">
+            <b>Est. Calories:</b> <span class="text-muted">{{ product.getCaloriesPer100g['total']|round }} cal/100g</span>
+          </div>
+
+          <div class="col-sm-2 col-no-hoz-padding hidden-xs">
+
+            {% if amazonUrl %}
+              <a href="{{ amazonUrl }}" rel="nofollow" target="_blank">
+                <button class="btn btn-sm btn-amazon pull-right btn-block"><b>Buy at<br>Amazon</b></button>
+              </a>
+            {% endif %}
+          </div>
+
+          <div class="col-xs-12 visible-xs-block">
+            {% if amazonUrl %}
+              <a href="{{ amazonUrl }}" rel="nofollow" target="_blank">
+                <button class="btn btn-sm btn-amazon " style="margin-right:10px; margin-top:10px"><b>Buy At Amazon</b></button>
+              </a>
+            {% endif %}
+            <a href="{{ reviewUrl }}">
+            <button class="btn btn-sm btn-info" style="margin-right:10px; margin-top:10px"><b>Full Review</b></button>
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+    {% endfor %}
+  </div>
+  </div>
+</div>
+
+

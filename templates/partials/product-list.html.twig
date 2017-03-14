@@ -1,0 +1,33 @@
+<div class="{{ className }} product-list">
+  <div class="panel panel-app product-list">
+    <div class="panel-heading">
+      <a class="brand-anchor" name="{{ title }}"></a>
+      <a class="panel-title" name="{{ title }}"><h3>{{ title }}</h3></a>
+    </div>
+    <table class="table table-condensed table-hover">
+      <tbody>
+      {% for product in products %}
+        {%  set nutrition = product.getExtraData('stats')['nutrition_rating'] %}
+        {%  set ingredients = product.getExtraData('stats')['ingredients_rating'] %}
+        <tr>
+          <td class="buy" >
+            {% if product.purchaseUrl %}
+              <a class="amazon-product" data-type="product-list-button" data-label="{{ product.displayName }}" href="{{ product.purchaseUrl }}" rel="nofollow" target="_blank">
+                <button class="btn btn-xs btn-amazon pull-right btn-block">Check Price</button>
+              </a>
+            {% endif %}
+          </td>
+          <td class="product">
+            <a href="{{ product | catfood_url }}">{{ product.displayName }}</a>
+          </td>
+          <td class="ratings">
+            <a href="{{ product | catfood_url }}">
+              {{ ingredients | paws("ingredients-paws") }}{{ nutrition | paws("nutrition-paws") }}
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>

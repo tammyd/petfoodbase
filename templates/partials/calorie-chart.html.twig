@@ -1,0 +1,7 @@
+{% if chartName is not defined %}
+  {% set chartName = 'calorie-chart' %}
+{% endif %}
+
+<div id="{{ chartName }}" class="calorie-chart">
+  {{ piechart(calorieChart,  chartName) | raw }}
+</div>
