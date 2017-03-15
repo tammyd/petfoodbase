@@ -1,5 +1,5 @@
 {
-    "name": "tammydca/PetFoodBase",
+    "name": "tammyd/PetFoodBase",
     "version": "0.0.1",
     "authors": [
         {
@@ -41,9 +41,7 @@
         "khill/lavacharts": "^3.0",
         "tammyd/micrometa": "^1.0"
     },
-    "config":{
-        "github-oauth":{
-            "github.com":"e754827ae971f0c51f957054e89ed715e1ba9348"
-        }
+    "autoload": {
+        "psr-4": { "PetFoodDB\\": "src" }
     }
 }
