@@ -19,7 +19,7 @@
         "slim/slim": "2.*",
         "slim/views": "0.*",
         "twig/twig": "1.*",
-		"components/bootstrap" : "^3.3",
+        "components/bootstrap" : "^3.3",
         "jswhetstone/twig-extension" : "dev-master",
         "vrana/notorm": "dev-master",
         "symfony/class-loader": "2.5.*",
@@ -42,6 +42,6 @@
         "tammyd/micrometa": "^1.0"
     },
     "autoload": {
-        "psr-4": { "PetFoodDB\\": "src" }
+        "psr-4": { "PetFoodDB\\": "src/PetFoodDB" }
     }
 }
