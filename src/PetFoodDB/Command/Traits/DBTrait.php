@@ -98,10 +98,7 @@ end;';
 "calories_sd" NUMERIC NOT NULL DEFAULT (0) ,
 "nutrition_rating" NUMERIC NOT NULL  DEFAULT (0) , 
 "ingredients_rating" NUMERIC NOT NULL  DEFAULT (0))';
-
-        $sqlCommands[] = 'CREATE TRIGGER catfood_delete_shop AFTER DELETE ON catfood BEGIN delete from shop where id=old.id; END';
-
-
+        
         foreach ($sqlCommands as $sql) {
             $pdo->query($sql);
         }
