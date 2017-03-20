@@ -74,7 +74,7 @@ class ChewyPriceLookup implements PriceLookupInterface
         return $this->getChewySearchUrl($search);
     }
 
-    protected function getChewySearchUrl($searchTerm) {
+    public function getChewySearchUrl($searchTerm) {
 
         $query = "s?query=";
         return sprintf("%s%s%s", self::CHEWY_BASE_URL, $query, urlencode($searchTerm));
@@ -139,7 +139,7 @@ class ChewyPriceLookup implements PriceLookupInterface
         ];
     }
 
-    protected function getProducChewySearchTerm(CatFood $product) {
+    public function getProducChewySearchTerm(CatFood $product) {
         return sprintf("%s cat food", $product->getDisplayName());
     }
 

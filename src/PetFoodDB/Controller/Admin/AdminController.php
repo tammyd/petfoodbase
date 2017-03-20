@@ -36,7 +36,8 @@ class AdminController extends PageController
         'chicken soup for the soul',
         'purina one',
         "newmans's own",
-        'whole earth farms'
+        'whole earth farms',
+        'muse'
     ];
 
     protected function validateCredentials() {

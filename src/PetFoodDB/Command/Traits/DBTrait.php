@@ -98,7 +98,9 @@ end;';
 "calories_sd" NUMERIC NOT NULL DEFAULT (0) ,
 "nutrition_rating" NUMERIC NOT NULL  DEFAULT (0) , 
 "ingredients_rating" NUMERIC NOT NULL  DEFAULT (0))';
-        
+
+
+
         foreach ($sqlCommands as $sql) {
             $pdo->query($sql);
         }
