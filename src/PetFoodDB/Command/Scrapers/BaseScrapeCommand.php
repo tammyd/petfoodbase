@@ -5,7 +5,7 @@ namespace PetFoodDB\Command\Scrapers;
 use PetFoodDB\Command\ContainerAwareCommand;
 use PetFoodDB\Command\Traits\CommandIOTrait;
 use PetFoodDB\Command\Traits\DBTrait;
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -185,7 +185,7 @@ abstract class BaseScrapeCommand extends ContainerAwareCommand
         }
     }
 
-    protected function insert(CatFood $catFood = null)
+    protected function insert(PetFood $catFood = null)
     {
         if ($catFood) {
             if ($this->input->getOption('debug')) {

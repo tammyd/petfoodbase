@@ -4,7 +4,7 @@
 namespace PetFoodDB\Service;
 
 
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use PetFoodDB\Traits\LoggerTrait;
 use PetFoodDB\Traits\MathTrait;
 use Doctrine\Common\Cache\CacheProvider;
@@ -59,7 +59,7 @@ class DBStatsService
         $dryCatFood = [];
         $stats = [];
 
-        /** @var CatFood $catFood */
+        /** @var PetFood $catFood */
         foreach ($allItems as $catFood) {
             if ($catFood->getIsDryFood()) {
                 $dryCatFood[] = $catFood;
@@ -102,7 +102,7 @@ class DBStatsService
             'dry' => ['carbohydrates', 'fibre', 'fat', 'protein', 'other'],
             'wet' => ['moisture']
         ];
-        /** @var CatFood $catFood */
+        /** @var PetFood $catFood */
         foreach ($catfoodItems as $i=>$catFood) {
             $percentages = $catFood->getPercentages();
 

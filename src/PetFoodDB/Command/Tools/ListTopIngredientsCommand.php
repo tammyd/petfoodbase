@@ -6,7 +6,7 @@ namespace PetFoodDB\Command\Tools;
 
 use PetFoodDB\Command\ContainerAwareCommand;
 use PetFoodDB\Command\Traits\DBTrait;
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use PetFoodDB\Traits\ArrayTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -115,7 +115,7 @@ class ListTopIngredientsCommand extends ContainerAwareCommand
         return $this->getNthIngredient($catfood, 1);
     }
 
-    protected function getIngredients(CatFood $catFood) {
+    protected function getIngredients(PetFood $catFood) {
         $ing = $catFood->getIngredients();
         $ingredients = array_map('trim', explode(",", $ing));
 

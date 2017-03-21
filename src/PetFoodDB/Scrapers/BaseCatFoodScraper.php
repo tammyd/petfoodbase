@@ -3,7 +3,7 @@
 namespace PetFoodDB\Scrapers;
 
 use PetFoodDB\Amazon\Lookup;
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use PetFoodDB\Service\YmlLookup;
 use PetFoodDB\Traits\LoggerTrait;
 use PetFoodDB\Traits\StringHelperTrait;
@@ -147,7 +147,7 @@ abstract class BaseCatFoodScraper
     /**
      * Scrapes all urls found in sitemap and returns CatFood objects
      *
-     * @return CatFood[]
+     * @return PetFood[]
      */
     public function scrape($urls = [])
     {
@@ -175,7 +175,7 @@ abstract class BaseCatFoodScraper
         return [$this->dataUrls, $this->nonDataUrls, $this->errorUrls];
     }
 
-    public function getKeywordsForFood(CatFood $catfood)
+    public function getKeywordsForFood(PetFood $catfood)
     {
         $replace = ['™'];
 
@@ -189,7 +189,7 @@ abstract class BaseCatFoodScraper
     /**
      * @param string $url Scrapes a single url and returns a catfood object
      *
-     * @return CatFood|null
+     * @return PetFood|null
      */
     public function scrapeUrl($url)
     {
@@ -200,10 +200,10 @@ abstract class BaseCatFoodScraper
             $data = $this->parse($url, []);
         }
         if (!empty($data)) {
-            $catFood = new CatFood($data);
+            $catFood = new PetFood($data);
             $amazon = $this->lookupAmazon($this->getKeywordsForFood($catFood));
             $data = array_merge($data, $amazon);
-            $catFood = new CatFood($data);
+            $catFood = new PetFood($data);
             $this->dataUrls[] = $url;
         } else {
             $this->nonDataUrls[] = $url;

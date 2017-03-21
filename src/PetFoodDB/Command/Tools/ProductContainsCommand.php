@@ -4,7 +4,7 @@
 namespace PetFoodDB\Command\Tools;
 
 
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

@@ -4,7 +4,7 @@
 namespace PetFoodDB\Service;
 
 
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use PetFoodDB\Traits\ArrayTrait;
 use PetFoodDB\Twig\CatFoodExtension;
 

@@ -5,7 +5,7 @@ namespace PetFoodDB\Command\Tools;
 
 
 use PetFoodDB\Command\ContainerAwareCommand;
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use PetFoodDB\Traits\MathTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -52,7 +52,7 @@ class NewAlgoTestCommand extends ContainerAwareCommand
         $this->timeFtnStop(__FUNCTION__);
     }
 
-    protected function calcStatsForProduct(CatFood $product, $wetFoodAverages, $dryFoodAverages) {
+    protected function calcStatsForProduct(PetFood $product, $wetFoodAverages, $dryFoodAverages) {
         if ($product->getIsWetFood()) {
             $averages = $wetFoodAverages;
         } else {

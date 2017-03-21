@@ -4,7 +4,7 @@
 namespace PetFoodDB\Service;
 
 
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use PetFoodDB\Traits\LoggerTrait;
 use PetFoodDB\Traits\MathTrait;
 use PetFoodDB\Traits\StringHelperTrait;
@@ -135,7 +135,7 @@ class AnalyzeIngredients
         return $allergens;
     }
 
-    static function containsAllergens(CatFood $catFood, $specificType=false) {
+    static function containsAllergens(PetFood $catFood, $specificType=false) {
 
         $allergens = self::getCommonAllergens();
 
@@ -193,13 +193,13 @@ class AnalyzeIngredients
     }
 
 
-    static function isByProduct(CatFood $catFood, $nth) {
+    static function isByProduct(PetFood $catFood, $nth) {
         $ingredient = self::getNthIngredient($catFood, $nth);
         return (self::isIngredientByProduct($ingredient)) ? $ingredient : false;
 
     }
 
-    static function getFirstIngredients(CatFood $catFood, $n) {
+    static function getFirstIngredients(PetFood $catFood, $n) {
         $ingredients = [];
         for ($i = 1; $i<=$n; $i++) {
             $ingredients[] = self::getNthIngredient($catFood, $i);
@@ -259,7 +259,7 @@ class AnalyzeIngredients
 
     }
 
-    static function isFiller(CatFood $catFood, $nth) {
+    static function isFiller(PetFood $catFood, $nth) {
         $ingredient = self::getNthIngredient($catFood, $nth);
         return (self::isIngredientFiller($ingredient)) ? $ingredient : false;
 
@@ -278,13 +278,13 @@ class AnalyzeIngredients
     }
 
 
-    static function isProteinSource(CatFood $catFood, $nth) {
+    static function isProteinSource(PetFood $catFood, $nth) {
         $ingredient = self::getNthIngredient($catFood, $nth);
         return self::isIngredientProteinSource($ingredient) ? $ingredient : false;
 
     }
 
-    static function isMoistureSource(CatFood $catFood, $nth) {
+    static function isMoistureSource(PetFood $catFood, $nth) {
         $ingredient = self::getNthIngredient($catFood, $nth);
         return self::isIngredientMoistureSource($ingredient) ? $ingredient : false;
     }
@@ -362,7 +362,7 @@ class AnalyzeIngredients
         return $ing;
     }
 
-    static public function getNthIngredient(CatFood $catfood, $n) {
+    static public function getNthIngredient(PetFood $catfood, $n) {
 
         $x = (int) $n -1;
 
@@ -376,7 +376,7 @@ class AnalyzeIngredients
     }
 
 
-    static public function parseIngredients(CatFood $catfood) {
+    static public function parseIngredients(PetFood $catfood) {
         $ing = $catfood->getIngredients();
         $ing = self::stripBrackets($ing);
         $ingredients = array_map('trim', explode(",", $ing));
@@ -403,7 +403,7 @@ class AnalyzeIngredients
     }
 
 
-    static function analyzeIngredients(CatFood $catFood) {
+    static function analyzeIngredients(PetFood $catFood) {
         $ingredients = self::parseIngredients($catFood);
 
         $quality = [];
@@ -436,7 +436,7 @@ class AnalyzeIngredients
 
     }
 
-    public static function getTopIngredientsByType(CatFood $catFood, &$proteins, &$byproducts, &$fillers) {
+    public static function getTopIngredientsByType(PetFood $catFood, &$proteins, &$byproducts, &$fillers) {
 
         $offset = 1;
 //        if (self::isMoistureSource($catFood, $offset)) {
@@ -455,7 +455,7 @@ class AnalyzeIngredients
 
     }
 
-    public static function hasUndesierablePreservative(CatFood $catFood) {
+    public static function hasUndesierablePreservative(PetFood $catFood) {
         $ingredients = self::parseIngredients($catFood);
         $ick = [];
         foreach ($ingredients as $ingredient) {
@@ -468,7 +468,7 @@ class AnalyzeIngredients
         return $ick ? $ick : false;
     }
 
-    public static function hasQuestionableAdditive(CatFood $catFood) {
+    public static function hasQuestionableAdditive(PetFood $catFood) {
         $ingredients = self::parseIngredients($catFood);
         $ick = [];
         foreach ($ingredients as $ingredient) {
@@ -482,7 +482,7 @@ class AnalyzeIngredients
     }
 
 
-    public function calcIngredientScore(CatFood $catFood) {
+    public function calcIngredientScore(PetFood $catFood) {
 
         /*
         * Ingredients: Start at 2
@@ -575,7 +575,7 @@ class AnalyzeIngredients
         return $score;
     }
 
-    public function getPrimaryProteins(CatFood $product, $maxIngredients = 6) {
+    public function getPrimaryProteins(PetFood $product, $maxIngredients = 6) {
 
         $baseProteins = self::getAllProteinSources();
         for ($i = 0; $i < $maxIngredients; $i++) {

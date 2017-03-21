@@ -4,7 +4,7 @@
 namespace PetFoodDB\Service;
 
 
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use PetFoodDB\Traits\LoggerTrait;
 use PetFoodDB\Traits\MathTrait;
 
@@ -116,7 +116,7 @@ class NewAnalysisService
         return $allData;
     }
 
-    protected function calcStatsForProduct(CatFood $product, $wetFoodAverages, $dryFoodAverages) {
+    protected function calcStatsForProduct(PetFood $product, $wetFoodAverages, $dryFoodAverages) {
         if ($product->getIsWetFood()) {
             $averages = $wetFoodAverages;
         } else {
@@ -284,7 +284,7 @@ class NewAnalysisService
 
     }
 
-    private function calcNewNutritionScore(CatFood $product) {
+    private function calcNewNutritionScore(PetFood $product) {
         $carbBucketsValues = [5,15,30,42,100];
         $proteinBucketsValues = [35,40,50,60,100];
         $dryValues = $product->getPercentages()['dry'];

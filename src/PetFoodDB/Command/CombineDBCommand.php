@@ -5,7 +5,7 @@ namespace PetFoodDB\Command;
 
 
 use PetFoodDB\Command\Traits\DBTrait;
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -84,7 +84,7 @@ class CombineDBCommand extends ContainerAwareCommand
         //return $this->db->catfood->insert($catfood->dbModel());
         foreach ($rows as $row) {
             $data = iterator_to_array($row);
-            $catfood = new CatFood($data);
+            $catfood = new PetFood($data);
             $catfood->setId(null);
             $brandCatFoods[] = $catfood;
         }

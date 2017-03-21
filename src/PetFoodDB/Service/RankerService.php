@@ -4,7 +4,7 @@
 namespace PetFoodDB\Service;
 
 
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 
 class RankerService
 {
@@ -31,7 +31,7 @@ class RankerService
 
     }
 
-    public function getAllProductData(CatFood $product) {
+    public function getAllProductData(PetFood $product) {
 
         $product = $this->catFoodService->updateExtendedProductDetails(
             $product,
@@ -72,7 +72,7 @@ class RankerService
         return $products;
     }
 
-    protected function usortByDiff(CatFood $productA, CatFood $productB) {
+    protected function usortByDiff(PetFood $productA, PetFood $productB) {
 
         $percentagesA = $productA->getPercentages();
         $percentagesB = $productB->getPercentages();
@@ -93,7 +93,7 @@ class RankerService
 
     }
 
-    protected function usortProduct(CatFood $productA, CatFood $productB) {
+    protected function usortProduct(PetFood $productA, PetFood $productB) {
 
         $scoreA = $productA->getExtraData('score');
         $scoreB = $productB->getExtraData('score');
@@ -110,7 +110,7 @@ class RankerService
 
     public function getTopWet($minScore = 9) {
         $products = $this->getAllProductWithData();
-        $products = array_filter($products, function(CatFood $product) use ($minScore) {
+        $products = array_filter($products, function(PetFood $product) use ($minScore) {
             $score = $product->getExtraData('score');
             if ($product->getIsDryFood()) {
                 return false;
@@ -126,7 +126,7 @@ class RankerService
 
     public function getTopDry($minScore = 8) {
         $products = $this->getAllProductWithData();
-        $products = array_filter($products, function(CatFood $product) use ($minScore) {
+        $products = array_filter($products, function(PetFood $product) use ($minScore) {
             $score = $product->getExtraData('score');
             if ($product->getIsWetFood()) {
                 return false;

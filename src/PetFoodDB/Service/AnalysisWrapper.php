@@ -4,7 +4,7 @@
 namespace PetFoodDB\Service;
 
 
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use PetFoodDB\Traits\LoggerTrait;
 use Symfony\Component\Stopwatch\Stopwatch;
 
@@ -25,7 +25,7 @@ class AnalysisWrapper extends BaseService
         $this->analysisService = $analysisService;
     }
 
-    public function getProductAnalysis(CatFood $catFood) {
+    public function getProductAnalysis(PetFood $catFood) {
         $row = $this->db->analysis[$catFood->getId()];
 
         return [

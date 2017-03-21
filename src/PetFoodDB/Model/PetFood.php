@@ -4,7 +4,7 @@ namespace PetFoodDB\Model;
 
 use PetFoodDB\Traits\StringHelperTrait;
 
-class CatFood
+class PetFood
 {
     use StringHelperTrait;
 

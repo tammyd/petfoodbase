@@ -7,7 +7,7 @@ use PetFoodDB\Controller\PageController;
 use PetFoodDB\Service\ShopService;
 use PetFoodDB\Traits\ArrayTrait;
 use PetFoodDB\Controller\BaseController;
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
 use Symfony\Component\VarDumper\Dumper\HtmlDumper;
@@ -71,7 +71,7 @@ class AdminController extends PageController
         $this->validateCredentials();
         $controller = $this->get('product.controller');
 
-        /* @var CatFood $product */
+        /* @var PetFood $product */
         $product = $this->catFoodService->getById($id);
         $data = $controller->getRenderProductTemplateData($product);
         $data['breakdowns'] = $product->getPercentages();
@@ -104,7 +104,7 @@ class AdminController extends PageController
         $products = [];
         $maxId = 0;
         foreach ($result as $i => $row) {
-            $product = new CatFood($row);
+            $product = new PetFood($row);
             $products[] = $product;
             $maxId = max($maxId, $product->getId());
         }
@@ -247,7 +247,7 @@ class AdminController extends PageController
     /**
      * @param array $input
      * @param string $action
-     * @return CatFood
+     * @return PetFood
      */
     protected function buildCatFoodFromInput(array $input, $action="insert") {
         $isError = false;
@@ -299,7 +299,7 @@ class AdminController extends PageController
         }
         
         if (!$isError) {
-            $catfood = new CatFood($data);
+            $catfood = new PetFood($data);
             return $catfood;
         }
 

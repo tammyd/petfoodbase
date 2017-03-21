@@ -2,7 +2,7 @@
 
 namespace PetFoodDB\Controller;
 
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use PetFoodDB\Service\AnalyzeIngredients;
 use PetFoodDB\Traits\ArrayTrait;
 use PetFoodDB\Traits\StringHelperTrait;
@@ -300,7 +300,7 @@ EOF;
     }
 
 
-    protected function buildAllergenData(CatFood $product) {
+    protected function buildAllergenData(PetFood $product) {
         
         $allergens = $this->get('catfood.analysis')->getIngredientService()->containsAllergens($product);
 
@@ -512,7 +512,7 @@ EOF;
         return $urls;
     }
 
-    protected function getAmazonSearchQuery(CatFood $product)
+    protected function getAmazonSearchQuery(PetFood $product)
     {
         if ($product->getIsWetFood()) {
             $query = "wet cat food";

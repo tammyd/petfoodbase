@@ -2,7 +2,7 @@
 
 namespace PetFoodDB\Service;
 
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use PetFoodDB\Traits\StringHelperTrait;
 
 class CatFoodService extends BaseService
@@ -16,7 +16,7 @@ class CatFoodService extends BaseService
     {
         $data = $this->db->catfood[$id];
 
-        return $data ? new CatFood(iterator_to_array($data)) : null;
+        return $data ? new PetFood(iterator_to_array($data)) : null;
 
     }
 
@@ -76,7 +76,7 @@ class CatFoodService extends BaseService
     {
         $catFood = [];
         foreach ($result as $row) {
-            $catFood[] = new CatFood(iterator_to_array($row));
+            $catFood[] = new PetFood(iterator_to_array($row));
         }
 
         return $catFood;
@@ -179,13 +179,13 @@ class CatFoodService extends BaseService
     }
 
     public function getNumberWetRecords() {
-        return count($this->db->catfood->where("moisture > ? ", CatFood::WET_DRY_PERCENT));
+        return count($this->db->catfood->where("moisture > ? ", PetFood::WET_DRY_PERCENT));
     }
     public function getNumberDryRecords() {
-        return count($this->db->catfood->where("moisture <= ? ", CatFood::WET_DRY_PERCENT));
+        return count($this->db->catfood->where("moisture <= ? ", PetFood::WET_DRY_PERCENT));
     }
 
-    public function insert(CatFood $catfood)
+    public function insert(PetFood $catfood)
     {
 
         return $this->db->catfood->insert($catfood->dbModel());
@@ -195,7 +195,7 @@ class CatFoodService extends BaseService
        return $this->db->catfood->insert_id();
     }
 
-    public function update(CatFood $catfood)
+    public function update(PetFood $catfood)
     {
         $dbModel = $catfood->dbModel();
         
@@ -267,7 +267,7 @@ catfood_search.id = catfood.id order by catfood.updated DESC");
     }
 
 
-    public function updateExtendedProductDetails(CatFood $product, $amazonTemplate, NewAnalysisService $analysisService, AnalysisWrapper $analysisWrapper) {
+    public function updateExtendedProductDetails(PetFood $product, $amazonTemplate, NewAnalysisService $analysisService, AnalysisWrapper $analysisWrapper) {
         if (!$product) {
             return $product;
         }
@@ -305,7 +305,7 @@ catfood_search.id = catfood.id order by catfood.updated DESC");
         return $product;
     }
 
-    protected function getAvgPrice(CatFood $product) {
+    protected function getAvgPrice(PetFood $product) {
         $data =  $this->db->prices[$product->getId()];
         if ($data) {
             $arr = iterator_to_array($data);
@@ -314,7 +314,7 @@ catfood_search.id = catfood.id order by catfood.updated DESC");
         return false;
     }
 
-    protected function getChewyUrl(CatFood $product) {
+    protected function getChewyUrl(PetFood $product) {
         $data =  $this->db->prices[$product->getId()];
         if ($data) {
             $arr = iterator_to_array($data);
@@ -323,7 +323,7 @@ catfood_search.id = catfood.id order by catfood.updated DESC");
         return false;
     }
 
-    protected function buildAllergenData(CatFood $product, NewAnalysisService $analysisService) {
+    protected function buildAllergenData(PetFood $product, NewAnalysisService $analysisService) {
         $allergens = $analysisService->getIngredientService()->containsAllergens($product);
 
         $allAllergens = $allergens['all'];
@@ -370,7 +370,7 @@ catfood_search.id = catfood.id order by catfood.updated DESC");
 
     }
 
-    public function productContainsIngredient(CatFood $product, $ing) {
+    public function productContainsIngredient(PetFood $product, $ing) {
         $ingredients =  array_map('strtolower', array_map('trim', explode(",", $product->getIngredients())));
         return in_array($ing, $ingredients);
     }

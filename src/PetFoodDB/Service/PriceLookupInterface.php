@@ -4,9 +4,9 @@
 namespace PetFoodDB\Service;
 
 
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 
 interface PriceLookupInterface
 {
-    public function lookupPrice(CatFood $product);
+    public function lookupPrice(PetFood $product);
 }

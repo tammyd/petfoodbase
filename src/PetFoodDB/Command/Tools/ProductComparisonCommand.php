@@ -4,7 +4,7 @@
 namespace PetFoodDB\Command\Tools;
 
 
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use PetFoodDB\Service\AnalysisWrapper;
 use PetFoodDB\Twig\CatFoodExtension;
 use Symfony\Component\Console\Helper\FormatterHelper;
@@ -60,7 +60,7 @@ class ProductComparisonCommand extends TableCommand
                 });
             }
 
-            /* @var CatFood $product */
+            /* @var PetFood $product */
             foreach ($data as $product) {
                 $dry = $product->getPercentages()['dry'];
                 $wet = $product->getPercentages()['wet'];
@@ -116,7 +116,7 @@ class ProductComparisonCommand extends TableCommand
 
     }
 
-    protected function getUrl(CatFood $product) {
+    protected function getUrl(PetFood $product) {
 
         /* @var CatFoodExtension $catfoodExtension */
         $catfoodExtension = $this->container->get('catfood.url');

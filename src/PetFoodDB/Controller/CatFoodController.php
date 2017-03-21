@@ -87,7 +87,7 @@ class CatFoodController extends BaseController
     protected function prepAmazon(BaseList $catfoodList)
     {
         foreach ($catfoodList as $catFood) {
-            if ($catFood instanceof \PetFoodDB\Model\CatFood) {
+            if ($catFood instanceof \PetFoodDB\Model\PetFood) {
                 $catFood->setPurchaseAsinTemplate($this->getParameter('amazon.purchase.url.template'));
             }
         }
@@ -114,7 +114,7 @@ class CatFoodController extends BaseController
 
         $anaylsisService = $this->get('analysis.access');
         foreach ($catfoodList as $catFood) {
-            if ($catFood instanceof \PetFoodDB\Model\CatFood) {
+            if ($catFood instanceof \PetFoodDB\Model\PetFood) {
                 $analysis = $anaylsisService->getProductAnalysis($catFood);
                 $catFood->addExtraData('nutritionScore', $analysis['nutrition_rating']);
                 $catFood->addExtraData('ingredientScore', $analysis['ingredients_rating']);

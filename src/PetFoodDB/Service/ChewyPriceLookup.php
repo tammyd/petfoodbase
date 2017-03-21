@@ -5,7 +5,7 @@ namespace PetFoodDB\Service;
 
 
 use PetFoodDB\Command\Tools\TooManySearchResultsException;
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use PetFoodDB\Traits\ArrayTrait;
 use PetFoodDB\Traits\StringHelperTrait;
 use Goutte\Client;
@@ -27,7 +27,7 @@ class ChewyPriceLookup implements PriceLookupInterface
         $this->shopService = $shopService;
     }
 
-    public function lookupPrice(CatFood $product) {
+    public function lookupPrice(PetFood $product) {
 
         //if chewy url exists in product, use that.
         $shopUrls = $this->shopService->getAll($product->getId());
@@ -69,7 +69,7 @@ class ChewyPriceLookup implements PriceLookupInterface
         return $data;
     }
 
-    public function getChewySearchUrlForProduct(CatFood $product) {
+    public function getChewySearchUrlForProduct(PetFood $product) {
         $search = $this->getProducChewySearchTerm($product);
         return $this->getChewySearchUrl($search);
     }
@@ -139,7 +139,7 @@ class ChewyPriceLookup implements PriceLookupInterface
         ];
     }
 
-    public function getProducChewySearchTerm(CatFood $product) {
+    public function getProducChewySearchTerm(PetFood $product) {
         return sprintf("%s cat food", $product->getDisplayName());
     }
 

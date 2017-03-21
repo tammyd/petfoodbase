@@ -3,7 +3,7 @@
 namespace PetFoodDB\Command;
 
 use PetFoodDB\Command\Traits\CommandIOTrait;
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -69,7 +69,7 @@ class DataCheckerCommand extends ContainerAwareCommand
         }
     }
 
-    protected function outputRecord(CatFood $record)
+    protected function outputRecord(PetFood $record)
     {
         return sprintf("%d:\t%s", $record->getId(), $record->getDisplayName());
     }

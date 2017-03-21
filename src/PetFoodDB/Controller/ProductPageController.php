@@ -4,7 +4,7 @@
 namespace PetFoodDB\Controller;
 
 
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use PetFoodDB\Service\AnalysisWrapper;
 use PetFoodDB\Service\AnalyzeIngredients;
 use PetFoodDB\Service\CatFoodService;
@@ -54,14 +54,14 @@ class ProductPageController extends PageController
     /**
      * Get the SEO array for a single catfood
      *
-     * @param CatFood $product
+     * @param PetFood $product
      * @return array
      */
-    protected function getProductSEO(CatFood $product) {
+    protected function getProductSEO(PetFood $product) {
         return $this->seoService->getProductSEO($product);
     }
 
-    public function getAllProductDetails(CatFood $product) {
+    public function getAllProductDetails(PetFood $product) {
         if (!$product) {
             return $product;
         }
@@ -84,9 +84,9 @@ class ProductPageController extends PageController
     /**
      * Render the product details for a specific product
      *
-     * @param CatFood|null $product
+     * @param PetFood|null $product
      */
-    protected function renderProduct(CatFood $product = null, $template=null) {
+    protected function renderProduct(PetFood $product = null, $template=null) {
         if (!$product) {
             $this->app->notFound();
         }
@@ -101,7 +101,7 @@ class ProductPageController extends PageController
         $this->render($template, $productData);
     }
 
-    public function getRenderProductTemplateData(CatFood $product = null) {
+    public function getRenderProductTemplateData(PetFood $product = null) {
         if (!$product) {
             return null;
         }
@@ -143,7 +143,7 @@ class ProductPageController extends PageController
 
     }
 
-    protected function getCalorieChart(CatFood $product) {
+    protected function getCalorieChart(PetFood $product) {
         $calories = $product->getCaloriesPer100g();
 
         $title = "CalorieBreakdown";
@@ -183,7 +183,7 @@ class ProductPageController extends PageController
 
     }
 
-    protected function getPriceDisplay(CatFood $product) {
+    protected function getPriceDisplay(PetFood $product) {
 
         $asin = $product->getAsin();
         $display = null;
@@ -204,15 +204,15 @@ class ProductPageController extends PageController
     /**
      * Get Related for products. For now it's just those of the same brand and type (wet vs dry)
      *
-     * @param CatFood $catFood
+     * @param PetFood $catFood
      *
      * @return array
      */
-    public function getRelatedProducts(CatFood $catFood) {
+    public function getRelatedProducts(PetFood $catFood) {
         $brand = $catFood->getBrand();
         $related = $this->catFoodService->getByBrand($brand);
 
-        $related = array_filter($related, function(CatFood $item) use ($catFood) {
+        $related = array_filter($related, function(PetFood $item) use ($catFood) {
             if ($catFood->getId() == $item->getId()) {
                 return false; //self is not related
             }

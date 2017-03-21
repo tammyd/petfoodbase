@@ -5,7 +5,7 @@ namespace PetFoodDB\Command\Tools;
 
 
 use PetFoodDB\Command\ContainerAwareCommand;
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -47,7 +47,7 @@ class UpdatePriceCommand extends ContainerAwareCommand
 
     }
 
-    protected function updateCatFood(CatFood $product) {
+    protected function updateCatFood(PetFood $product) {
         $priceLookup = $this->container->get('price.lookup');
 
         $data = $priceLookup->lookupPrice($product);

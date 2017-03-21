@@ -4,7 +4,7 @@
 namespace PetFoodDB\Twig;
 
 
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 
 class CatFoodExtension extends \Twig_Extension
 {
@@ -58,7 +58,7 @@ class CatFoodExtension extends \Twig_Extension
         ];
     }
 
-    public function catfoodUrl(CatFood $catfood = null)
+    public function catfoodUrl(PetFood $catfood = null)
     {
         if (!$catfood) {
             return "";
@@ -67,7 +67,7 @@ class CatFoodExtension extends \Twig_Extension
         return sprintf($this->path, $catfood->getProductPath());
     }
 
-    public function priceOunceSummary(CatFood $product, $pricePerOz) {
+    public function priceOunceSummary(PetFood $product, $pricePerOz) {
         $char = "$";
         $score = 0;
 
@@ -112,7 +112,7 @@ class CatFoodExtension extends \Twig_Extension
         return sprintf($template, $url);
     }
 
-    public function amazonUrl(CatFood $catfood, $target = "_blank", $classes = "", $text = null, $eventType='link') {
+    public function amazonUrl(PetFood $catfood, $target = "_blank", $classes = "", $text = null, $eventType='link') {
 
         $text = $text ? $text : $catfood->getDisplayName();
         $eventLabel = $catfood->getDisplayName();
@@ -134,7 +134,7 @@ class CatFoodExtension extends \Twig_Extension
     }
 
 
-    public function imageUrl(CatFood $catfood, $size=null) {
+    public function imageUrl(PetFood $catfood, $size=null) {
         
         if ($catfood->getImageUrl()) {
             $url =  $size ? $catfood->getResizedImageUrl($size) : $catfood->getImageUrl();
@@ -160,7 +160,7 @@ class CatFoodExtension extends \Twig_Extension
         return $url;
     }
 
-    public function imageUrlMax(CatFood $catfood, $size=null) {
+    public function imageUrlMax(PetFood $catfood, $size=null) {
 
         $img = $this->imageUrl($catfood, $size);
 
@@ -175,7 +175,7 @@ class CatFoodExtension extends \Twig_Extension
 
     }
 
-    public function brandUrl(CatFood $catfood) {
+    public function brandUrl(PetFood $catfood) {
 
         $brand = strtolower($catfood->getBrand());
         return sprintf("/brand/%s", $brand);
@@ -191,7 +191,7 @@ class CatFoodExtension extends \Twig_Extension
         return $html;
     }
 
-    public function pinterestData(CatFood $catFood) {
+    public function pinterestData(PetFood $catFood) {
 
         $media = $this->imageUrl($catFood);
         //some image hacks for the best image
@@ -219,7 +219,7 @@ class CatFoodExtension extends \Twig_Extension
         return $tags;
     }
 
-    public function overallRating(CatFood $catfood, $noun = "product") {
+    public function overallRating(PetFood $catfood, $noun = "product") {
 
         $nutScore = $catfood->getExtraData('stats')['nutrition_rating'];
         $ingScore = $catfood->getExtraData('stats')['ingredients_rating'];

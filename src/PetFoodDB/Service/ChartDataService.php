@@ -4,7 +4,7 @@
 namespace PetFoodDB\Service;
 
 
-use PetFoodDB\Model\CatFood;
+use PetFoodDB\Model\PetFood;
 use Khill\Lavacharts\Lavacharts;
 
 class ChartDataService
@@ -19,7 +19,7 @@ class ChartDataService
         $this->lavaCharts = $lavaCharts;
     }
 
-    public function getCalorieChart(CatFood $product) {
+    public function getCalorieChart(PetFood $product) {
         $calories = $product->getCaloriesPer100g();
 
         $title = "CalorieBreakdown" . $product->getId();
