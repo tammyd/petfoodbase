@@ -87,12 +87,12 @@ class SeoService
 
 
     /**
-     * Get the SEO array for a single catfood
+     * Get the SEO array for a single petfood
      *
-     * @param CatFood $product
+     * @param PetFood $product
      * @return array
      */
-    public function getProductSEO(CatFood $product) {
+    public function getProductSEO(PetFood $product) {
 
         $title = $product->getDisplayName() . " Cat Food Review";
         if (strpos(strtolower($product->getDisplayName()), "cat food") > 0) {
