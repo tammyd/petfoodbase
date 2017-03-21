@@ -27,13 +27,13 @@ class SeoService
         //these values are defined in base.html.twig
         //todo - make these config, and pull in base from config as well
         $seo = [
-            'shortTitle' => 'CatFoodDB - Unbiased Cat Food Reviews',
-            'title' =>  'CatFoodDB - Cat Food Reviews to help you find the best cat food for your cat',
-            'description' => 'Cat food reviews for over 2000 wet and dry cat food products. Includes product analysis, ingredient lists, nutritional breakdown and calorie counts.',
+            'shortTitle' => '',
+            'title' =>  '',
+            'description' => '',
             'url' => $this->baseUrl,
-            'siteImage' => $this->baseUrl . '/img/logo/logo-purple.jpg',
-            'twitter' => '@catfooddb',
-            'siteName' => 'CatFoodDB',
+            'siteImage' => $this->baseUrl . '',
+            'twitter' => '',
+            'siteName' => '',
             'siteUrl' => $this->baseUrl
         ];
 
@@ -68,18 +68,18 @@ class SeoService
 
         $seo = $this->getBaseSEO();
         $seo['siteUrl'] = $this->baseUrl . "/faq";
-        $seo['shortTitle'] = "CatFoodDB - FAQ";
+        $seo['shortTitle'] = "";
         $seo['title'] = $seo['shortTitle'];
-        $seo['description'] = "CatFoodDB - Frequently Asked Questions";
+        $seo['description'] = "";
 
         return $seo;
     }
 
     public function getResourcesSEO() {
         $seo = $this->getBaseSEO();
-        $seo['shortTitle'] = "CatFoodDB - Resources & Recommendations";
+        $seo['shortTitle'] = "";
         $seo['title'] = $seo['shortTitle'];
-        $seo['description'] = "Resources & Recommendations for other cat products, including toys, trees, litter boxes and cat carriers from the human behind CatFoodDB.";
+        $seo['description'] = "";
         $seo['siteUrl'] = $this->baseUrl . "/resources";
 
         return $seo;
@@ -94,11 +94,7 @@ class SeoService
      */
     public function getProductSEO(PetFood $product) {
 
-        $title = $product->getDisplayName() . " Cat Food Review";
-        if (strpos(strtolower($product->getDisplayName()), "cat food") > 0) {
-            $title = $product->getDisplayName() . " Review"; //dont duplicate "cat food"
-        }
-
+        $title = $product->getDisplayName() . " Review";
 
         $seo = $this->getBaseSEO();
         $seo['shortTitle'] = $title;
