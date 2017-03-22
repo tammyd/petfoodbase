@@ -4,7 +4,7 @@ namespace PetFoodDB\Controller;
 
 use PetFoodDB\Model\BaseList;
 
-class CatFoodController extends BaseController
+class PetFoodController extends BaseController
 {
 
     public function __construct(\Slim\Slim &$app)
