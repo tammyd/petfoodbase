@@ -13,7 +13,7 @@ use VDB\Spider\Filter\Prefetch\UriWithHashFragmentFilter;
 use VDB\Spider\Spider;
 use VDB\Spider\Discoverer\XPathExpressionDiscoverer;
 
-abstract class NoSitemapScraper extends BaseCatFoodScraper
+abstract class NoSitemapScraper extends BasePetFoodScraper
 {
     protected $scrapeDelay = 450;
     protected $forceRegen = false;

@@ -63,7 +63,7 @@ class UpdateRecordCommand extends DataCheckerCommand
                 $this->container->get('manual.data'),
                 $this->container->get('sitemap.utils')
             );
-        } elseif (is_subclass_of($parserClass, 'PetFoodDB\Scrapers\BaseCatFoodScraper')) {
+        } elseif (is_subclass_of($parserClass, 'PetFoodDB\Scrapers\BasePetFoodScraper')) {
             $parser = new $parserClass($this->container->get('amazon.lookup'), $this->container->get('manual.data'));
         } else {
             $this->getOutput()->writeln("<error>Cannot create instance of $parserClass</error>");

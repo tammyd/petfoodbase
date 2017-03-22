@@ -11,7 +11,7 @@ use Goutte\Client;
 use Symfony\Component\DomCrawler\Crawler;
 use GuzzleHttp\Exception\RequestException;
 
-abstract class BaseCatFoodScraper
+abstract class BasePetFoodScraper
 {
     use StringHelperTrait,
         LoggerTrait;
