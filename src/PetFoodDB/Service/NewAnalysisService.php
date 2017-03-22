@@ -26,7 +26,7 @@ class NewAnalysisService
      * NewAnalysisService constructor.
      */
     public function __construct(
-        CatFoodService $catfoodService,
+        PetFoodService $catfoodService,
         DBStatsService $statsService,
         AnalyzeIngredients $ingredientService,
         $newAlgo = false)
@@ -193,7 +193,7 @@ class NewAnalysisService
     protected function calcBrandAverages() {
 
 
-        /* @var \PetFoodDB\Service\CatFoodService */
+        /* @var \PetFoodDB\Service\PetFoodService */
         $service = $this->catfoodService;
         $stats = $this->statsService;
         $brands = $service->getBrands();

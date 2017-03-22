@@ -9,7 +9,7 @@ class ReportingService
     protected $catfoodService;
     protected $dbConnection;
 
-    public function __construct(CatFoodService $catFoodService)
+    public function __construct(PetFoodService $catFoodService)
     {
         $this->catFoodService  = $catFoodService;
         $this->dbConnection = $catFoodService->getDb()->getConnection();

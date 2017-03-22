@@ -7,7 +7,7 @@ namespace PetFoodDB\Controller;
 use PetFoodDB\Model\PetFood;
 use PetFoodDB\Service\AnalysisWrapper;
 use PetFoodDB\Service\AnalyzeIngredients;
-use PetFoodDB\Service\CatFoodService;
+use PetFoodDB\Service\PetFoodService;
 
 
 class ProductPageController extends PageController
@@ -66,7 +66,7 @@ class ProductPageController extends PageController
             return $product;
         }
 
-        /* @var CatFoodService $catfoodService */
+        /* @var PetFoodService $catfoodService */
         $catfoodService = $this->getContainer()->get('catfood');
 
         $shopService = $this->getContainer()->get('shop.service');

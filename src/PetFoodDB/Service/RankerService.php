@@ -17,7 +17,7 @@ class RankerService
     protected $allProducts;
 
 
-    public function __construct(CatFoodService $catFoodService,
+    public function __construct(PetFoodService $catFoodService,
                                 NewAnalysisService $catFoodAnalysisService,
                                 AnalysisWrapper $catFoodAnalysisWrapper,
                                 AnalyzeIngredients $ingredientAnalysis,

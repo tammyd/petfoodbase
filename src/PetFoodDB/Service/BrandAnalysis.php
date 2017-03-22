@@ -14,7 +14,7 @@ class BrandAnalysis extends BaseService
     protected $analysisService;
 
     
-    public function __construct(\NotORM $db, CatFoodService $catfoodService, NewAnalysisService $analysisService, AnalysisWrapper $analysisWrapper)
+    public function __construct(\NotORM $db, PetFoodService $catfoodService, NewAnalysisService $analysisService, AnalysisWrapper $analysisWrapper)
     {
         parent::__construct($db);
         $this->catFoodService = $catfoodService;
@@ -45,7 +45,7 @@ class BrandAnalysis extends BaseService
     public function calculateBrandAnalysis(callable $brandProgress = null)
     {
 
-        /* @var \PetFoodDB\Service\CatFoodService $catfoodService */
+        /* @var \PetFoodDB\Service\PetFoodService $catfoodService */
         $catfoodService = $this->catFoodService;
         $analysisService = $this->analysisService;
         $analysis = $this->analysisWrapper;

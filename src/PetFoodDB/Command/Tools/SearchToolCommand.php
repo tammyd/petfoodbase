@@ -5,7 +5,7 @@ namespace PetFoodDB\Command\Tools;
 
 
 use PetFoodDB\Service\AnalyzeIngredients;
-use PetFoodDB\Service\CatFoodService;
+use PetFoodDB\Service\PetFoodService;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -42,7 +42,7 @@ class SearchToolCommand extends TableCommand
     }
 
 
-    public static function getHypoallegenicFoods(CatFoodService $catfoodService, AnalyzeIngredients $ingredientAnalysisService) {
+    public static function getHypoallegenicFoods(PetFoodService $catfoodService, AnalyzeIngredients $ingredientAnalysisService) {
         $MIN_SCORE = 6;
 
         $allergens = AnalyzeIngredients::getCommonAllergens();

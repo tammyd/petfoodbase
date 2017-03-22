@@ -28,7 +28,7 @@ class ProductContainsCommand extends TableCommand
     {
 
         parent::execute($input, $output);
-        /* @var \PetFoodDB\Service\CatFoodService $catfoodService */
+        /* @var \PetFoodDB\Service\PetFoodService $catfoodService */
         $catfoodService = $this->container->get('catfood');
         $id = $input->getOption('id');
         $product = $catfoodService->getById($id);

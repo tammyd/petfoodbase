@@ -18,7 +18,7 @@ class DBStatsService
     protected $cache;
     protected $catfoodService;
 
-    public function __construct(CatFoodService $catfoodService, CacheProvider $cache)
+    public function __construct(PetFoodService $catfoodService, CacheProvider $cache)
     {
         $this->cache = $cache;
         $this->catfoodService = $catfoodService;

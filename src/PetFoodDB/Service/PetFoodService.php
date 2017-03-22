@@ -5,7 +5,7 @@ namespace PetFoodDB\Service;
 use PetFoodDB\Model\PetFood;
 use PetFoodDB\Traits\StringHelperTrait;
 
-class CatFoodService extends BaseService
+class PetFoodService extends BaseService
 {
 
     use StringHelperTrait;
@@ -57,7 +57,7 @@ class CatFoodService extends BaseService
     public function getAll() {
         $data = $this->db->catfood()
             ->select('*');
-        return $this->convertResultToCatfood($data);
+        return $this->convertResultToPetFood($data);
 
     }
 
@@ -68,11 +68,11 @@ class CatFoodService extends BaseService
             ->select('*')
             ->where('id', $ids);
 
-        return $this->convertResultToCatfood($data);
+        return $this->convertResultToPetFood($data);
 
     }
 
-    public function convertResultToCatfood(\NotORM_Result $result)
+    public function convertResultToPetFood(\NotORM_Result $result)
     {
         $catFood = [];
         foreach ($result as $row) {
@@ -230,18 +230,6 @@ catfood_search.id = catfood.id order by catfood.updated DESC");
     public function getPopularBrands() {
 
         $brands = [
-            'simply nourish',
-            'wellness',
-            'weruva',
-            'orijen',
-            'blue buffalo',
-            'nutro',
-            'merrick',
-            'whiskas',
-            'natural balance',
-            'fancy feast',
-            'royal canin',
-            'purina beyond'
         ];
 
         return $this->getSpecificBrands($brands);

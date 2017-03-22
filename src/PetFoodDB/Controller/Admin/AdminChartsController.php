@@ -17,7 +17,7 @@ class AdminChartsController extends AdminController
     public function chartBreakdownAction() {
 
         $this->validateCredentials();
-        /* @var \PetFoodDB\Service\CatFoodService $catfoodService */
+        /* @var \PetFoodDB\Service\PetFoodService $catfoodService */
         $catfoodService = $this->get('catfood');
         $products = $catfoodService->getAll();
         $proteinData = [];

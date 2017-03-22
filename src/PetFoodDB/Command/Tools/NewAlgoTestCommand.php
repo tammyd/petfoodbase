@@ -169,7 +169,7 @@ class NewAlgoTestCommand extends ContainerAwareCommand
 
         $this->timeFtnStart(__FUNCTION__);
 
-        /* @var \PetFoodDB\Service\CatFoodService */
+        /* @var \PetFoodDB\Service\PetFoodService */
         $service = $this->container->catfood;
         $stats = $this->container->stats;
         $brands = $service->getBrands();

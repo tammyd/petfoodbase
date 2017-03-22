@@ -36,7 +36,7 @@ class InfoCommand extends TableCommand
 
     protected function listBrands() {
 
-        /* @var \PetFoodDB\Service\CatFoodService $service */
+        /* @var \PetFoodDB\Service\PetFoodService $service */
         $service = $this->container->get('catfood');
         $brands = $service->getBrands();
         $brandLabels = array_map(function ($b) { return $b['name']; }, $brands);

@@ -18,7 +18,7 @@ class AnalysisWrapper extends BaseService
     protected $catfoodService;
     protected $analysisService;
 
-    public function __construct(\NotORM $db, CatFoodService $catfoodService, NewAnalysisService $analysisService)
+    public function __construct(\NotORM $db, PetFoodService $catfoodService, NewAnalysisService $analysisService)
     {
         parent::__construct($db);
         $this->catfoodService = $catfoodService;

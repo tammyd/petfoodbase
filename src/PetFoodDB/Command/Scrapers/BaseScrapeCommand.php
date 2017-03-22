@@ -103,7 +103,7 @@ abstract class BaseScrapeCommand extends ContainerAwareCommand
         }
 
         $db = $this->getDB($dbPath);
-        $this->catfoodService = new \PetFoodDB\Service\CatFoodService($db);
+        $this->catfoodService = new \PetFoodDB\Service\PetFoodService($db);
         $this->catfoodService->setLogger($this->container->get('logger'));
     }
 

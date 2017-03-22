@@ -36,7 +36,7 @@ class ProductComparisonCommand extends TableCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         parent::execute($input, $output);
-        /* @var \PetFoodDB\Service\CatFoodService $catfoodService */
+        /* @var \PetFoodDB\Service\PetFoodService $catfoodService */
         $catfoodService = $this->container->get('catfood');
 
         /* @var AnalysisWrapper $analysisWrapper */
@@ -204,7 +204,7 @@ class ProductComparisonCommand extends TableCommand
     
     protected function getBrandsToAnalyze() {
 
-        /* @var \PetFoodDB\Service\CatFoodService $catfoodService */
+        /* @var \PetFoodDB\Service\PetFoodService $catfoodService */
         $catfoodService = $this->container->get('catfood');
 
         if ($this->input->getOption('brand')) {
