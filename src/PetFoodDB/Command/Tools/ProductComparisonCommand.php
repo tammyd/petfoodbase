@@ -6,7 +6,7 @@ namespace PetFoodDB\Command\Tools;
 
 use PetFoodDB\Model\PetFood;
 use PetFoodDB\Service\AnalysisWrapper;
-use PetFoodDB\Twig\CatFoodExtension;
+use PetFoodDB\Twig\PetFoodExtension;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -118,7 +118,7 @@ class ProductComparisonCommand extends TableCommand
 
     protected function getUrl(PetFood $product) {
 
-        /* @var CatFoodExtension $catfoodExtension */
+        /* @var PetFoodExtension $catfoodExtension */
         $catfoodExtension = $this->container->get('catfood.url');
         $baseUrl = $this->container->config['app.base_url'];
         $catfoodExtension->setBaseUrl($baseUrl);

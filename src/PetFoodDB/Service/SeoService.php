@@ -6,7 +6,7 @@ namespace PetFoodDB\Service;
 
 use PetFoodDB\Model\PetFood;
 use PetFoodDB\Traits\ArrayTrait;
-use PetFoodDB\Twig\CatFoodExtension;
+use PetFoodDB\Twig\PetFoodExtension;
 
 class SeoService
 {
@@ -14,7 +14,7 @@ class SeoService
 
     protected $baseUrl;
 
-    public function __construct($baseUrl, CatFoodExtension $urlHelper)
+    public function __construct($baseUrl, PetFoodExtension $urlHelper)
     {
         $this->baseUrl = $baseUrl;
         $this->urlHelper = $urlHelper;
