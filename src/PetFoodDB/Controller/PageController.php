@@ -15,6 +15,8 @@ class PageController extends BaseController
 
     use ArrayTrait, StringHelperTrait;
 
+    protected $petType = 'cat';
+
     protected $stats;
 
     //services
@@ -35,6 +37,26 @@ class PageController extends BaseController
 
 
     }
+
+    /**
+     * @return string
+     */
+    public function getPetType()
+    {
+        return $this->petType;
+    }
+
+    /**
+     * @param string $petType
+     * @return $this
+     */
+    public function setPetType($petType)
+    {
+        $this->petType = $petType;
+        return $this;
+    }
+
+
 
     public function fourOrFourAction() {
 
@@ -78,7 +100,7 @@ class PageController extends BaseController
             'minimalMobile' => false,
             'homeNavClass' => 'active',
             'recentUpdates' => $this->getRecentUpdates(),
-            'amazonQuery' => 'cat supplies',
+            'amazonQuery' => sprintf("%s supplies", strtolower($this->getPetType())),
             'brands' => $allBrands,
             'popular' => $popularBrands,
             'seo' => $this->getBaseSEO()
@@ -100,42 +122,11 @@ class PageController extends BaseController
 
         return $recents;
     }
-    
-    protected function getRecommendations() {
-        $html = <<< EOF
-        I’m often asked about the products I use with my three cats, Kilo, Echo & Zulu. Over the years we’ve tried many different foods, litter, and toys, and we definitely have our favorites. Below is a sample of those products we use regularly and recommend.
-EOF;
 
-        $postData = [
-            'title' => "Other Recommendations",
-            'slug' => "resources",
-            'url' => "/resources",
-            'html' => $html
-        ];
-
-        return $postData;
-    }
-
-    protected function getOrigins() {
-        $aboutHTML = <<< EOF
-        I first got interested in pet nutrition, and specifically cat food nutrition, after visiting the pet food store one afternoon. I had returned from my vet’s office earlier that morning, and during my visit she mentioned a number of ingredients she felt my cats should avoid.
-While in the pet food store I spent a very long time reading tiny ingredient lists on many different varieties of cat food, trying to find the ones without the offending words. At the time I also only vaguely understood that carbs were generally less desirable in cat food, and that I should be looking for foods higher in protein.
-        I left the store that day without purchasing anything. I couldn’t decide what was the “best” food for my much adored three black cats that would meet my vets recommendations. I returned home, and turned to my trusty friend Google.
-EOF;
-
-        $postData = [
-            'title' => "The Origins of CatFoodDB",
-            'slug' => "/about",
-            'url' => "about",
-            'html' => $aboutHTML
-        ];
-
-        return $postData;
-    }
 
     public function aboutAction() {
         $params = [
-            'amazonQuery' => "cat toys",
+            'amazonQuery' => sprintf("%s toys", strtolower($this->getPetType())),
             'aboutNavClass'=>'active'
         ];
         $this->render('about.html.twig', $params);
@@ -143,7 +134,7 @@ EOF;
 
     public function resourcesAction() {
         $params = [
-            'amazonQuery' => "cat trees",
+            'amazonQuery' => sprintf("%s trees", strtolower($this->getPetType())),
             'resourcesNavClass'=>'active',
             'seo' => $this->seoService->getResourcesSEO()
         ];
@@ -160,7 +151,7 @@ EOF;
     
     public function faqAction() {
         $seo = $this->getFAQSEO();
-        $this->render('faq.html.twig', ['faqNavClass'=>'active', 'seo'=>$seo, 'amazonQuery' => "cat treats"]);
+        $this->render('faq.html.twig', ['faqNavClass'=>'active', 'seo'=>$seo, 'amazonQuery' => sprintf("%s treats", strtolower($this->getPetType()))]);
     }
 
 
@@ -232,10 +223,9 @@ EOF;
             'wetRating' => $wetRating, 'dryRating' => $dryRating,
             'seo'=>$this->getBrandSEO($products),
             'reviewNavClass' => 'active',
-            'amazonQuery' => $products[0]->getBrand() . " cat food",
             'template' => $this->templateExists($infoTemplate) ? $infoTemplate : null,
 //            'amazonTemplate' => $this->templateExists($amazonTemplate) ? $amazonTemplate : null,
-            'amazonQuery' => "$brandId cat food"
+            'amazonQuery' => sprintf("%s %s food", $brandId, $this->getPetType())
             
         ];
 
@@ -279,13 +269,19 @@ EOF;
         $brandInfo = $this->get('brand.info')->getBrandInfo($products[0]->getBrand());
         $seo = $this->getBaseSEO();
         $brand = ucwords($products[0]->getBrand());
-        $title = $brandInfo['official_name'] .  " Cat Food Reviews";
-        $title = $this->removeDups($title, "Cat");
+        $capPet = ucwords($this->getPetType());
+        $title = sprintf("%s %s Food Reviews", $brandInfo['official_name'], $capPet );
+
+        $title = $this->removeDups($title, $capPet);
+        $site = $capPet."FoodDB";
 
         $seo['shortTitle'] = $title;
-        $seo['title'] = "CatFoodDB - $title";
+        $seo['title'] = $capPet . "FoodDB - $title";
         $seo['url'] = $this->seoService->getBaseUrl() . "/" . $this->getRequest()->getResourceUri();
-        $seo['description'] = sprintf("%s cat food reviews from CatFoodDB -- Includes nutritional analysis, ingredient lists, allergen alerts and more.", $brand);
+
+        $food = strtolower($this->getPetType());
+
+        $seo['description'] = sprintf("%s $food food reviews from $site -- Includes nutritional analysis, ingredient lists, allergen alerts and more.", $brand);
         
 
         return $seo;
@@ -509,15 +505,17 @@ EOF;
         }
 
 
+
         return $urls;
     }
 
     protected function getAmazonSearchQuery(PetFood $product)
     {
+        $food = strtolower($this->getPetType());
         if ($product->getIsWetFood()) {
-            $query = "wet cat food";
+            $query = "wet $food food";
         } else {
-            $query = "dry cat food";
+            $query = "dry $food food";
         }
 
         $analysis = $this->getContainer()->get('catfood.analysis');
