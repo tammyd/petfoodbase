@@ -12,6 +12,7 @@ class RankerService
     protected $catFoodAnalysisService;
     protected $catFoodAnalysisWrapper;
     protected $ingredientAnalysis;
+    protected $shopService;
     protected $amazonTemplate;
 
     protected $allProducts;
@@ -21,6 +22,7 @@ class RankerService
                                 NewAnalysisService $catFoodAnalysisService,
                                 AnalysisWrapper $catFoodAnalysisWrapper,
                                 AnalyzeIngredients $ingredientAnalysis,
+                                ShopService $shopService,
                                 $amazonTemplate)
     {
         $this->catFoodService = $catFoodService;
@@ -28,6 +30,7 @@ class RankerService
         $this->catFoodAnalysisWrapper = $catFoodAnalysisWrapper;
         $this->ingredientAnalysis = $ingredientAnalysis;
         $this->amazonTemplate = $amazonTemplate;
+        $this->shopService = $shopService;
 
     }
 
@@ -45,6 +48,8 @@ class RankerService
         $ing = $analysis['ingredients_rating'];
         $score = $nut + $ing;
 
+        $shop = $this->shopService->getAll($product->getId());
+        $product->addExtraData('shopUrls', $shop);
         $product->addExtraData('nutrition_rating', $nut);
         $product->addExtraData('ingredients_rating', $ing);
         $product->addExtraData('score', $score);
