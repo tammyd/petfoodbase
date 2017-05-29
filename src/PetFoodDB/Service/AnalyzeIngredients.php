@@ -24,7 +24,7 @@ class AnalyzeIngredients
     static function getProteinSpecifics() {
         return ['heart', 'liver', 'lung', 'liver', 'giblets', 'meal', 'white meat', 'filets', 'red meat', 'meat meal',
             'whole meat', 'cutlets', 'tripe', 'meat', '(boneless, skinless breast)', 'livers', 'gizzards', 'gizzard', 'hearts', 'necks',
-            'giblets (liver, heart, kidney)'];
+            'giblets (liver, heart, kidney)', 'with ground bone', '(ground with bone)'];
     }
 
     static function getSeafoodProteins() {
