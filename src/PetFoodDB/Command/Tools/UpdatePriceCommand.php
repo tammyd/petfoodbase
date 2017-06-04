@@ -20,7 +20,8 @@ class UpdatePriceCommand extends ContainerAwareCommand
             ->setDescription("Retrieve product prices from retailers and update db")
             ->setName('price:update')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, "Id to update", null)
-            ->addOption('brand', null, InputOption::VALUE_REQUIRED, "brand to update", null);
+            ->addOption('brand', null, InputOption::VALUE_REQUIRED, "brand to update", null)
+            ->addOption('no_search', null, InputOption::VALUE_NONE, "Skip Chewy search");
 
     }
 
@@ -28,17 +29,19 @@ class UpdatePriceCommand extends ContainerAwareCommand
     {
         $catfoodService = $this->container->get('catfood');
 
+        $skipSearch = $input->getOption('no_search');
+
         $results = [];
         if ($input->getOption('id')) {
             $product = $catfoodService->getById($input->getOption('id'));
-            $result = $this->updateCatFood($product);
+            $result = $this->updateCatFood($product, $skipSearch);
             $results[] = $result;
             dump($result);
         } elseif ($input->getOption('brand')) {
             $brand = $input->getOption('brand');
             $products = $catfoodService->getByBrand($brand);
             foreach ($products as $product) {
-                $result = $this->updateCatFood($product);
+                $result = $this->updateCatFood($product, $skipSearch);
                 $results[] = $result;
                 dump($result);
             }
@@ -47,10 +50,10 @@ class UpdatePriceCommand extends ContainerAwareCommand
 
     }
 
-    protected function updateCatFood(PetFood $product) {
+    protected function updateCatFood(PetFood $product, $skipSearch = false) {
         $priceLookup = $this->container->get('price.lookup');
 
-        $data = $priceLookup->lookupPrice($product);
+        $data = $priceLookup->lookupPrice($product, $skipSearch);
 
         if ($data) {
             $priceService = $this->container->get('price.service');

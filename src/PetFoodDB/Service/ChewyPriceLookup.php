@@ -27,10 +27,11 @@ class ChewyPriceLookup implements PriceLookupInterface
         $this->shopService = $shopService;
     }
 
-    public function lookupPrice(PetFood $product) {
+    public function lookupPrice(PetFood $product, $skipChewySearch = false) {
 
         //if chewy url exists in product, use that.
         $shopUrls = $this->shopService->getAll($product->getId());
+        $data = [];
         if (isset($shopUrls['chewy'])) {
             $url = $shopUrls['chewy'];
             $rawResults = $this->parseAllChewyPriceDataFromBaseProductUrl($url);
@@ -39,7 +40,7 @@ class ChewyPriceLookup implements PriceLookupInterface
                 $data['productUrl'] = $url;
                 $data['url'] = $url;
             }
-        } else {
+        } else if (!$skipChewySearch) {
             //otherwise search
             $searchTerm = $this->getProducChewySearchTerm($product);
             try {
@@ -73,6 +74,8 @@ class ChewyPriceLookup implements PriceLookupInterface
         $search = $this->getProducChewySearchTerm($product);
         return $this->getChewySearchUrl($search);
     }
+
+
 
     public function getChewySearchUrl($searchTerm) {
 
