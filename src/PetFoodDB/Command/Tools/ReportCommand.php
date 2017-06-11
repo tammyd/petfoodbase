@@ -6,6 +6,7 @@ namespace PetFoodDB\Command\Tools;
 use PetFoodDB\Service\NewAnalysisService;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableCell;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -45,11 +46,21 @@ class ReportCommand extends TableCommand
             ->setColumnStyle(0, $this->rightAligned())
             ->setColumnStyle(1, $this->rightAligned())
             ->setColumnStyle(2, $this->rightAligned());
+
+        $sum = 0;
+        $records = 0;
         foreach ($result as $row) {
             $percentage = sprintf("%.02f", (100*$row['count']/$row['type_count']));
             $rating = sprintf("%.01f", $row['rating']);
             $table->addRow([$rating, $row['count'], $percentage]);
+
+            $sum += $row['count'] * $rating;
+            $records += $row['count'];
         }
+
+
+        $table->addRow(new TableSeparator());
+        $table->addRow([new TableCell('Average Score:', ['colspan' => 2]), sprintf("%0.02f", $sum / $records)]);
 
         return $table;
 
@@ -69,6 +80,8 @@ class ReportCommand extends TableCommand
 
         $table = new Table($this->output);
         $title = sprintf("%s Cat Food Scores", ucwords($type));
+        $sum = 0;
+        $records = 0;
         $table->setHeaders(
             [
                 [new TableCell($title, ['colspan' => 3])],
@@ -82,7 +95,15 @@ class ReportCommand extends TableCommand
             $percentage = sprintf("%.02f", (100*$row['count']/$row['type_count']));
             $score = sprintf("%.01f", $row['score']);
             $table->addRow([$score, $row['count'], $percentage]);
+
+            $records += $row['count'];
+            $sum += $row['score'] * $row['count'];
         }
+
+
+        $table->addRow(new TableSeparator());
+        $table->addRow([new TableCell('Average Score:', ['colspan' => 2]), sprintf("%0.02f", $sum / $records)]);
+
 
         return $table;
     }
@@ -112,7 +133,7 @@ class ReportCommand extends TableCommand
         $dryResults = $this->getScoreData($dbConnection, 'dry');
         $wetResults = $this->getScoreData($dbConnection, 'wet');
 
-        
+
         for($score=2, $w = 0, $d=0; $score<=10; $score++) {
 
             $count = 0;
@@ -172,6 +193,7 @@ class ReportCommand extends TableCommand
             $row[] = $percentage;
 
             $table->addRow($row);
+
 
         }
 

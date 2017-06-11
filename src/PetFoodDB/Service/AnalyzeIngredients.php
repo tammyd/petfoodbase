@@ -284,6 +284,12 @@ class AnalyzeIngredients
 
     }
 
+
+    static function isSeafoodSource(PetFood $catFood, $nth) {
+        $ingredient = self::getNthIngredient($catFood, $nth);
+        return self::isIngredientSeafoodProtein($ingredient) ? $ingredient : false;
+    }
+
     static function isMoistureSource(PetFood $catFood, $nth) {
         $ingredient = self::getNthIngredient($catFood, $nth);
         return self::isIngredientMoistureSource($ingredient) ? $ingredient : false;
@@ -304,9 +310,10 @@ class AnalyzeIngredients
 
         return $string;
     }
- 
-    static function isIngredientProteinSource($ingredient) {
-        $proteins = self::getAllProteinSources();
+
+
+
+    static function isIngredientASource($proteins, $ingredient) {
         $adjectives = self::getProteinAdjectives();
         $suffixes = self::getProteinSpecifics();
 
@@ -334,6 +341,16 @@ class AnalyzeIngredients
         }
 
         return false;
+    }
+
+    static function isIngredientSeafoodProtein($ingredient) {
+        $proteins = self::getSeafoodProteins();
+        return self::isIngredientASource($proteins, $ingredient);
+    }
+ 
+    static function isIngredientProteinSource($ingredient) {
+        $proteins = self::getAllProteinSources();
+        return self::isIngredientASource($proteins, $ingredient);
     }
 
     static function isUndesirerableIngredient($ingredient) {
