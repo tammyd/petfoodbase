@@ -284,7 +284,7 @@ class NewAnalysisService
 
     }
 
-    private function calcNewNutritionScore(PetFood $product) {
+    protected function calcNewNutritionScore(PetFood $product) {
         $carbBucketsValues = [5,15,30,42,100];
         $proteinBucketsValues = [35,40,50,60,100];
         $dryValues = $product->getPercentages()['dry'];
