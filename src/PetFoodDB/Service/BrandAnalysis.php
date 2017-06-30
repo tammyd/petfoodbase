@@ -4,14 +4,24 @@
 namespace PetFoodDB\Service;
 
 
+use PetFoodDB\Traits\MathTrait;
+
 class BrandAnalysis extends BaseService
 {
 
     const ANALYSIS_DB_NAME = 'brands';
 
+    const SIG_ABOVE_AVG = 5;
+    const ABOVE_AVG = 4;
+    const AVG = 3;
+    const BELOW_AVG = 2;
+    const SIG_BELOW_AVG = 1;
+
     protected $catFoodService;
     protected $analysisWrapper;
     protected $analysisService;
+
+    use MathTrait;
 
     
     public function __construct(\NotORM $db, PetFoodService $catfoodService, NewAnalysisService $analysisService, AnalysisWrapper $analysisWrapper)
@@ -39,6 +49,81 @@ class BrandAnalysis extends BaseService
         }
 
         return $rows;
+    }
+
+    public function rateBrand ($brand) {
+        $brandData = $this->getBrandData($brand);
+        $maxOverall = $brandData['brand_count'];
+        $overallRank = $brandData['rank'];
+
+        $overallRating = 0;
+        $dryRating = null;
+        $wetRating = null;
+
+        //get overall rating
+        $overallBreakPoints = [
+            ceil($maxOverall / 6),
+            ceil($maxOverall / 3),
+            ceil(2/3 * $maxOverall),
+            floor(5/6*$maxOverall),
+            $maxOverall + 1
+            ];
+
+
+        foreach ($overallBreakPoints as $i => $pt) {
+            if ($overallRank <= $pt) {
+                $overallRating = self::SIG_ABOVE_AVG - $i;
+                break;
+            }
+        }
+
+
+        if ($brandData['num_dry'] > 0) {
+            $dryRank = $brandData['dry_rank'];
+            $dryOverall = $brandData['dry_brand_count'];
+            $dryBreakPoints = [
+                ceil($dryOverall / 6),
+                ceil($dryOverall / 3),
+                ceil(2/3 * $dryOverall),
+                floor(5/6*$dryOverall),
+                $dryOverall + 1
+            ];
+            foreach ($dryBreakPoints as $i=>$pt) {
+                if ($dryRank <= $pt) {
+                    $dryRating = self::SIG_ABOVE_AVG - $i;
+                    break;
+                }
+            }
+        }
+
+
+        if ($brandData['num_wet'] > 0) {
+            $wetRank = $brandData['wet_rank'];
+            $wetOverall = $brandData['wet_brand_count'];
+            $wetBreakPoints = [
+                ceil($wetOverall / 6),
+                ceil($wetOverall / 3),
+                ceil(2/3 * $wetOverall),
+                floor(5/6*$wetOverall),
+                $wetOverall+1
+            ];
+            foreach ($wetBreakPoints as $i=>$pt) {
+                if ($wetRank <= $pt) {
+                    $wetRating = self::SIG_ABOVE_AVG - $i;
+                    break;
+                }
+            }
+        }
+
+        $rv = [
+            'overallRating' => $overallRating,
+            'dryRating' => $dryRating,
+            'wetRating' => $wetRating
+        ];
+
+        return $rv;
+
+
     }
 
 

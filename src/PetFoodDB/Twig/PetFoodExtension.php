@@ -5,6 +5,7 @@ namespace PetFoodDB\Twig;
 
 
 use PetFoodDB\Model\PetFood;
+use PetFoodDB\Service\BrandAnalysis;
 
 class PetFoodExtension extends \Twig_Extension
 {
@@ -257,21 +258,32 @@ class PetFoodExtension extends \Twig_Extension
     }
 
     public function brandRating($brandRating, $prefix="", $postfix="") {
-        if ($brandRating < 5) {
-            $text =  "a significantly below average";
-            $class = "text-sbavg";
-        } elseif ($brandRating < 5.75) {
-            $text = "a below average";
-            $class = "text-bavg";
-        } elseif ($brandRating < 7.25) {
-            $text = "an average";
-            $class = "text-avg";
-        } elseif ($brandRating < 8) {
-            $text = "an above average";
-            $class = "text-aavg";
-        } elseif ($brandRating <=10) {
-            $text = "a significantly above average";
-            $class = "text-saavg";
+        //if using the constants from BrandAnalysis
+
+        $text = "";
+        $class = "";
+        switch ($brandRating) {
+            case BrandAnalysis::SIG_ABOVE_AVG:
+                $text = "a significantly above average";
+                $class = "text-saavg";
+                break;
+            case BrandAnalysis::ABOVE_AVG:
+                $text = "an above average";
+                $class = "text-aavg";
+                break;
+            case BrandAnalysis::AVG:
+                $text = "an average";
+                $class = "text-avg";
+                break;
+            case BrandAnalysis::BELOW_AVG:
+                $text = "a below average";
+                $class = "text-bavg";
+                break;
+            case BrandAnalysis::SIG_BELOW_AVG:
+                $text =  "a significantly below average";
+                $class = "text-sbavg";
+                break;
+
         }
 
         $text = trim(sprintf("%s %s %s", $prefix, $text, $postfix));
@@ -279,6 +291,5 @@ class PetFoodExtension extends \Twig_Extension
         return $rv;
 
     }
-
 
 }

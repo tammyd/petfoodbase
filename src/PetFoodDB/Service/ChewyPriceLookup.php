@@ -80,7 +80,8 @@ class ChewyPriceLookup implements PriceLookupInterface
     public function getChewySearchUrl($searchTerm) {
 
         $query = "s?query=";
-        return sprintf("%s%s%s", self::CHEWY_BASE_URL, $query, urlencode($searchTerm));
+        $url = sprintf("%s%s%s", self::CHEWY_BASE_URL, $query, urlencode($searchTerm));
+        return $url;
 
     }
 
@@ -93,6 +94,7 @@ class ChewyPriceLookup implements PriceLookupInterface
         //do we have any results
         $noResultsTexts = ['Sorry, your search', 'did not match any products.'];
         $html = $crawler->html();
+
         if ($this->containsAny($html, $noResultsTexts)) {
             return [];
         }

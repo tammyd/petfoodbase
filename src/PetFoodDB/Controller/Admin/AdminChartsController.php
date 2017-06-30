@@ -5,9 +5,14 @@ namespace PetFoodDB\Controller\Admin;
 
 
 use PetFoodDB\Controller\Admin\AdminController;
+use PetFoodDB\Traits\MathTrait;
+use Symfony\Component\VarDumper\Cloner\VarCloner;
+use Symfony\Component\VarDumper\VarDumper;
 
 class AdminChartsController extends AdminController
 {
+
+    use MathTrait;
     
     public function chartHomeAction() {
         $this->validateCredentials();
@@ -80,7 +85,7 @@ class AdminChartsController extends AdminController
         $this->validateCredentials();
         $catFoodService = $this->get('catfood');
         $brandService = $this->get('brand.analysis');
-        
+
         $result = $brandService->getAllData();
         $chartData = [
             ["Brand", "Average Score"]
@@ -91,8 +96,33 @@ class AdminChartsController extends AdminController
         }
         $jsonStr = json_encode($chartData);
 
+        $brands = $catFoodService->getBrands();
+        $brands = array_combine(array_column($brands, 'brand'), array_column($brands, 'brand'));
+
+
+        $brandRanks = $brands; //copy for altering
+         array_walk($brandRanks, function (&$brand, $key) use ($brandService) {
+             $b = $brand;
+             $brand = $brandService->rateBrand($brand);
+             $brand['brand'] = $b;
+        });
+
+
+        $rankCounts = [
+            'overall' => array_count_values(array_column($brandRanks, 'overallRating')),
+            'wet' => array_count_values(array_filter(array_column($brandRanks, 'wetRating'))),
+            'dry' => array_count_values(array_filter(array_column($brandRanks, 'dryRating')))
+            ];
+        usort($brandRanks, function($a, $b) {
+            if ($a['overallRating'] == $b['overallRating']) return 0;
+            return ($a['overallRating'] < $b['overallRating']) ? -1 : 1;
+        });
+
+
         $templateData = [
             'brandJson' => $jsonStr,
+            'raw' => $result,
+            'ranks' => $brandRanks
         ];
 
 

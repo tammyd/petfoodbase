@@ -66,7 +66,7 @@ class AdminTopListsController extends AdminController
 
         $this->validateCredentials();
         $ranker = $this->get('catfood.ranker');
-        $products = $ranker->getTopWet();
+        $products = $ranker->getTopWet(8);
 
 
         $data = [
