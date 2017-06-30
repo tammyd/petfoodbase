@@ -105,7 +105,6 @@ class PetFoodController extends BaseController
         $list = $this->prepRatings($list);
         $maxAge = 7*24*60*60;
         $this->getResponse()->headers()->set('Cache-Control', "public, max-age=$maxAge, s-max-age=$maxAge");
-
         $this->getResponse()->setBody($this->get('catfood.serializer')->serialize($list, 'json'));
     }
 

@@ -214,6 +214,8 @@ class PageController extends BaseController
         $infoTemplate = "partials/brands/$brandId.html.twig";
 
         $brandInfo = $brandAnalysis->getBrandData($brand);
+        $brandRating = $brandAnalysis->rateBrand($brand);
+
 
         $data = [
             'img' => $brandId,
@@ -225,9 +227,11 @@ class PageController extends BaseController
             'reviewNavClass' => 'active',
             'template' => $this->templateExists($infoTemplate) ? $infoTemplate : null,
 //            'amazonTemplate' => $this->templateExists($amazonTemplate) ? $amazonTemplate : null,
-            'amazonQuery' => sprintf("%s %s food", $brandId, $this->getPetType())
+            'amazonQuery' => sprintf("%s %s food", $brandId, $this->getPetType()),
+            'brandRating' => $brandRating
             
         ];
+
 
         $this->render('brand.html.twig', $data);
     }
