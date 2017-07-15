@@ -185,6 +185,7 @@ class PageController extends BaseController
         $brandAnalysis = $this->get('brand.analysis');
         $products = $this->catFoodService->getByBrand($brand);
         $productController = $this->get('product.controller');
+        $shopService = $this->getContainer()->get('shop.service');
         if (!$products) {
             $this->app->notFound();
         }
@@ -193,6 +194,10 @@ class PageController extends BaseController
         $dry = [];
         foreach ($products as $product) {
             $stats = $analysis->getProductAnalysis($product);
+
+            $shop = $shopService->getAll($product->getId());
+            $product->addExtraData('shopUrls', $shop);
+
             $product->addExtraData('stats', $stats);
             $product = $productController->getAllProductDetails($product);
             if ($product->getIsWetFood()) {
@@ -213,14 +218,16 @@ class PageController extends BaseController
         $amazonTemplate = "partials/brands/amazon/$brandId.html.twig";
         $infoTemplate = "partials/brands/$brandId.html.twig";
 
-        $brandInfo = $brandAnalysis->getBrandData($brand);
+        $brandData = $brandAnalysis->getBrandData($brand);
+        $brandInfo = $this->get('brand.info')->getBrandInfo($products[0]->getBrand());
         $brandRating = $brandAnalysis->rateBrand($brand);
 
-
+        $chewyUrl = $this->getChewyBrandUrl($brandInfo, array_merge($wet, $dry));
+        $brandInfo['chewy'] = $chewyUrl;
         $data = [
             'img' => $brandId,
-            'brand' => $this->get('brand.info')->getBrandInfo($products[0]->getBrand()),
-            'brandInfo' => $brandInfo,
+            'brand' => $brandInfo,
+            'brandInfo' => $brandData,
             'wet'=>$wet, 'dry'=>$dry,
             'wetRating' => $wetRating, 'dryRating' => $dryRating,
             'seo'=>$this->getBrandSEO($products),
@@ -233,7 +240,26 @@ class PageController extends BaseController
         ];
 
 
+
         $this->render('brand.html.twig', $data);
+    }
+
+    protected function getChewyBrandUrl($brandInfo, $products) {
+        $hasChewy = false;
+        foreach ($products as $prod) {
+            $shopUrls = $prod->getExtraData('shopUrls');
+            if (isset($shopUrls['chewy'])) {
+                $hasChewy = true;
+                break;
+            }
+        }
+
+        if ($hasChewy) {
+            $chewyUrl = sprintf("https://www.chewy.com/s?query=%s+cat+food", $brandInfo['official_name']);
+            return $chewyUrl;
+        } else {
+            return null;
+        }
     }
 
     public function rankProduct($productA, $productB) {
