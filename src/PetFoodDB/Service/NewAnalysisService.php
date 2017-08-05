@@ -56,7 +56,6 @@ class NewAnalysisService
         foreach ($brandAverages as $brand=>$brandData) {
 
 
-
             if ($brandData['wet']['count'] > 0) {
                 $wetAverages[$brand] = $brandData['combined']['mean'];
 
@@ -203,6 +202,11 @@ class NewAnalysisService
             $brandName = $brand['name'];
 
             $products = $service->getByBrand($brand['name']);
+
+            //don't include discontinued products
+            $products = array_filter($products, function($p) {
+                return !$p->getDiscontinued();
+            });
 
             //changed my mind to use all products, not seperated wet cs dry
             $wetProducts = array_filter($products, function($p) {
