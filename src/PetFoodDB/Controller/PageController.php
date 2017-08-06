@@ -262,11 +262,30 @@ class PageController extends BaseController
         }
     }
 
+
+    //rank by score, but discontinued products always rank lower
     public function rankProduct($productA, $productB) {
         $scoreA = $productA->getExtraData('stats')['nutrition_rating'] + $productA->getExtraData('stats')['ingredients_rating'];
         $scoreB = $productB->getExtraData('stats')['nutrition_rating'] + $productB->getExtraData('stats')['ingredients_rating'];
 
-        return ($scoreA < $scoreB) ? 1 : -1;
+        $da = $productA->getDiscontinued();
+        $db = $productB->getDiscontinued();
+
+
+        if (($da && $db) || (!$da && !$db)) {
+            if ($scoreA == $scoreB) {
+                return 0;
+            }
+            return ($scoreA < $scoreB) ? 1 : -1;
+        }
+        else if ($da) {
+            return 1;
+        }
+        else if ($db) {
+            return -1;
+        }
+
+        return 0;
     }
 
     public function calculateAverageRating(array $products) {

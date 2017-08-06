@@ -93,4 +93,5 @@ class AdminTopListsController extends AdminController
         ];
         $this->render('admin/admin-product-list.html.twig', $data);
     }
+
 }

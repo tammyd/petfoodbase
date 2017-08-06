@@ -116,6 +116,9 @@ class RankerService
     public function getTopWet($minScore = 9) {
         $products = $this->getAllProductWithData();
         $products = array_filter($products, function(PetFood $product) use ($minScore) {
+            if ($product->getDiscontinued()) {
+                return false;
+            }
             $score = $product->getExtraData('score');
             if ($product->getIsDryFood()) {
                 return false;

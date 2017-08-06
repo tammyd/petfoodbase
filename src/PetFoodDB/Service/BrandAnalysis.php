@@ -53,6 +53,14 @@ class BrandAnalysis extends BaseService
 
     public function rateBrand ($brand) {
         $brandData = $this->getBrandData($brand);
+        if (empty($brandData)) {
+            $rv = [
+                'overallRating' => 0,
+                'dryRating' => 0,
+                'wetRating' => 0
+            ];
+            return $rv;
+        }
         $maxOverall = $brandData['brand_count'];
         $overallRank = $brandData['rank'];
 
