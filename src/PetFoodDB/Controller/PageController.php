@@ -262,6 +262,17 @@ class PageController extends BaseController
         }
     }
 
+    //rank by id
+    public function rankByName($productA, $productB) {
+        $n1 = $productA->getFlavor();
+        $n2 = $productB->getFlavor();
+        if ($n1==$n2) {
+            return 0;
+        } else {
+            return ($n1 < $n2) ? 1 : -1;
+        }
+    }
+
 
     //rank by score, but discontinued products always rank lower
     public function rankProduct($productA, $productB) {
