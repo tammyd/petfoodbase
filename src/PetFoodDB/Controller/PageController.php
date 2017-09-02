@@ -95,7 +95,9 @@ class PageController extends BaseController
         foreach ($popularBrandInfo as $brand) {
             $popularBrands[$brand['name']] = "/brand/" . $brand['brand'];
         }
-        
+
+        $articles = $this->getArticleBlogPosts();
+
         $params = [
             'minimalMobile' => false,
             'homeNavClass' => 'active',
@@ -103,10 +105,22 @@ class PageController extends BaseController
             'amazonQuery' => sprintf("%s supplies", strtolower($this->getPetType())),
             'brands' => $allBrands,
             'popular' => $popularBrands,
-            'seo' => $this->getBaseSEO()
+            'seo' => $this->getBaseSEO(),
+            'articles' => $articles
         ];
 
         $this->render('home.html.twig', $params);
+    }
+
+    protected function getArticleBlogPosts() {
+        $blog = $this->get('blog.service');
+        $posts = $blog->getBlogPosts();
+        $posts = array_filter($posts, function ($p) {
+            $meta = $p->getYaml();
+            return !$meta['isBestOf'];
+        });
+
+        return $posts;
     }
 
     protected function getRecentUpdates() {

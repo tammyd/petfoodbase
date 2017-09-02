@@ -109,7 +109,8 @@ class BlogController extends PageController
             'preview' => $helper->makeAbsoluteUrl($this->getArrayValue($meta, 'preview')),
             'date' => $this->getArrayValue($meta, 'date'),
             'meta' => $post->getYAML(),
-            'html' => $post->getContent()
+            'html' => $post->getContent(),
+            'isBestOf' => $meta['isBestOf']
         ];
 
         $data = [
