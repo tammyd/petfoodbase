@@ -95,7 +95,9 @@ class PageController extends BaseController
         foreach ($popularBrandInfo as $brand) {
             $popularBrands[$brand['name']] = "/brand/" . $brand['brand'];
         }
-        
+
+        $articles = $this->getArticleBlogPosts();
+
         $params = [
             'minimalMobile' => false,
             'homeNavClass' => 'active',
@@ -103,10 +105,22 @@ class PageController extends BaseController
             'amazonQuery' => sprintf("%s supplies", strtolower($this->getPetType())),
             'brands' => $allBrands,
             'popular' => $popularBrands,
-            'seo' => $this->getBaseSEO()
+            'seo' => $this->getBaseSEO(),
+            'articles' => $articles
         ];
 
         $this->render('home.html.twig', $params);
+    }
+
+    protected function getArticleBlogPosts() {
+        $blog = $this->get('blog.service');
+        $posts = $blog->getBlogPosts();
+        $posts = array_filter($posts, function ($p) {
+            $meta = $p->getYaml();
+            return !$meta['isBestOf'];
+        });
+
+        return $posts;
     }
 
     protected function getRecentUpdates() {
@@ -259,6 +273,17 @@ class PageController extends BaseController
             return $chewyUrl;
         } else {
             return null;
+        }
+    }
+
+    //rank by id
+    public function rankByName($productA, $productB) {
+        $n1 = $productA->getFlavor();
+        $n2 = $productB->getFlavor();
+        if ($n1==$n2) {
+            return 0;
+        } else {
+            return ($n1 < $n2) ? 1 : -1;
         }
     }
 

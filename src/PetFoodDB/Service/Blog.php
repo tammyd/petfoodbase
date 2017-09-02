@@ -111,6 +111,7 @@ class Blog
         $filename = $this->getFilename($path);
         $contents = file_get_contents($filename);
         $document = $this->parser->parse($contents);
+
         return $document;
     }
 

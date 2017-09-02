@@ -55,6 +55,10 @@ trait StringHelperTrait
        return preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $string);
     }
 
+    public static function removeMultipleSpaces($string) {
+        return preg_replace('!\s+!', ' ', $string);
+    }
+
 
     protected function cleanText($text) {
         $text =  html_entity_decode(trim(str_replace(array("\r", "\n"), ' ', $text)));
