@@ -28,7 +28,7 @@ class AnalyzeIngredients
     }
 
     static function getSeafoodProteins() {
-        $seafood = ['seafood', 'salmon', 'tuna', 'trout', 'mussel', 'anchovy & sardine', 'Green Lipped Mussel',
+        $seafood = ['salmon', 'tuna', 'trout', 'mussel', 'anchovy & sardine', 'Green Lipped Mussel',
             'ocean whitefish', 'herring', 'flounder', 'clam', 'pollock', 'red snapper',
             'whitefish', 'cod', 'white fish', 'mackerel', 'pacific hake', 'tilapia', 'prawns',
             'yellowfin tuna', 'seabream', 'catfish', 'sea bream', 'menhaden fish', 'ahi tuna', 'sardine', 'arctic char',
