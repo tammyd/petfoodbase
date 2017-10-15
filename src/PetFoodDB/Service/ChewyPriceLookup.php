@@ -136,9 +136,15 @@ class ChewyPriceLookup implements PriceLookupInterface
             $ppOunces[] = $this->parseChewyPricePerOunce($row);
         }
 
+        $ppOunces = array_filter($ppOunces);
+
+        $low = round(min($ppOunces),2);
+        $high = round(max($ppOunces),2);
+
+
         return [
-            'low' => round(min($ppOunces),2),
-            'high' => round(max($ppOunces),2),
+            'low' => $low,
+            'high' => $high,
             'avg' => round(array_sum($ppOunces) / count($ppOunces),2),
             'name' => $rows[0]['name']
         ];
@@ -157,8 +163,11 @@ class ChewyPriceLookup implements PriceLookupInterface
     protected function parseChewyPricePerOunce(array $row) {
         $ounces = $this->parseChewyWeight($row['name']);
 
-        $priceOunce = floatval($row['price']) / $ounces;
-        return $priceOunce;
+        if ($ounces) {
+
+            $priceOunce = floatval($row['price']) / $ounces;
+            return $priceOunce;
+        }
     }
 
     protected function parseChewyWeight($name) {

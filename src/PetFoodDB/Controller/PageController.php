@@ -58,7 +58,12 @@ class PageController extends BaseController
 
 
 
-    public function fourOrFourAction() {
+    public function fourOhFourAction() {
+
+        if ($this->getRedirect()) {
+            $redirect = $this->getRedirect();
+            $this->app->redirect($redirect[0], $redirect[1]);
+        }
 
         $brands = $this->getBrandPageUrls();
         $allBrands = [];
@@ -77,6 +82,14 @@ class PageController extends BaseController
             'seo' => $seo
 
         ]);
+    }
+
+    public function getRedirect() {
+
+        $service = $this->get('redirector.service');
+        $currentPath = $this->app->request->getResourceUri();
+
+        return $service->getRedirectFor($currentPath);
     }
 
     
