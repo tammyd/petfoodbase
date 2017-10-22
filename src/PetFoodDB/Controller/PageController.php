@@ -237,6 +237,7 @@ class PageController extends BaseController
         usort($wet, [$this, 'rankProduct']);
         usort($dry, [$this, 'rankProduct']);
 
+        $hasPurchaseInfo = $brandAnalysis->hasAnyPurchaseInfo($brand);
 
         $wetRating = $this->calculateAverageRating($wet);
         $dryRating = $this->calculateAverageRating($dry);
@@ -255,18 +256,18 @@ class PageController extends BaseController
             'img' => $brandId,
             'brand' => $brandInfo,
             'brandInfo' => $brandData,
-            'wet'=>$wet, 'dry'=>$dry,
-            'wetRating' => $wetRating, 'dryRating' => $dryRating,
+            'wet'=>$wet,
+            'dry'=>$dry,
+            'wetRating' => $wetRating,
+            'dryRating' => $dryRating,
             'seo'=>$this->getBrandSEO($products),
             'reviewNavClass' => 'active',
             'template' => $this->templateExists($infoTemplate) ? $infoTemplate : null,
-//            'amazonTemplate' => $this->templateExists($amazonTemplate) ? $amazonTemplate : null,
             'amazonQuery' => sprintf("%s %s food", $brandId, $this->getPetType()),
-            'brandRating' => $brandRating
+            'brandRating' => $brandRating,
+            'hideProductPrices' => !$hasPurchaseInfo
             
         ];
-
-
 
         $this->render('brand.html.twig', $data);
     }

@@ -41,6 +41,17 @@ class BrandAnalysis extends BaseService
         }
     }
 
+    public function hasAnyPurchaseInfo($brand) {
+        $pdo = $this->getPDO();
+        $sql = "SELECT count(*) from 
+catfood left join shop on (catfood.id = shop.id) where LOWER(catfood.brand) = :brand and (asin is not null or chewy is not null)";
+        $sth = $pdo->prepare($sql, array(\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY));
+        $sth->execute([':brand' => $brand]);
+        $result = $sth->fetchAll(\PDO::FETCH_COLUMN);
+        $result = (int)array_pop($result) ? true: false;
+        return $result;
+    }
+
     public function getAllData() {
         $rows = [];
         $result = $this->db->brands;
@@ -53,6 +64,7 @@ class BrandAnalysis extends BaseService
 
     public function rateBrand ($brand) {
         $brandData = $this->getBrandData($brand);
+
         if (empty($brandData)) {
             $rv = [
                 'overallRating' => 0,

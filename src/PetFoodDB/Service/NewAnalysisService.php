@@ -311,7 +311,13 @@ class NewAnalysisService
             }
         }
 
-        return ceil(($carbScore + $proteinScore)/2);
+        $nutScore = ceil(($carbScore + $proteinScore)/2);
+        $this->getLogger()->debug($product->getId() . ": Carb Score: $carbScore. Protein score: $proteinScore. FInal score: $nutScore ");
+        $this->getLogger()->debug($product->getId() . ": Protein Raw: $carbs. Carb Raw: $protein. ");
+
+
+
+        return $nutScore;
 
 
     }
