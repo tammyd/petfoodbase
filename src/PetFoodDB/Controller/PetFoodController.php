@@ -95,6 +95,21 @@ class PetFoodController extends BaseController
         return $catfoodList;
     }
 
+    protected function prepChewy(BaseList $catfoodList)
+    {
+        $shopService = $this->getContainer()->get('shop.service');
+
+        foreach ($catfoodList as $catFood) {
+            if ($catFood instanceof \PetFoodDB\Model\PetFood) {
+                $shop = $shopService->getAll($catFood->getId());
+                $catFood->addExtraData('shop', $shop);
+            }
+        }
+
+        return $catfoodList;
+    }
+
+
     protected function prepListResponse($data)
     {
         if (!is_null($data) && !is_array($data)) {
@@ -102,6 +117,7 @@ class PetFoodController extends BaseController
         }
         $list = new BaseList($data);
         $list = $this->prepAmazon($list);
+        $list = $this->prepChewy($list);
         $list = $this->prepRatings($list);
         $maxAge = 7*24*60*60;
         $this->getResponse()->headers()->set('Cache-Control', "public, max-age=$maxAge, s-max-age=$maxAge");

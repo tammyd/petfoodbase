@@ -31,6 +31,7 @@ class ChewyPriceLookup implements PriceLookupInterface
 
         //if chewy url exists in product, use that.
         $shopUrls = $this->shopService->getAll($product->getId());
+
         $data = [];
         if (isset($shopUrls['chewy'])) {
             $url = $shopUrls['chewy'];
@@ -202,16 +203,19 @@ class ChewyPriceLookup implements PriceLookupInterface
                 $dataArr = json_decode($str, true);
 
                 foreach ($dataArr as $item) {
-                    $urls[] = $item['canonicalURL'];
+                    $urls[] = [
+                        'url' => $item['canonicalURL'],
+                        'price' => $item['price']
+                        ];
                 }
 
             }
 
         });
 
-
         foreach ($urls as $url) {
-            $data = $this->parseSingleChewyPriceFromUrl($url);
+            $data = $this->parseSingleChewyPriceFromUrl($url['url']);
+            $data[0]['price'] = str_replace("$", "", $url['price']);
             $rows = array_merge($rows, $data);
         }
 
@@ -221,6 +225,7 @@ class ChewyPriceLookup implements PriceLookupInterface
     protected function parseSingleChewyPriceFromUrl($url) {
         $micrometaParser = new \Jkphl\Micrometa($url);
         $micrometaObjectData = $micrometaParser->toObject();
+
 
         $items = $micrometaObjectData->items;
 
