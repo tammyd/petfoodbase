@@ -233,9 +233,9 @@ class AdminController extends PageController
         $chewy = $this->getArrayValue($submittedVars, 'chewy');
         $petsmart = $this->getArrayValue($submittedVars, 'petsmart');
 
-        if ($chewy) {
+        //if ($chewy) {
             $service->updateChewy($id, $chewy);
-        }
+        //}
 
         if ($petsmart) {
             $service->updatePetsmart($id, $petsmart);
