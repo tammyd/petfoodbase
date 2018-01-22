@@ -219,6 +219,7 @@ class PageController extends BaseController
 
         $wet = [];
         $dry = [];
+        $discontinued = [];
         foreach ($products as $product) {
             $stats = $analysis->getProductAnalysis($product);
 
@@ -227,15 +228,22 @@ class PageController extends BaseController
 
             $product->addExtraData('stats', $stats);
             $product = $productController->getAllProductDetails($product);
-            if ($product->getIsWetFood()) {
-                $wet[] = $product;
-            } else {
-                $dry[] = $product;
+
+            if ($product->getDiscontinued()) {
+                $discontinued[] = $product;
+            }
+            else {
+                if ($product->getIsWetFood()) {
+                    $wet[] = $product;
+                } else {
+                    $dry[] = $product;
+                }
             }
         }
 
         usort($wet, [$this, 'rankProduct']);
         usort($dry, [$this, 'rankProduct']);
+        usort($discontinued, [$this, 'rankProduct']);
 
         $hasPurchaseInfo = $brandAnalysis->hasAnyPurchaseInfo($brand);
 
@@ -258,6 +266,7 @@ class PageController extends BaseController
             'brandInfo' => $brandData,
             'wet'=>$wet,
             'dry'=>$dry,
+            'discontinued' => $discontinued,
             'wetRating' => $wetRating,
             'dryRating' => $dryRating,
             'seo'=>$this->getBrandSEO($products),
