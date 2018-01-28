@@ -285,7 +285,7 @@ class PageController extends BaseController
         $hasChewy = false;
         foreach ($products as $prod) {
             $shopUrls = $prod->getExtraData('shopUrls');
-            if (isset($shopUrls['chewy'])) {
+            if (isset($shopUrls['chewy']) && $shopUrls['chewy']) {
                 $hasChewy = true;
                 break;
             }

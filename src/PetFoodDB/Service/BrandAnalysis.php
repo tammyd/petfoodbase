@@ -43,11 +43,12 @@ class BrandAnalysis extends BaseService
 
     public function hasAnyPurchaseInfo($brand) {
         $pdo = $this->getPDO();
-        $sql = "SELECT count(*) from 
-catfood left join shop on (catfood.id = shop.id) where LOWER(catfood.brand) = :brand and (asin is not null or chewy is not null)";
+
+        $sql = "SELECT * from (catfood left join shop on (catfood.id = shop.id)) where lower(catfood.brand) = :brand and (length(chewy) > 0 or length(asin) > 0)";
         $sth = $pdo->prepare($sql, array(\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY));
         $sth->execute([':brand' => $brand]);
         $result = $sth->fetchAll(\PDO::FETCH_COLUMN);
+
         $result = (int)array_pop($result) ? true: false;
         return $result;
     }
