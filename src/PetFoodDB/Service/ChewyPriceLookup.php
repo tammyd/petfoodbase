@@ -36,6 +36,7 @@ class ChewyPriceLookup implements PriceLookupInterface
         if (isset($shopUrls['chewy'])) {
             $url = $shopUrls['chewy'];
             $rawResults = $this->parseAllChewyPriceDataFromBaseProductUrl($url);
+
             $data = $this->parseRawChewyData($rawResults);
             if ($data) {
                 $data['productUrl'] = $url;
@@ -132,6 +133,11 @@ class ChewyPriceLookup implements PriceLookupInterface
 
 
     protected function parseRawChewyData(array $rows) {
+        if (!$rows) {
+            return [];
+        }
+
+
         $ppOunces = [];
         foreach ($rows as $row) {
             $ppOunces[] = $this->parseChewyPricePerOunce($row);
@@ -188,9 +194,11 @@ class ChewyPriceLookup implements PriceLookupInterface
     }
 
     protected function parseAllChewyPriceDataFromBaseProductUrl($url) {
+
         $crawler = $this->getUrlCrawler($url);
         $urls = [];
         $rows = [];
+
         $scripts = $crawler->filter('script')->each(function($node) use (&$urls) {
             $text = $node->text();
             $check = "var itemData = {";

@@ -96,12 +96,14 @@ class PageController extends BaseController
     public function homeAction() {
 
         $brands = $this->getBrandPageUrls();
+
         $allBrands = [];
         foreach ($brands as $section=>$brandData) {
             foreach ($brandData as $brand=>$url) {
                 $allBrands[$brand] = $url;
             }
         }
+
 
         $popularBrandInfo = $this->catFoodService->getPopularBrands();
         $popularBrands = [];
@@ -115,12 +117,14 @@ class PageController extends BaseController
             'minimalMobile' => false,
             'homeNavClass' => 'active',
             'recentUpdates' => $this->getRecentUpdates(),
+            'updatedBrands' => $this->catFoodService->getRecentlyUpdatedBrands(),
             'amazonQuery' => sprintf("%s supplies", strtolower($this->getPetType())),
             'brands' => $allBrands,
             'popular' => $popularBrands,
             'seo' => $this->getBaseSEO(),
             'articles' => $articles
         ];
+
 
         $this->render('home.html.twig', $params);
     }
@@ -479,20 +483,6 @@ class PageController extends BaseController
     }
 
 
-    protected function getRecentlyUpdatedBrands() {
-
-        $limit = 5;
-
-        $recentlyUpdated = $this->catFoodService->getRecentlyUpdatedBrands();
-        $updatedBrands = [];
-        foreach ($recentlyUpdated as $brand) {
-            $updatedBrands[$brand['name']] = "/brand/" . $brand['brand'];
-        }
-
-        return array_splice($updatedBrands, 0, $limit);
-
-
-    }
 
 
     /**
@@ -514,7 +504,7 @@ class PageController extends BaseController
             'stats' => $this->stats,
             'seo' => $this->getBaseSEO(),
             'brandUrls' => $this->getBrandPageUrls(),
-            'updatedBrands' => $this->getRecentlyUpdatedBrands(),
+            'updatedBrands' => $this->catFoodService->getRecentlyUpdatedBrands(),
             'articleUrls' => $this->getArticlePageUrls(),
             'minimalMobile' => true,
             'shareText' => urlencode($baseSeo['title']),
@@ -525,7 +515,7 @@ class PageController extends BaseController
         $pageData = array_merge($defaultData, $data);
 
         $this->app->response->headers->replace(['Cache-Control'=>"public, s-maxage=$cache max-age=$cache"]);
-        
+
         $this->app->render($template, $pageData);
     }
 

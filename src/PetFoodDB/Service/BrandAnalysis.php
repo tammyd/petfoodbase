@@ -53,6 +53,7 @@ class BrandAnalysis extends BaseService
         return $result;
     }
 
+
     public function getAllData() {
         $rows = [];
         $result = $this->db->brands;
