@@ -185,6 +185,9 @@ class ChewyPriceLookup implements PriceLookupInterface
         preg_match("/([\d\.]+)-lb/", $name, $lb);
         preg_match("/of (\d+)/", $name, $count);
 
+        if (!$oz) {
+            preg_match("/([\d\.]+)\soz/", $name, $oz);
+        }
 
         $totalOunces = isset($oz[1]) ? $oz[1] : 0;
         $totalOunces += isset($lb[1]) ? $lb[1]*16 : 0;
