@@ -278,11 +278,22 @@ class PageController extends BaseController
             'template' => $this->templateExists($infoTemplate) ? $infoTemplate : null,
             'amazonQuery' => sprintf("%s %s food", $brandId, $this->getPetType()),
             'brandRating' => $brandRating,
-            'hideProductPrices' => !$hasPurchaseInfo
+            'hideProductPrices' => !$hasPurchaseInfo,
+            'chewySource' => $this->makeChewySource($brand)
             
         ];
 
         $this->render('brand.html.twig', $data);
+    }
+
+    protected function makeChewySource($brand) {
+        $source = strtolower($brand);
+        $source = $this->stripHtmlSuperscripts($source);
+        $source = $this->stripNonUTF8($source);
+        $source = trim($this->removeMultipleSpaces($source));
+        $source = str_replace(' ', '_', $source);
+        return "brand_$source";
+
     }
 
     protected function getChewyBrandUrl($brandInfo, $products) {

@@ -107,10 +107,18 @@ class PetFoodExtension extends \Twig_Extension
         return str_repeat($char, $score);
     }
 
-    public function chewyAffiliateUrl($chewyUrl) {
-        $template = "http://tracking.chewy.com/aff_c?offer_id=4&aff_id=4635&url=%s";
+    public function chewyAffiliateUrl($chewyUrl, $source = null) {
+        if (is_string($source)) {
+            $template = "http://tracking.chewy.com/aff_c?offer_id=4&aff_id=4635&url=%s&source=%s";
+        } else {
+            $template = "http://tracking.chewy.com/aff_c?offer_id=4&aff_id=4635&url=%s";
+        }
+
         $url = urlencode($chewyUrl);
-        return sprintf($template, $url);
+
+        $result = is_string($source) ? sprintf($template, $url, $source) : sprintf($template, $url);
+
+        return $result;
     }
 
     public function amazonUrl(PetFood $petFood, $target = "_blank", $classes = "", $text = null, $eventType='link') {
