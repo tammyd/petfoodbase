@@ -110,7 +110,7 @@ class PetFoodController extends BaseController
     }
 
 
-    protected function prepListResponse($data)
+    protected function prepListResponse($data, $retry=false)
     {
         if (!is_null($data) && !is_array($data)) {
             $data = [$data];
@@ -121,7 +121,32 @@ class PetFoodController extends BaseController
         $list = $this->prepRatings($list);
         $maxAge = 7*24*60*60;
         $this->getResponse()->headers()->set('Cache-Control', "public, max-age=$maxAge, s-max-age=$maxAge");
-        $this->getResponse()->setBody($this->get('catfood.serializer')->serialize($list, 'json'));
+        try {
+            $this->getResponse()->setBody($this->get('catfood.serializer')->serialize($list, 'json'));
+        } catch (\UnexpectedValueException $e) {
+            if ($retry) {
+                $this->getLogger()->err("ERROR on prepListResponse retry: " . $e->getMessage());
+                return null;
+            }
+
+            $deadlyIds = [];
+            //probably a json encoding error. Remove the items that have errors and try again with the rest.
+            $items = $list->getItems();
+            foreach ($items as $item) {
+                try {
+                    $enc = $this->get('catfood.serializer')->serialize($item, 'json');
+                } catch (\Exception $e) {
+                    $this->getLogger()->err("ERROR SERIALIZING Item "  . $item->getId());
+                    $deadlyIds[] = $item->getId();
+                }
+
+            }
+            $newItems = array_filter($items, function($x) use ($deadlyIds) {
+                return !in_array($x->getId(), $deadlyIds);
+            });
+            $list = $list->setItems($newItems);
+            return $this->prepListResponse($list, true);
+        }
     }
 
     protected function prepRatings(BaseList $catfoodList)
