@@ -214,7 +214,9 @@ class PageController extends BaseController
 
         $analysis = $this->get('analysis.access');
         $brandAnalysis = $this->get('brand.analysis');
+
         $products = $this->catFoodService->getByBrand($brand);
+
         $productController = $this->get('product.controller');
         $shopService = $this->getContainer()->get('shop.service');
         if (!$products) {
@@ -249,7 +251,8 @@ class PageController extends BaseController
         usort($dry, [$this, 'rankProduct']);
         usort($discontinued, [$this, 'rankProduct']);
 
-        $hasPurchaseInfo = $brandAnalysis->hasAnyPurchaseInfo($brand);
+        $dryPurchaseInfo = $brandAnalysis->hasAnyPurchaseInfo($brand, 'dry');
+        $wetPurchaseInfo = $brandAnalysis->hasAnyPurchaseInfo($brand, 'wet');
 
         $wetRating = $this->calculateAverageRating($wet);
         $dryRating = $this->calculateAverageRating($dry);
@@ -278,7 +281,8 @@ class PageController extends BaseController
             'template' => $this->templateExists($infoTemplate) ? $infoTemplate : null,
             'amazonQuery' => sprintf("%s %s food", $brandId, $this->getPetType()),
             'brandRating' => $brandRating,
-            'hideProductPrices' => !$hasPurchaseInfo,
+            'hideDryProductPrices' => !$dryPurchaseInfo,
+            'hideWetProductPrices' => !$wetPurchaseInfo,
             'chewySource' => $this->makeChewySource($brand)
             
         ];

@@ -41,10 +41,26 @@ class BrandAnalysis extends BaseService
         }
     }
 
-    public function hasAnyPurchaseInfo($brand) {
+    public function hasAnyPurchaseInfo($brand, $type=null) {
         $pdo = $this->getPDO();
 
-        $sql = "SELECT * from (catfood left join shop on (catfood.id = shop.id)) where lower(catfood.brand) = :brand and (length(chewy) > 0 or length(asin) > 0)";
+        switch ($type) {
+            case 'wet':
+                $sql = "SELECT * from (catfood left join shop on (catfood.id = shop.id)) "
+                    . "where lower(catfood.brand) = :brand and (length(chewy) > 0 or length(asin) > 0) "
+                    . "and moisture >20 and discontinued = 0";
+                break;
+            case 'dry':
+                $sql = "SELECT * from (catfood left join shop on (catfood.id = shop.id)) "
+                    . "where lower(catfood.brand) = :brand and (length(chewy) > 0 or length(asin) > 0) "
+                    . "and moisture <=20 and discontinued = 0";
+                break;
+            default:
+                $sql = "SELECT * from (catfood left join shop on (catfood.id = shop.id)) "
+                    . "where lower(catfood.brand) = :brand and (length(chewy) > 0 or length(asin) > 0) "
+                    . " and discontinued = 0";
+        }
+
         $sth = $pdo->prepare($sql, array(\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY));
         $sth->execute([':brand' => $brand]);
         $result = $sth->fetchAll(\PDO::FETCH_COLUMN);

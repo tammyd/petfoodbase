@@ -51,6 +51,9 @@ class PetFoodController extends BaseController
 
         $data = $this->get('catfood')->textSearch($search, $brandFilter);
 
+        //sort search results by moisture
+        $data = $this->get('catfood')->sortPetFoodBy($data, 'moisture', true);
+
         if (!is_null($data)) {
             $this->prepListResponse($data);
         } else {

@@ -18,13 +18,15 @@ class AnalyzeIngredients
     static function getProteinAdjectives() {
         return ['deboned', 'fresh deboned', 'organic', 'boneless', 'boneless/skinless', 'de-boned', 'whole', 'fresh', 'hydrolyzed',
             'lamb', 'cutlets', 'flaked', 'shredded', 'flakes', 'freeze-dried', 'dried', 'baby', 'meat', 'dehydrated', 'fresh whole',
-            'whole atlantic', 'dehydrated whole', 'fresh angus', 'fresh plains', 'fresh yorkshire', 'fresh whole pacific', 'raw grass-fed'];
+            'whole atlantic', 'dehydrated whole', 'fresh angus', 'fresh plains', 'fresh yorkshire', 'fresh whole pacific',
+            'raw grass-fed', 'finely ground'];
     }
 
     static function getProteinSpecifics() {
         return ['heart', 'liver', 'lung', 'liver', 'giblets', 'meal', 'white meat', 'filets', 'red meat', 'meat meal',
             'whole meat', 'cutlets', 'tripe', 'meat', '(boneless, skinless breast)', 'livers', 'gizzards', 'gizzard', 'hearts', 'necks',
-            'giblets (liver, heart, kidney)', 'with ground bone', '(ground with bone)'];
+            'giblets (liver, heart, kidney)', 'with ground bone', '(ground with bone)', 'kidney', 'lungs', 'trachea',
+            'with bone'];
     }
 
     static function getSeafoodProteins() {

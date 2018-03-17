@@ -72,6 +72,35 @@ class PetFoodService extends BaseService
 
     }
 
+    public function sortPetFoodBy(array $petFood = null, $search='flavor', $desc = false) {
+
+        if (is_null($petFood)) {
+            return [];
+        }
+
+        usort($petFood, function ($a, $b) use ($search, $desc) {
+            $modelA = $a->dbModel();
+            $modelB = $b->dbModel();
+
+            if (isset($modelA[$search]) && isset($modelB[$search])) {
+                if ($modelA[$search] == $modelB[$search]) {
+                    return 0;
+                }
+
+                if ($desc) {
+                    return ($modelA[$search] < $modelB[$search]) ? 1 : -1;
+                } else {
+                    return ($modelA[$search] < $modelB[$search]) ? -1 : 1;
+                }
+            } else {
+                return 0;
+            }
+        });
+
+        return $petFood;
+
+    }
+
     public function convertResultToPetFood(\NotORM_Result $result)
     {
         $catFood = [];

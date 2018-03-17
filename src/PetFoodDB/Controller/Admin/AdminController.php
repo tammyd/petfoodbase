@@ -73,6 +73,11 @@ class AdminController extends PageController
 
         /* @var PetFood $product */
         $product = $this->catFoodService->getById($id);
+        if (!$product) {
+            $this->app->notFound();
+        }
+
+
         $data = $controller->getRenderProductTemplateData($product);
         $data['breakdowns'] = $product->getPercentages();
 
