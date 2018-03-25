@@ -313,7 +313,7 @@ class NewAnalysisService
 
         $nutScore = ceil(($carbScore + $proteinScore)/2);
         $this->getLogger()->debug($product->getId() . ": Carb Score: $carbScore. Protein score: $proteinScore. FInal score: $nutScore ");
-        $this->getLogger()->debug($product->getId() . ": Protein Raw: $carbs. Carb Raw: $protein. ");
+        $this->getLogger()->debug($product->getId() . ": Protein Raw: $protein. Carb Raw: $carbs . ");
 
 
 

@@ -123,7 +123,7 @@ class AnalyzeIngredients
         $allergens = [
             'beef' => ['beef'],
             'lamb' => ['lamb'],
-            'seafood' => self::getSeafoodProteins(),
+            'seafood' => array_merge(self::getSeafoodProteins(), ['fish']),
             'corn' => ['corn', 'cornmeal', 'corn meal', 'corn starch'],
             'wheat gluten' => ['wheat gluten'],
             'soy' => ['soy'],
