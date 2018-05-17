@@ -23,7 +23,7 @@ class AnalyzeIngredients
     }
 
     static function getProteinSpecifics() {
-        return ['heart', 'liver', 'lung', 'liver', 'giblets', 'meal', 'white meat', 'filets', 'red meat', 'meat meal',
+        return ['heart', 'thigh', 'liver', 'lung', 'liver', 'giblets', 'meal', 'white meat', 'filets', 'red meat', 'meat meal',
             'whole meat', 'cutlets', 'tripe', 'meat', '(boneless, skinless breast)', 'livers', 'gizzards', 'gizzard', 'hearts', 'necks',
             'giblets (liver, heart, kidney)', 'with ground bone', '(ground with bone)', 'kidney', 'lungs', 'trachea',
             'with bone'];

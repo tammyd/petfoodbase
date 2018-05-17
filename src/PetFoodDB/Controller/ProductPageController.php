@@ -138,7 +138,7 @@ class ProductPageController extends PageController
             'debug' => $this->getParameter('app.debug'),
             'calorieChart' => $this->getCalorieChart($product)
         ];
-        
+
 
         return $productData;
 

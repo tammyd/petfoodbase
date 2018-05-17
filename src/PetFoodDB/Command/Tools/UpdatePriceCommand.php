@@ -35,6 +35,11 @@ class UpdatePriceCommand extends ContainerAwareCommand
         $results = [];
         if ($input->getOption('id')) {
             $product = $catfoodService->getById($input->getOption('id'));
+
+            if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                $output->writeln("Looking up prices for Id #" . $input->getOption('id'). " <info>" . $product->getDisplayName() . "</info>");
+            }
+
             $result = $this->updateCatFood($product, $skipSearch);
             $results[] = $result;
             dump($result);

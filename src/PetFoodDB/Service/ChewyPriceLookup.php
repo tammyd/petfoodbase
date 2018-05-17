@@ -32,9 +32,11 @@ class ChewyPriceLookup implements PriceLookupInterface
         //if chewy url exists in product, use that.
         $shopUrls = $this->shopService->getAll($product->getId());
 
+
         $data = [];
-        if (isset($shopUrls['chewy'])) {
+        if (isset($shopUrls['chewy']) && $shopUrls['chewy']) {
             $url = $shopUrls['chewy'];
+
             $rawResults = $this->parseAllChewyPriceDataFromBaseProductUrl($url);
 
             $data = $this->parseRawChewyData($rawResults);
@@ -45,6 +47,7 @@ class ChewyPriceLookup implements PriceLookupInterface
         } else if (!$skipChewySearch) {
             //otherwise search
             $searchTerm = $this->getProducChewySearchTerm($product);
+
             try {
                 $data = $this->searchChewyPrice($searchTerm);
             } catch (TooManySearchResultsException $e) {
