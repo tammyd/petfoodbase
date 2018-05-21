@@ -247,9 +247,9 @@ class PageController extends BaseController
             }
         }
 
-        usort($wet, [$this, 'rankProduct']);
-        usort($dry, [$this, 'rankProduct']);
-        usort($discontinued, [$this, 'rankProduct']);
+        usort($wet, [$this, 'rankByName']);
+        usort($dry, [$this, 'rankByName']);
+        usort($discontinued, [$this, 'rankByName']);
 
         $dryPurchaseInfo = $brandAnalysis->hasAnyPurchaseInfo($brand, 'dry');
         $wetPurchaseInfo = $brandAnalysis->hasAnyPurchaseInfo($brand, 'wet');
@@ -325,7 +325,7 @@ class PageController extends BaseController
         if ($n1==$n2) {
             return 0;
         } else {
-            return ($n1 < $n2) ? 1 : -1;
+            return ($n1 > $n2) ? 1 : -1;
         }
     }
 
