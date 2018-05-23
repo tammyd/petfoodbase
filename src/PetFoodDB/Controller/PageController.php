@@ -461,7 +461,12 @@ class PageController extends BaseController
         ];
 
         foreach($all as $i => $product) {
-            $urls[] = sprintf("%s/product/%s", $baseUrl, htmlspecialchars($product->getProductPath()));
+            $path = htmlspecialchars($product->getProductPath());
+            if ($this->contains($path, "%E2_%A2")) {
+                $path = str_replace("%E2_%A2", "™", $path);
+            }
+
+            $urls[] = sprintf("%s/product/%s", $baseUrl, $path);
         }
 
         $brandUrls = $this->getBrandPageUrls();
@@ -469,11 +474,16 @@ class PageController extends BaseController
         foreach ($brandUrls as $section=>$urlData) {
 
             foreach ($urlData as $name=>$url) {
+                $url = htmlspecialchars($url);
+                if ($this->contains($url, "%E2_%A2")) {
+                    $url = str_replace("%E2_%A2", "™", $url);
+                }
+
 
                 if ($this->startsWith($url, "/")) {
-                    $uri = sprintf("%s%s", $baseUrl, htmlspecialchars($url));
+                    $uri = sprintf("%s%s", $baseUrl, $url);
                 } else {
-                    $uri = sprintf("%s/%s", $baseUrl, htmlspecialchars($url));
+                    $uri = sprintf("%s/%s", $baseUrl, $url);
                 }
 
                 $urls[] = $uri;
