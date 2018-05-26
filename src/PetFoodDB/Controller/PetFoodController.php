@@ -43,6 +43,7 @@ class PetFoodController extends BaseController
     public function searchAction($search)
     {
 
+
         if (!$this->handleAuth()) {
             return;
         }
@@ -122,6 +123,7 @@ class PetFoodController extends BaseController
         $list = $this->prepAmazon($list);
         $list = $this->prepChewy($list);
         $list = $this->prepRatings($list);
+
         $maxAge = 7*24*60*60;
         $this->getResponse()->headers()->set('Cache-Control', "public, max-age=$maxAge, s-max-age=$maxAge");
         try {
@@ -148,6 +150,7 @@ class PetFoodController extends BaseController
                 return !in_array($x->getId(), $deadlyIds);
             });
             $list = $list->setItems($newItems);
+
             return $this->prepListResponse($list, true);
         }
     }
@@ -159,8 +162,9 @@ class PetFoodController extends BaseController
         foreach ($catfoodList as $catFood) {
             if ($catFood instanceof \PetFoodDB\Model\PetFood) {
                 $analysis = $anaylsisService->getProductAnalysis($catFood);
-                $catFood->addExtraData('nutritionScore', $analysis['nutrition_rating']);
-                $catFood->addExtraData('ingredientScore', $analysis['ingredients_rating']);
+                $catFood->addExtraData('nutritionScore', (int)$analysis['nutrition_rating']);
+                $catFood->addExtraData('ingredientScore', (int)$analysis['ingredients_rating']);
+                $catFood->addExtraData('totalScore', $analysis['nutrition_rating'] + $analysis['ingredients_rating']);
             }
         }
 
