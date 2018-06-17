@@ -137,9 +137,16 @@ class AnalyzeIngredients
         return $allergens;
     }
 
+    static function notAllergens() {
+
+        return ['milk thistle'];
+
+    }
+
     static function containsAllergens(PetFood $catFood, $specificType=false) {
 
         $allergens = self::getCommonAllergens();
+        $notAllergens = self::notAllergens();
 
         if ($specificType && isset($allergens[$specificType])) {
             $allergens = [
@@ -158,7 +165,10 @@ class AnalyzeIngredients
             foreach ($ingredients as $ingredient) {
                 foreach ($allergenIngredients as $allergen) {
                     if (strpos($ingredient, $allergen) !== false) {
-                        $contains[$type][] = $ingredient;
+                        if (!in_array($ingredient, $notAllergens)) {
+
+                            $contains[$type][] = $ingredient;
+                        }
                     }
                 }
             }
@@ -410,10 +420,13 @@ class AnalyzeIngredients
         $allergens = array_values(self::getCommonAllergens());
         $allergens = call_user_func_array('array_merge', $allergens);
         $allergens = array_map('strtolower', array_unique($allergens));
+        $notAllergens = self::notAllergens();
 
         foreach ($allergens as $allergen) {
             if (strpos($ingredient, $allergen) !== false) {
-                return true;
+                if (!in_array($ingredient, $notAllergens)) {
+                    return true;
+                }
             }
         }
         return false;
