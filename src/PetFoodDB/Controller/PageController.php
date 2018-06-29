@@ -267,6 +267,7 @@ class PageController extends BaseController
 
         $chewyUrl = $this->getChewyBrandUrl($brandInfo, array_merge($wet, $dry));
         $brandInfo['chewy'] = $chewyUrl;
+
         $data = [
             'img' => $brandId,
             'brand' => $brandInfo,

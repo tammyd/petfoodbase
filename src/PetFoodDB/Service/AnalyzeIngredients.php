@@ -35,7 +35,8 @@ class AnalyzeIngredients
             'whitefish', 'cod', 'white fish', 'mackerel', 'pacific hake', 'tilapia', 'prawns',
             'yellowfin tuna', 'seabream', 'catfish', 'sea bream', 'menhaden fish', 'ahi tuna', 'sardine', 'arctic char',
             'sardines', 'basa', 'saba', 'mackerel', 'trevally', 'barramundi', 'shrimp', 'crab', 'polluck', 'bonito', 'hoki', 'krill', 'pilchard',
-            'acadian redﬁsh', 'atlantic monkfish', 'silver hake', 'blue whiting', 'rockfish', 'big redeye', 'barramundi','shirasu', 'skipjack'
+            'acadian redﬁsh', 'atlantic monkfish', 'silver hake', 'blue whiting', 'rockfish', 'big redeye', 'barramundi','shirasu', 'skipjack',
+            'red bigeye', 'unagi'
         ];
 
         return $seafood;
