@@ -188,10 +188,13 @@ class BrandAnalysis extends BaseService
                 $stats = $analysis->getProductAnalysis($product);
                 $product->addExtraData('stats', $stats);
                 $product = $catfoodService->updateExtendedProductDetails($product, "", $analysisService, $analysis);
-                if ($product->getIsWetFood()) {
-                    $wet[] = $product;
-                } else {
-                    $dry[] = $product;
+
+                if (!$product->getDiscontinued()) {
+                    if ($product->getIsWetFood()) {
+                        $wet[] = $product;
+                    } else {
+                        $dry[] = $product;
+                    }
                 }
             }
 
