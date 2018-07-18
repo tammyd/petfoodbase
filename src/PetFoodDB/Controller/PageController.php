@@ -216,6 +216,8 @@ class PageController extends BaseController
         $brandAnalysis = $this->get('brand.analysis');
 
         $products = $this->catFoodService->getByBrand($brand);
+        $pet = isset($this->app->config['pet.type']) ? $this->app->config['pet.type'] : "cat";
+
 
         $productController = $this->get('product.controller');
         $shopService = $this->getContainer()->get('shop.service');
@@ -263,11 +265,13 @@ class PageController extends BaseController
 
         $brandData = $brandAnalysis->getBrandData($brand);
         $brandInfo = $this->get('brand.info')->getBrandInfo($products[0]->getBrand());
+
         $brandRating = $brandAnalysis->rateBrand($brand);
 
-        $chewyUrl = $this->getChewyBrandUrl($brandInfo, array_merge($wet, $dry));
+        $chewyUrl = $this->getChewyBrandUrl($brandInfo, array_merge($wet, $dry), "$pet food");
         $brandInfo['chewy'] = $chewyUrl;
 
+        
         $data = [
             'img' => $brandId,
             'brand' => $brandInfo,
@@ -301,7 +305,7 @@ class PageController extends BaseController
 
     }
 
-    protected function getChewyBrandUrl($brandInfo, $products) {
+    protected function getChewyBrandUrl($brandInfo, $products, $brandQuery="") {
         $hasChewy = false;
         foreach ($products as $prod) {
             $shopUrls = $prod->getExtraData('shopUrls');
@@ -312,7 +316,11 @@ class PageController extends BaseController
         }
 
         if ($hasChewy) {
-            $chewyUrl = sprintf("https://www.chewy.com/s?query=%s+cat+food", $brandInfo['official_name']);
+            if ($brandQuery) {
+                $chewyUrl = sprintf("https://www.chewy.com/s?query=%s+%s", $brandInfo['official_name'], $brandQuery);
+            } else {
+                $chewyUrl = sprintf("https://www.chewy.com/s?query=%s+cat+food", $brandInfo['official_name']);
+            }
             return $chewyUrl;
         } else {
             return null;
