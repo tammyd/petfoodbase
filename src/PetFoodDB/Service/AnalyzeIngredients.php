@@ -408,7 +408,9 @@ class AnalyzeIngredients
 
     static public function parseIngredients(PetFood $catfood) {
         $ing = $catfood->getIngredients();
-        $ing = self::stripBrackets($ing);
+        $regex = "/\s*\([^\)]*\)\s*/";
+        $ing = preg_replace($regex, "", $ing);
+        
         $ingredients = array_map('trim', explode(",", $ing));
         $ingredients = array_map('strtolower', $ingredients);
         $ingredients = array_map('self::stripPeriod', $ingredients);

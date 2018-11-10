@@ -88,15 +88,17 @@ class NewAnalysisService
                 $progressFtn($done);
             }
 
+            $ingScore = $this->ingredientService->calcIngredientScore($product);
+            $roundUp = $ingScore >= 3;
+            $this->getLogger()->debug($product->getId() . ": roundUp new nutrit score? " . ($roundUp ? "Yes" : "No"));
 
             $stats = $this->calcStatsForProduct($product, $wetAverage, $dryAverage);
             if ($this->useNewAlgo) {
-                $nutScore = $this->calcNewNutritionScore($product);
+                $nutScore = $this->calcNewNutritionScore($product, $roundUp);
             } else {
                 $nutScore = $this->calcNutritionScore($stats);
             }
 
-            $ingScore = $this->ingredientService->calcIngredientScore($product);
 
             $stats['nutrition_rating'] = $nutScore;
             $stats['ingredients_rating'] = $ingScore;
@@ -288,7 +290,7 @@ class NewAnalysisService
 
     }
 
-    protected function calcNewNutritionScore(PetFood $product) {
+    protected function calcNewNutritionScore(PetFood $product, $roundUp = true) {
         $carbBucketsValues = [5,15,30,42,100];
         $proteinBucketsValues = [35,40,50,60,100];
         $dryValues = $product->getPercentages()['dry'];
@@ -311,7 +313,11 @@ class NewAnalysisService
             }
         }
 
-        $nutScore = ceil(($carbScore + $proteinScore)/2);
+        if ($roundUp) {
+            $nutScore = ceil(($carbScore + $proteinScore) / 2); //will be whole #s or .5 - round up.
+        } else {
+            $nutScore = floor(($carbScore + $proteinScore) / 2); //will be whole #s or .5 - round down.
+        }
         $this->getLogger()->debug($product->getId() . ": Carb Score: $carbScore. Protein score: $proteinScore. FInal score: $nutScore ");
         $this->getLogger()->debug($product->getId() . ": Protein Raw: $protein. Carb Raw: $carbs . ");
 
