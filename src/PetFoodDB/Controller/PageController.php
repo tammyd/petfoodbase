@@ -58,7 +58,12 @@ class PageController extends BaseController
 
 
 
-    public function fourOrFourAction() {
+    public function fourOhFourAction() {
+
+        if ($this->getRedirect()) {
+            $redirect = $this->getRedirect();
+            $this->app->redirect($redirect[0], $redirect[1]);
+        }
 
         $brands = $this->getBrandPageUrls();
         $allBrands = [];
@@ -79,16 +84,26 @@ class PageController extends BaseController
         ]);
     }
 
+    public function getRedirect() {
+
+        $service = $this->get('redirector.service');
+        $currentPath = $this->app->request->getResourceUri();
+
+        return $service->getRedirectFor($currentPath);
+    }
+
     
     public function homeAction() {
 
         $brands = $this->getBrandPageUrls();
+
         $allBrands = [];
         foreach ($brands as $section=>$brandData) {
             foreach ($brandData as $brand=>$url) {
                 $allBrands[$brand] = $url;
             }
         }
+
 
         $popularBrandInfo = $this->catFoodService->getPopularBrands();
         $popularBrands = [];
@@ -102,12 +117,14 @@ class PageController extends BaseController
             'minimalMobile' => false,
             'homeNavClass' => 'active',
             'recentUpdates' => $this->getRecentUpdates(),
+            'updatedBrands' => $this->catFoodService->getRecentlyUpdatedBrands(),
             'amazonQuery' => sprintf("%s supplies", strtolower($this->getPetType())),
             'brands' => $allBrands,
             'popular' => $popularBrands,
             'seo' => $this->getBaseSEO(),
             'articles' => $articles
         ];
+
 
         $this->render('home.html.twig', $params);
     }
@@ -197,7 +214,9 @@ class PageController extends BaseController
 
         $analysis = $this->get('analysis.access');
         $brandAnalysis = $this->get('brand.analysis');
+
         $products = $this->catFoodService->getByBrand($brand);
+
         $productController = $this->get('product.controller');
         $shopService = $this->getContainer()->get('shop.service');
         if (!$products) {
@@ -206,6 +225,7 @@ class PageController extends BaseController
 
         $wet = [];
         $dry = [];
+        $discontinued = [];
         foreach ($products as $product) {
             $stats = $analysis->getProductAnalysis($product);
 
@@ -214,16 +234,25 @@ class PageController extends BaseController
 
             $product->addExtraData('stats', $stats);
             $product = $productController->getAllProductDetails($product);
-            if ($product->getIsWetFood()) {
-                $wet[] = $product;
-            } else {
-                $dry[] = $product;
+
+            if ($product->getDiscontinued()) {
+                $discontinued[] = $product;
+            }
+            else {
+                if ($product->getIsWetFood()) {
+                    $wet[] = $product;
+                } else {
+                    $dry[] = $product;
+                }
             }
         }
 
-        usort($wet, [$this, 'rankProduct']);
-        usort($dry, [$this, 'rankProduct']);
+        usort($wet, [$this, 'rankByName']);
+        usort($dry, [$this, 'rankByName']);
+        usort($discontinued, [$this, 'rankByName']);
 
+        $dryPurchaseInfo = $brandAnalysis->hasAnyPurchaseInfo($brand, 'dry');
+        $wetPurchaseInfo = $brandAnalysis->hasAnyPurchaseInfo($brand, 'wet');
 
         $wetRating = $this->calculateAverageRating($wet);
         $dryRating = $this->calculateAverageRating($dry);
@@ -238,31 +267,45 @@ class PageController extends BaseController
 
         $chewyUrl = $this->getChewyBrandUrl($brandInfo, array_merge($wet, $dry));
         $brandInfo['chewy'] = $chewyUrl;
+
         $data = [
             'img' => $brandId,
             'brand' => $brandInfo,
             'brandInfo' => $brandData,
-            'wet'=>$wet, 'dry'=>$dry,
-            'wetRating' => $wetRating, 'dryRating' => $dryRating,
+            'wet'=>$wet,
+            'dry'=>$dry,
+            'discontinued' => $discontinued,
+            'wetRating' => $wetRating,
+            'dryRating' => $dryRating,
             'seo'=>$this->getBrandSEO($products),
             'reviewNavClass' => 'active',
             'template' => $this->templateExists($infoTemplate) ? $infoTemplate : null,
-//            'amazonTemplate' => $this->templateExists($amazonTemplate) ? $amazonTemplate : null,
             'amazonQuery' => sprintf("%s %s food", $brandId, $this->getPetType()),
-            'brandRating' => $brandRating
+            'brandRating' => $brandRating,
+            'hideDryProductPrices' => !$dryPurchaseInfo,
+            'hideWetProductPrices' => !$wetPurchaseInfo,
+            'chewySource' => $this->makeChewySource($brand)
             
         ];
 
-
-
         $this->render('brand.html.twig', $data);
+    }
+
+    protected function makeChewySource($brand) {
+        $source = strtolower($brand);
+        $source = $this->stripHtmlSuperscripts($source);
+        $source = $this->stripNonUTF8($source);
+        $source = trim($this->removeMultipleSpaces($source));
+        $source = str_replace(' ', '_', $source);
+        return "brand_$source";
+
     }
 
     protected function getChewyBrandUrl($brandInfo, $products) {
         $hasChewy = false;
         foreach ($products as $prod) {
             $shopUrls = $prod->getExtraData('shopUrls');
-            if (isset($shopUrls['chewy'])) {
+            if (isset($shopUrls['chewy']) && $shopUrls['chewy']) {
                 $hasChewy = true;
                 break;
             }
@@ -283,7 +326,7 @@ class PageController extends BaseController
         if ($n1==$n2) {
             return 0;
         } else {
-            return ($n1 < $n2) ? 1 : -1;
+            return ($n1 > $n2) ? 1 : -1;
         }
     }
 
@@ -419,7 +462,12 @@ class PageController extends BaseController
         ];
 
         foreach($all as $i => $product) {
-            $urls[] = sprintf("%s/product/%s", $baseUrl, htmlspecialchars($product->getProductPath()));
+            $path = htmlspecialchars($product->getProductPath());
+            if ($this->contains($path, "%E2_%A2")) {
+                $path = str_replace("%E2_%A2", "™", $path);
+            }
+
+            $urls[] = sprintf("%s/product/%s", $baseUrl, $path);
         }
 
         $brandUrls = $this->getBrandPageUrls();
@@ -427,11 +475,16 @@ class PageController extends BaseController
         foreach ($brandUrls as $section=>$urlData) {
 
             foreach ($urlData as $name=>$url) {
+                $url = htmlspecialchars($url);
+                if ($this->contains($url, "%E2_%A2")) {
+                    $url = str_replace("%E2_%A2", "™", $url);
+                }
+
 
                 if ($this->startsWith($url, "/")) {
-                    $uri = sprintf("%s%s", $baseUrl, htmlspecialchars($url));
+                    $uri = sprintf("%s%s", $baseUrl, $url);
                 } else {
-                    $uri = sprintf("%s/%s", $baseUrl, htmlspecialchars($url));
+                    $uri = sprintf("%s/%s", $baseUrl, $url);
                 }
 
                 $urls[] = $uri;
@@ -456,20 +509,6 @@ class PageController extends BaseController
     }
 
 
-    protected function getRecentlyUpdatedBrands() {
-
-        $limit = 5;
-
-        $recentlyUpdated = $this->catFoodService->getRecentlyUpdatedBrands();
-        $updatedBrands = [];
-        foreach ($recentlyUpdated as $brand) {
-            $updatedBrands[$brand['name']] = "/brand/" . $brand['brand'];
-        }
-
-        return array_splice($updatedBrands, 0, $limit);
-
-
-    }
 
 
     /**
@@ -491,7 +530,7 @@ class PageController extends BaseController
             'stats' => $this->stats,
             'seo' => $this->getBaseSEO(),
             'brandUrls' => $this->getBrandPageUrls(),
-            'updatedBrands' => $this->getRecentlyUpdatedBrands(),
+            'updatedBrands' => $this->catFoodService->getRecentlyUpdatedBrands(),
             'articleUrls' => $this->getArticlePageUrls(),
             'minimalMobile' => true,
             'shareText' => urlencode($baseSeo['title']),
@@ -502,7 +541,7 @@ class PageController extends BaseController
         $pageData = array_merge($defaultData, $data);
 
         $this->app->response->headers->replace(['Cache-Control'=>"public, s-maxage=$cache max-age=$cache"]);
-        
+
         $this->app->render($template, $pageData);
     }
 

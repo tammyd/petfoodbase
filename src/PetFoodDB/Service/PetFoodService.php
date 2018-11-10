@@ -72,6 +72,35 @@ class PetFoodService extends BaseService
 
     }
 
+    public function sortPetFoodBy(array $petFood = null, $search='flavor', $desc = false) {
+
+        if (is_null($petFood)) {
+            return [];
+        }
+
+        usort($petFood, function ($a, $b) use ($search, $desc) {
+            $modelA = $a->dbModel();
+            $modelB = $b->dbModel();
+
+            if (isset($modelA[$search]) && isset($modelB[$search])) {
+                if ($modelA[$search] == $modelB[$search]) {
+                    return 0;
+                }
+
+                if ($desc) {
+                    return ($modelA[$search] < $modelB[$search]) ? 1 : -1;
+                } else {
+                    return ($modelA[$search] < $modelB[$search]) ? -1 : 1;
+                }
+            } else {
+                return 0;
+            }
+        });
+
+        return $petFood;
+
+    }
+
     public function convertResultToPetFood(\NotORM_Result $result)
     {
         $catFood = [];
@@ -210,17 +239,19 @@ class PetFoodService extends BaseService
 
     }
 
-    public function getRecentlyUpdatedBrands() {
 
-        $result = $this->getDb()->getConnection()
-            ->query("SELECT distinct(catfood_search.brand) as brand, 
-catfood.brand as name from catfood_search, catfood where 
-catfood_search.id = catfood.id order by catfood.updated DESC");
+    public function getRecentlyUpdatedBrands($days = 30) {
 
+
+        $days = is_numeric($days) ? floatval($days) : 30.0;
+
+        $sql = "select min(days) as last_updated, brand from (select (julianday('now') - julianday(updated)) as 
+          days, * from catfood where discontinued = 0 ) where days < $days group by brand order by last_updated asc";
+        $result = $this->getDb()->getConnection()->query($sql);
 
         $brands = [];
-        foreach ($result as $i=>$row) {
-            $brands[] = ['index'=>$i, 'name'=>$row['name'], 'brand'=>$row['brand']];
+        foreach ($result as $r) { //traversable, not iterable, hence no array_x functions
+            $brands[] = $r['brand'];
         }
 
         return $brands;

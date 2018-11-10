@@ -59,6 +59,9 @@ trait StringHelperTrait
         return preg_replace('!\s+!', ' ', $string);
     }
 
+    protected function stripUndefined($string) {
+        return mb_ereg_replace('/[\x80-\x9F/', ' ', $string);
+    }
 
     protected function cleanText($text) {
         $text =  html_entity_decode(trim(str_replace(array("\r", "\n"), ' ', $text)));

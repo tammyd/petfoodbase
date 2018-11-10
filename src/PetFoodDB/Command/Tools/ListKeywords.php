@@ -15,7 +15,7 @@ class ListKeywords extends ContainerAwareCommand
             ->setDescription("List all potential keywords for SEO research")
             ->setName('seo:keywords')
             ->addOption("filename", "f", InputOption::VALUE_OPTIONAL, "list of brands to look up")
-            ->addOption('adjective', "a", InputOption::VALUE_OPTIONAL, "just use a single adjective")
+            ->addOption('adjective', "a", InputOption::VALUE_OPTIONAL, "just use a single adjective, or 'none' for brand list")
             ->addOption('brand', "b", InputOption::VALUE_OPTIONAL, "just use a single brand");
     }
 
@@ -23,6 +23,7 @@ class ListKeywords extends ContainerAwareCommand
     {
         $keywords = [];
         $catfoodService = $this->container->get('catfood');
+        $justBrands = false;
 
 
         if ($input->getOption('filename')) {
@@ -38,7 +39,11 @@ class ListKeywords extends ContainerAwareCommand
             $brands = $catfoodService->getBrands();
         }
         if ($input->getOption('adjective')) {
-            $adjectives = [$input->getOption('adjective')];
+            if ($input->getOption('adjective') == "none") {
+                $justBrands = true;
+            } else {
+                $adjectives = [$input->getOption('adjective')];
+            }
         } else {
             $adjectives = [
                 'cat food',
@@ -61,8 +66,12 @@ class ListKeywords extends ContainerAwareCommand
             if (!$input->getOption('adjective')) {
                 //$keywords[] = $brand['brand'];
             }
-            foreach ($adjectives as $adj) {
-                $keywords[] = strtolower(sprintf("%s %s", $brand['brand'], $adj));
+            if ($justBrands) {
+                $keywords[] = strtolower($brand['brand']);
+            } else {
+                foreach ($adjectives as $adj) {
+                    $keywords[] = strtolower(sprintf("%s %s", $brand['brand'], $adj));
+                }
             }
         }
 

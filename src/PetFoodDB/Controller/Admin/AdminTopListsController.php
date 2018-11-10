@@ -94,4 +94,112 @@ class AdminTopListsController extends AdminController
         $this->render('admin/admin-product-list.html.twig', $data);
     }
 
+    public function topBrandsAction() {
+        $this->validateCredentials();
+        $brandService = $this->get('brand.analysis');
+
+        $data = $brandService->getAllData();
+
+        //sort on brand score
+        usort($data, function($a, $b) {
+            $aScore = $a['rank'];
+            $bScore = $b['rank'];
+            return ($aScore < $bScore) ? -1 : 1;
+        });
+
+        $displayData = [];
+        foreach ($data as $i=>$row) {
+            $entry = [
+                'rank' => $row['rank'],
+                'brand' => $row['brand'],
+                'score' => $row['avg_total_score']
+            ];
+            $displayData[] = $entry;
+        }
+
+        $renderData = [
+            'data' => $displayData,
+            'title' => "Top Brands By Score"
+        ];
+
+
+        $this->render('admin/rank-brands.html.twig', $renderData);
+
+    }
+
+    public function topWetBrandsAction() {
+        $this->validateCredentials();
+        $brandService = $this->get('brand.analysis');
+
+        $data = $brandService->getAllData();
+
+        $data = array_filter($data, function($x) {
+            if (!$x['num_wet']) {
+                return false;
+            }
+            return true;
+        });
+
+        usort($data, function($a, $b) {
+            $aScore = $a['wet_rank'];
+            $bScore = $b['wet_rank'];
+            return ($aScore < $bScore) ? -1 : 1;
+        });
+
+
+        $displayData = [];
+        foreach ($data as $i=>$row) {
+            $entry = [
+                'rank' => $row['wet_rank'],
+                'brand' => $row['brand'],
+                'score' => $row['wet_avg_total_score']
+            ];
+            $displayData[] = $entry;
+        }
+
+        $renderData = [
+            'data' => $displayData,
+            'title' => "Top Wet Brands By Score"
+        ];
+
+        $this->render('admin/rank-brands.html.twig', $renderData);
+    }
+
+    public function topDryBrandsAction() {
+        $this->validateCredentials();
+        $brandService = $this->get('brand.analysis');
+
+        $data = $brandService->getAllData();
+
+        $data = array_filter($data, function($x) {
+            if (!$x['num_dry']) {
+                return false;
+            }
+            return true;
+        });
+
+        usort($data, function($a, $b) {
+            $aScore = $a['dry_rank'];
+            $bScore = $b['dry_rank'];
+            return ($aScore < $bScore) ? -1 : 1;
+        });
+
+        $displayData = [];
+        foreach ($data as $i=>$row) {
+            $entry = [
+                'rank' => $row['dry_rank'],
+                'brand' => $row['brand'],
+                'score' => $row['dry_avg_total_score']
+            ];
+            $displayData[] = $entry;
+        }
+
+        $renderData = [
+            'data' => $displayData,
+            'title' => "Top Dry Brands By Score"
+        ];
+
+        $this->render('admin/rank-brands.html.twig', $renderData);
+    }
+
 }

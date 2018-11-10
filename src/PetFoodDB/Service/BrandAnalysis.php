@@ -41,6 +41,35 @@ class BrandAnalysis extends BaseService
         }
     }
 
+    public function hasAnyPurchaseInfo($brand, $type=null) {
+        $pdo = $this->getPDO();
+
+        switch ($type) {
+            case 'wet':
+                $sql = "SELECT * from (catfood left join shop on (catfood.id = shop.id)) "
+                    . "where lower(catfood.brand) = :brand and (length(chewy) > 0 or length(asin) > 0) "
+                    . "and moisture >20 and discontinued = 0";
+                break;
+            case 'dry':
+                $sql = "SELECT * from (catfood left join shop on (catfood.id = shop.id)) "
+                    . "where lower(catfood.brand) = :brand and (length(chewy) > 0 or length(asin) > 0) "
+                    . "and moisture <=20 and discontinued = 0";
+                break;
+            default:
+                $sql = "SELECT * from (catfood left join shop on (catfood.id = shop.id)) "
+                    . "where lower(catfood.brand) = :brand and (length(chewy) > 0 or length(asin) > 0) "
+                    . " and discontinued = 0";
+        }
+
+        $sth = $pdo->prepare($sql, array(\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY));
+        $sth->execute([':brand' => $brand]);
+        $result = $sth->fetchAll(\PDO::FETCH_COLUMN);
+
+        $result = (int)array_pop($result) ? true: false;
+        return $result;
+    }
+
+
     public function getAllData() {
         $rows = [];
         $result = $this->db->brands;
@@ -53,6 +82,7 @@ class BrandAnalysis extends BaseService
 
     public function rateBrand ($brand) {
         $brandData = $this->getBrandData($brand);
+
         if (empty($brandData)) {
             $rv = [
                 'overallRating' => 0,
@@ -158,10 +188,13 @@ class BrandAnalysis extends BaseService
                 $stats = $analysis->getProductAnalysis($product);
                 $product->addExtraData('stats', $stats);
                 $product = $catfoodService->updateExtendedProductDetails($product, "", $analysisService, $analysis);
-                if ($product->getIsWetFood()) {
-                    $wet[] = $product;
-                } else {
-                    $dry[] = $product;
+
+                if (!$product->getDiscontinued()) {
+                    if ($product->getIsWetFood()) {
+                        $wet[] = $product;
+                    } else {
+                        $dry[] = $product;
+                    }
                 }
             }
 

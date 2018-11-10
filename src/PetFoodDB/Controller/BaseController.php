@@ -77,10 +77,15 @@ class BaseController
         $admin = $this->app->request->headers->get($this->app->config['admin.header']);
         $adminValue = $this->app->config['admin.header.value'];
 
-        if ($admin && $admin == $adminValue) {
+        if ($this->isDevEnv() &&  $admin && $admin == $adminValue) {
             return true;
         }
         return false;
+    }
+
+    protected function isDevEnv() {
+        $env = getenv('APP_ENV');
+        return strcmp($env, 'dev') == 0;
     }
 
     protected function templateExists($template) {

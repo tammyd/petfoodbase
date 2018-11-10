@@ -73,6 +73,11 @@ class AdminController extends PageController
 
         /* @var PetFood $product */
         $product = $this->catFoodService->getById($id);
+        if (!$product) {
+            $this->app->notFound();
+        }
+
+
         $data = $controller->getRenderProductTemplateData($product);
         $data['breakdowns'] = $product->getPercentages();
 
@@ -233,9 +238,9 @@ class AdminController extends PageController
         $chewy = $this->getArrayValue($submittedVars, 'chewy');
         $petsmart = $this->getArrayValue($submittedVars, 'petsmart');
 
-        if ($chewy) {
+        //if ($chewy) {
             $service->updateChewy($id, $chewy);
-        }
+        //}
 
         if ($petsmart) {
             $service->updatePetsmart($id, $petsmart);

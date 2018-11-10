@@ -18,22 +18,25 @@ class AnalyzeIngredients
     static function getProteinAdjectives() {
         return ['deboned', 'fresh deboned', 'organic', 'boneless', 'boneless/skinless', 'de-boned', 'whole', 'fresh', 'hydrolyzed',
             'lamb', 'cutlets', 'flaked', 'shredded', 'flakes', 'freeze-dried', 'dried', 'baby', 'meat', 'dehydrated', 'fresh whole',
-            'whole atlantic', 'dehydrated whole', 'fresh angus', 'fresh plains', 'fresh yorkshire', 'fresh whole pacific', 'raw grass-fed'];
+            'whole atlantic', 'dehydrated whole', 'fresh angus', 'fresh plains', 'fresh yorkshire', 'fresh whole pacific',
+            'raw grass-fed', 'finely ground', 'king'];
     }
 
     static function getProteinSpecifics() {
-        return ['heart', 'liver', 'lung', 'liver', 'giblets', 'meal', 'white meat', 'filets', 'red meat', 'meat meal',
+        return ['heart', 'thigh', 'liver', 'lung', 'liver', 'giblets', 'meal', 'white meat', 'filets', 'red meat', 'meat meal',
             'whole meat', 'cutlets', 'tripe', 'meat', '(boneless, skinless breast)', 'livers', 'gizzards', 'gizzard', 'hearts', 'necks',
-            'giblets (liver, heart, kidney)', 'with ground bone', '(ground with bone)'];
+            'giblets (liver, heart, kidney)', 'with ground bone', '(ground with bone)', 'kidney', 'lungs', 'trachea',
+            'with bone'];
     }
 
     static function getSeafoodProteins() {
-        $seafood = ['seafood', 'salmon', 'tuna', 'trout', 'mussel', 'anchovy & sardine', 'Green Lipped Mussel',
+        $seafood = ['salmon', 'tuna', 'trout', 'mussel', 'anchovy & sardine', 'Green Lipped Mussel',
             'ocean whitefish', 'herring', 'flounder', 'clam', 'pollock', 'red snapper',
             'whitefish', 'cod', 'white fish', 'mackerel', 'pacific hake', 'tilapia', 'prawns',
             'yellowfin tuna', 'seabream', 'catfish', 'sea bream', 'menhaden fish', 'ahi tuna', 'sardine', 'arctic char',
             'sardines', 'basa', 'saba', 'mackerel', 'trevally', 'barramundi', 'shrimp', 'crab', 'polluck', 'bonito', 'hoki', 'krill', 'pilchard',
-            'acadian redﬁsh', 'atlantic monkfish', 'silver hake', 'blue whiting', 'rockfish', 'big redeye', 'barramundi','shirasu', 'skipjack'
+            'acadian redﬁsh', 'atlantic monkfish', 'silver hake', 'blue whiting', 'rockfish', 'big redeye', 'barramundi','shirasu', 'skipjack',
+            'red bigeye', 'unagi'
         ];
 
         return $seafood;
@@ -121,7 +124,7 @@ class AnalyzeIngredients
         $allergens = [
             'beef' => ['beef'],
             'lamb' => ['lamb'],
-            'seafood' => self::getSeafoodProteins(),
+            'seafood' => array_merge(self::getSeafoodProteins(), ['fish']),
             'corn' => ['corn', 'cornmeal', 'corn meal', 'corn starch'],
             'wheat gluten' => ['wheat gluten'],
             'soy' => ['soy'],
@@ -135,9 +138,16 @@ class AnalyzeIngredients
         return $allergens;
     }
 
+    static function notAllergens() {
+
+        return ['milk thistle'];
+
+    }
+
     static function containsAllergens(PetFood $catFood, $specificType=false) {
 
         $allergens = self::getCommonAllergens();
+        $notAllergens = self::notAllergens();
 
         if ($specificType && isset($allergens[$specificType])) {
             $allergens = [
@@ -156,7 +166,10 @@ class AnalyzeIngredients
             foreach ($ingredients as $ingredient) {
                 foreach ($allergenIngredients as $allergen) {
                     if (strpos($ingredient, $allergen) !== false) {
-                        $contains[$type][] = $ingredient;
+                        if (!in_array($ingredient, $notAllergens)) {
+
+                            $contains[$type][] = $ingredient;
+                        }
                     }
                 }
             }
@@ -395,7 +408,9 @@ class AnalyzeIngredients
 
     static public function parseIngredients(PetFood $catfood) {
         $ing = $catfood->getIngredients();
-        $ing = self::stripBrackets($ing);
+        $regex = "/\s*\([^\)]*\)\s*/";
+        $ing = preg_replace($regex, "", $ing);
+        
         $ingredients = array_map('trim', explode(",", $ing));
         $ingredients = array_map('strtolower', $ingredients);
         $ingredients = array_map('self::stripPeriod', $ingredients);
@@ -408,10 +423,13 @@ class AnalyzeIngredients
         $allergens = array_values(self::getCommonAllergens());
         $allergens = call_user_func_array('array_merge', $allergens);
         $allergens = array_map('strtolower', array_unique($allergens));
+        $notAllergens = self::notAllergens();
 
         foreach ($allergens as $allergen) {
             if (strpos($ingredient, $allergen) !== false) {
-                return true;
+                if (!in_array($ingredient, $notAllergens)) {
+                    return true;
+                }
             }
         }
         return false;

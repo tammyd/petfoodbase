@@ -21,7 +21,8 @@ class UpdatePriceCommand extends ContainerAwareCommand
             ->setName('price:update')
             ->addOption('id', null, InputOption::VALUE_REQUIRED, "Id to update", null)
             ->addOption('brand', null, InputOption::VALUE_REQUIRED, "brand to update", null)
-            ->addOption('no_search', null, InputOption::VALUE_NONE, "Skip Chewy search");
+            ->addOption('no_search', null, InputOption::VALUE_NONE, "Skip Chewy search")
+            ->addOption('min', null, InputOption::VALUE_REQUIRED, "Min Id to use; skip others", 0);
 
     }
 
@@ -34,13 +35,22 @@ class UpdatePriceCommand extends ContainerAwareCommand
         $results = [];
         if ($input->getOption('id')) {
             $product = $catfoodService->getById($input->getOption('id'));
+
+            if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
+                $output->writeln("Looking up prices for Id #" . $input->getOption('id'). " <info>" . $product->getDisplayName() . "</info>");
+            }
+
             $result = $this->updateCatFood($product, $skipSearch);
             $results[] = $result;
             dump($result);
         } elseif ($input->getOption('brand')) {
             $brand = $input->getOption('brand');
             $products = $catfoodService->getByBrand($brand);
+            $minId = intval($input->getOption('min'));
             foreach ($products as $product) {
+                if ($product->getId() < $minId) {
+                    continue;
+                }
                 $result = $this->updateCatFood($product, $skipSearch);
                 $results[] = $result;
                 dump($result);

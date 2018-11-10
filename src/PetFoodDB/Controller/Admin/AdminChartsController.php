@@ -87,6 +87,7 @@ class AdminChartsController extends AdminController
         $brandService = $this->get('brand.analysis');
 
         $result = $brandService->getAllData();
+
         $chartData = [
             ["Brand", "Average Score"]
         ];

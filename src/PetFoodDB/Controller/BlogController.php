@@ -22,6 +22,15 @@ class BlogController extends PageController
 
     public function blogHomeAction() {
         $posts = $this->blog->getBlogPosts();
+
+        $posts = array_filter($posts, function($p) {
+            $yml = $p->getYAML();
+            if (isset($yml['hideFromIndex']) && $yml['hideFromIndex']) {
+                return false;
+            }
+            return true;
+        });
+
         $data = [
             'posts' => []
         ];
@@ -87,7 +96,6 @@ class BlogController extends PageController
 
         $template = $this->getArrayValue($meta, 'template', 'post.html.twig');
 
-//        dump($data); die();
         
         $this->render($template, $data);
     }

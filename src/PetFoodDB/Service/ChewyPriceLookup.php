@@ -31,10 +31,14 @@ class ChewyPriceLookup implements PriceLookupInterface
 
         //if chewy url exists in product, use that.
         $shopUrls = $this->shopService->getAll($product->getId());
+
+
         $data = [];
-        if (isset($shopUrls['chewy'])) {
+        if (isset($shopUrls['chewy']) && $shopUrls['chewy']) {
             $url = $shopUrls['chewy'];
+
             $rawResults = $this->parseAllChewyPriceDataFromBaseProductUrl($url);
+
             $data = $this->parseRawChewyData($rawResults);
             if ($data) {
                 $data['productUrl'] = $url;
@@ -43,6 +47,7 @@ class ChewyPriceLookup implements PriceLookupInterface
         } else if (!$skipChewySearch) {
             //otherwise search
             $searchTerm = $this->getProducChewySearchTerm($product);
+
             try {
                 $data = $this->searchChewyPrice($searchTerm);
             } catch (TooManySearchResultsException $e) {
@@ -131,14 +136,25 @@ class ChewyPriceLookup implements PriceLookupInterface
 
 
     protected function parseRawChewyData(array $rows) {
+        if (!$rows) {
+            return [];
+        }
+
+
         $ppOunces = [];
         foreach ($rows as $row) {
             $ppOunces[] = $this->parseChewyPricePerOunce($row);
         }
 
+        $ppOunces = array_filter($ppOunces);
+
+        $low = round(min($ppOunces),2);
+        $high = round(max($ppOunces),2);
+
+
         return [
-            'low' => round(min($ppOunces),2),
-            'high' => round(max($ppOunces),2),
+            'low' => $low,
+            'high' => $high,
             'avg' => round(array_sum($ppOunces) / count($ppOunces),2),
             'name' => $rows[0]['name']
         ];
@@ -157,8 +173,11 @@ class ChewyPriceLookup implements PriceLookupInterface
     protected function parseChewyPricePerOunce(array $row) {
         $ounces = $this->parseChewyWeight($row['name']);
 
-        $priceOunce = floatval($row['price']) / $ounces;
-        return $priceOunce;
+        if ($ounces) {
+
+            $priceOunce = floatval($row['price']) / $ounces;
+            return $priceOunce;
+        }
     }
 
     protected function parseChewyWeight($name) {
@@ -169,6 +188,9 @@ class ChewyPriceLookup implements PriceLookupInterface
         preg_match("/([\d\.]+)-lb/", $name, $lb);
         preg_match("/of (\d+)/", $name, $count);
 
+        if (!$oz) {
+            preg_match("/([\d\.]+)\soz/", $name, $oz);
+        }
 
         $totalOunces = isset($oz[1]) ? $oz[1] : 0;
         $totalOunces += isset($lb[1]) ? $lb[1]*16 : 0;
@@ -178,9 +200,11 @@ class ChewyPriceLookup implements PriceLookupInterface
     }
 
     protected function parseAllChewyPriceDataFromBaseProductUrl($url) {
+
         $crawler = $this->getUrlCrawler($url);
         $urls = [];
         $rows = [];
+
         $scripts = $crawler->filter('script')->each(function($node) use (&$urls) {
             $text = $node->text();
             $check = "var itemData = {";
@@ -193,16 +217,19 @@ class ChewyPriceLookup implements PriceLookupInterface
                 $dataArr = json_decode($str, true);
 
                 foreach ($dataArr as $item) {
-                    $urls[] = $item['canonicalURL'];
+                    $urls[] = [
+                        'url' => $item['canonicalURL'],
+                        'price' => $item['price']
+                        ];
                 }
 
             }
 
         });
 
-
         foreach ($urls as $url) {
-            $data = $this->parseSingleChewyPriceFromUrl($url);
+            $data = $this->parseSingleChewyPriceFromUrl($url['url']);
+            $data[0]['price'] = str_replace("$", "", $url['price']);
             $rows = array_merge($rows, $data);
         }
 
@@ -212,6 +239,7 @@ class ChewyPriceLookup implements PriceLookupInterface
     protected function parseSingleChewyPriceFromUrl($url) {
         $micrometaParser = new \Jkphl\Micrometa($url);
         $micrometaObjectData = $micrometaParser->toObject();
+
 
         $items = $micrometaObjectData->items;
 

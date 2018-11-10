@@ -139,6 +139,7 @@ class ProductPageController extends PageController
             'calorieChart' => $this->getCalorieChart($product)
         ];
 
+
         return $productData;
 
     }
