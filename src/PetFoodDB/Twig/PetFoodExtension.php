@@ -109,14 +109,16 @@ class PetFoodExtension extends \Twig_Extension
 
     public function chewyAffiliateUrl($chewyUrl, $source = null) {
         if (is_string($source)) {
-            $template = "http://tracking.chewy.com/aff_c?offer_id=4&aff_id=4635&url=%s&source=%s";
+            $template = "https://prf.hn/click/camref:1011l4bA9/pubref:%s/destination:%s";
         } else {
-            $template = "http://tracking.chewy.com/aff_c?offer_id=4&aff_id=4635&url=%s";
+            $template = "https://prf.hn/click/camref:1011l4bA9/destination:%s";
         }
+
 
         $url = urlencode($chewyUrl);
 
-        $result = is_string($source) ? sprintf($template, $url, $source) : sprintf($template, $url);
+
+        $result = is_string($source) ? sprintf($template, $source, $url) : sprintf($template, $url);
 
         return $result;
     }
