@@ -19,7 +19,7 @@ class AnalyzeIngredients
         return ['deboned', 'fresh deboned', 'organic', 'boneless', 'boneless/skinless', 'de-boned', 'whole', 'fresh', 'hydrolyzed',
             'lamb', 'cutlets', 'flaked', 'shredded', 'flakes', 'freeze-dried', 'dried', 'baby', 'meat', 'dehydrated', 'fresh whole',
             'whole atlantic', 'dehydrated whole', 'fresh angus', 'fresh plains', 'fresh yorkshire', 'fresh whole pacific',
-            'raw grass-fed', 'finely ground', 'king'];
+            'raw grass-fed', 'finely ground', 'king', 'ocean caught', 'humanely raised', 'pasture raised', 'wild caught', 'sustainably sourced'];
     }
 
     static function getProteinSpecifics() {
