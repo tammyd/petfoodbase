@@ -14,6 +14,7 @@ class ChewyPriceLookup implements PriceLookupInterface
 {
 
     const CHEWY_BASE_URL = "https://www.chewy.com/";
+    const USER_AGENT = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.96 Safari/537.36";
 
     protected $client;
     protected $shopService;
@@ -166,7 +167,10 @@ class ChewyPriceLookup implements PriceLookupInterface
 
     protected function getUrlCrawler($url)
     {
-        $crawler = $this->client->request('GET', $url);
+        $server = [
+            "HTTP_USER_AGENT" => self::USER_AGENT
+        ];
+        $crawler = $this->client->request('GET', $url, [], [], $server);
         return $crawler;
     }
 
@@ -228,7 +232,7 @@ class ChewyPriceLookup implements PriceLookupInterface
         });
 
         foreach ($urls as $url) {
-            $data = $this->parseSingleChewyPriceFromUrl($url['url']);
+            $data = @$this->parseSingleChewyPriceFromUrl($url['url']); //ignore jsonld parsing
             $data[0]['price'] = str_replace("$", "", $url['price']);
             $rows = array_merge($rows, $data);
         }

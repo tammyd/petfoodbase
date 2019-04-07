@@ -94,7 +94,7 @@ class PetFood
         ];
     }
 
-    protected function getDryPercentages()
+    public function getDryPercentages()
     {
         $wet = $this->getWetPercentages();
         $dryFactor = 100 / (100 - $wet['moisture']);
