@@ -84,6 +84,7 @@ class PetFood
 
     protected function getWetPercentages()
     {
+
         return [
             'fat' => (float) $this->fat,
             'protein' => (float) $this->protein,
@@ -97,6 +98,7 @@ class PetFood
     public function getDryPercentages()
     {
         $wet = $this->getWetPercentages();
+
         $dryFactor = 100 / (100 - $wet['moisture']);
 
         $dry = array_map(function ($x) use ($dryFactor) { return $x * $dryFactor; }, $wet);

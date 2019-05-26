@@ -108,7 +108,8 @@ class AnalyzeIngredients
             'eel',
             'pheasant',
             'boar',
-            'kangaroo'
+            'kangaroo',
+            'alligator'
         ];
         return $nonSeafoodProteins;
     }
