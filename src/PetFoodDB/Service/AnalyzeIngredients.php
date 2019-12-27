@@ -25,7 +25,7 @@ class AnalyzeIngredients
     static function getProteinSpecifics() {
         return ['heart', 'thigh', 'liver', 'lung', 'liver', 'giblets', 'meal', 'white meat', 'filets', 'red meat', 'meat meal',
             'whole meat', 'cutlets', 'tripe', 'meat', '(boneless, skinless breast)', 'livers', 'gizzards', 'gizzard', 'hearts', 'necks',
-            'giblets (liver, heart, kidney)', 'with ground bone', '(ground with bone)', 'kidney', 'lungs', 'trachea',
+            'giblets (liver, heart, kidney)', 'with ground bone', '(ground with bone)', 'kidney', 'lungs', 'trachea', 'skin',
             'with bone'];
     }
 
@@ -36,7 +36,7 @@ class AnalyzeIngredients
             'yellowfin tuna', 'seabream', 'catfish', 'sea bream', 'menhaden fish', 'ahi tuna', 'sardine', 'arctic char',
             'sardines', 'basa', 'saba', 'mackerel', 'trevally', 'barramundi', 'shrimp', 'crab', 'polluck', 'bonito', 'hoki', 'krill', 'pilchard',
             'acadian redﬁsh', 'atlantic monkfish', 'silver hake', 'blue whiting', 'rockfish', 'big redeye', 'barramundi','shirasu', 'skipjack',
-            'red bigeye', 'unagi'
+            'threadfin bream', 'red bigeye', 'unagi'
         ];
 
         return $seafood;
