@@ -187,6 +187,7 @@ class PetFoodService extends BaseService
         $result = $this->db->catfood_search()
             ->select('catfood.brand as name, catfood_search.brand as brand')
             ->where('catfood:id = catfood_search.id')
+            ->where('catfood.discontinued = 0')
             ->group('catfood.brand')
             ->order('catfood.brand COLLATE NOCASE ASC');
         foreach ($result as $i=>$row) {
@@ -201,17 +202,17 @@ class PetFoodService extends BaseService
 
         //We want the # of unique cat products. Due to the nature of the scraping, a few products have multiple pages, resulting in multiple records.
         //This fixes that, but we had to use a raw query to get the data.
-        $result = $this->getDb()->getConnection()->query("select count(id) as total from catfood where id in (select min(id) from catfood group by brand,flavor,ingredients,protein,fat,moisture,ash)");
+        $result = $this->getDb()->getConnection()->query("select count(id) as total from catfood where id in (select min(id) from catfood where discontinued = 0 group by brand,flavor,ingredients,protein,fat,moisture,ash)");
 
         return $result->fetch()['total'];
 
     }
 
     public function getNumberWetRecords() {
-        return count($this->db->catfood->where("moisture > ? ", PetFood::WET_DRY_PERCENT));
+        return count($this->db->catfood->where("moisture > ? and discontinued = 0 ", PetFood::WET_DRY_PERCENT));
     }
     public function getNumberDryRecords() {
-        return count($this->db->catfood->where("moisture <= ? ", PetFood::WET_DRY_PERCENT));
+        return count($this->db->catfood->where("moisture <= ? and discontinued = 0 ", PetFood::WET_DRY_PERCENT));
     }
 
     public function insert(PetFood $catfood)
