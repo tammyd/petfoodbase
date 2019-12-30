@@ -43,7 +43,6 @@ class PetFoodController extends BaseController
     public function searchAction($search)
     {
 
-
         if (!$this->handleAuth()) {
             return;
         }
@@ -51,6 +50,15 @@ class PetFoodController extends BaseController
         $brandFilter = $this->parseBrandFilter();
 
         $data = $this->get('catfood')->textSearch($search, $brandFilter);
+
+        //remove discontinued items
+        $data = array_filter($data, function($x)  {
+            if ($x instanceof \PetFoodDB\Model\PetFood) {
+                return !$x->getDiscontinued();
+            }
+            return true;
+        });
+
 
         //sort search results by moisture
         $data = $this->get('catfood')->sortPetFoodBy($data, 'moisture', true);
@@ -116,13 +124,16 @@ class PetFoodController extends BaseController
 
     protected function prepListResponse($data, $retry=false)
     {
+
         if (!is_null($data) && !is_array($data)) {
             $data = [$data];
         }
+
         $list = new BaseList($data);
         $list = $this->prepAmazon($list);
         $list = $this->prepChewy($list);
         $list = $this->prepRatings($list);
+
 
         $maxAge = 7*24*60*60;
         $this->getResponse()->headers()->set('Cache-Control', "public, max-age=$maxAge, s-max-age=$maxAge");
@@ -149,6 +160,7 @@ class PetFoodController extends BaseController
             $newItems = array_filter($items, function($x) use ($deadlyIds) {
                 return !in_array($x->getId(), $deadlyIds);
             });
+
             $list = $list->setItems($newItems);
 
             return $this->prepListResponse($list, true);

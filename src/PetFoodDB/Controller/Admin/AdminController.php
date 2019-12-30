@@ -71,6 +71,7 @@ class AdminController extends PageController
         $this->validateCredentials();
         $controller = $this->get('product.controller');
 
+
         /* @var PetFood $product */
         $product = $this->catFoodService->getById($id);
         if (!$product) {
@@ -159,7 +160,7 @@ class AdminController extends PageController
             'defaults' => $vars,
             'catfood'=> $catFood,
             'posturl' => '/admin/update/process',
-            'showIframe' => $showIframe
+            'showIframe' => false
         ]);
     }
 
