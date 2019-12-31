@@ -179,17 +179,26 @@ class PetFoodService extends BaseService
     }
 
 
-    public function getBrands()
+    public function getBrands($includeDiscontinued = false)
     {
 
         $brands = [];
-        //SELECT catfood.brand as name, catfood_search.brand as brand FROM catfood_search LEFT JOIN catfood ON catfood_search.id = catfood.id WHERE (catfood.id = catfood_search.id) group by catfood.brand
-        $result = $this->db->catfood_search()
-            ->select('catfood.brand as name, catfood_search.brand as brand')
-            ->where('catfood:id = catfood_search.id')
-            ->where('catfood.discontinued = 0')
-            ->group('catfood.brand')
-            ->order('catfood.brand COLLATE NOCASE ASC');
+
+        if (!$includeDiscontinued) {
+            //SELECT catfood.brand as name, catfood_search.brand as brand FROM catfood_search LEFT JOIN catfood ON catfood_search.id = catfood.id WHERE (catfood.id = catfood_search.id) group by catfood.brand
+            $result = $this->db->catfood_search()
+                ->select('catfood.brand as name, catfood_search.brand as brand')
+                ->where('catfood:id = catfood_search.id')
+                ->where('catfood.discontinued = 0')
+                ->group('catfood.brand')
+                ->order('catfood.brand COLLATE NOCASE ASC');
+        } else {
+            $result = $this->db->catfood_search()
+                ->select('catfood.brand as name, catfood_search.brand as brand')
+                ->where('catfood:id = catfood_search.id')
+                ->group('catfood.brand')
+                ->order('catfood.brand COLLATE NOCASE ASC');
+        }
         foreach ($result as $i=>$row) {
             $brands[] = ['index'=>$i, 'name'=>$row['name'], 'brand'=>$row['brand']];
         }

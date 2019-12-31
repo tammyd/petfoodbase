@@ -561,7 +561,7 @@ class PageController extends BaseController
     
 
     protected function getBrandPageUrls() {
-        $brands = $this->catFoodService->getBrands();
+        $brands = $this->catFoodService->getBrands(true);
 
         usort($brands, function($left, $right) {
             return strcasecmp($left['name'], $right['name']);
