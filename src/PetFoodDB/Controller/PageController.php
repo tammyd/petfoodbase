@@ -470,7 +470,7 @@ class PageController extends BaseController
             $urls[] = sprintf("%s/product/%s", $baseUrl, $path);
         }
 
-        $brandUrls = $this->getBrandPageUrls();
+        $brandUrls = $this->getBrandPageUrls(true);
 
         foreach ($brandUrls as $section=>$urlData) {
 
@@ -560,8 +560,8 @@ class PageController extends BaseController
     }
     
 
-    protected function getBrandPageUrls() {
-        $brands = $this->catFoodService->getBrands(true);
+    protected function getBrandPageUrls($discontinued = false) {
+        $brands = $this->catFoodService->getBrands($discontinued);
 
         usort($brands, function($left, $right) {
             return strcasecmp($left['name'], $right['name']);
