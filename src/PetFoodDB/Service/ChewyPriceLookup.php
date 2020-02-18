@@ -280,7 +280,10 @@ class ChewyPriceLookup implements PriceLookupInterface
         $str = preg_replace('/\s(\w+):\s/i', '"$1":', $str);
         $str = str_replace("'", '"', $str);
         $str = str_replace(", ]", " ]", $str);
+        $str = str_replace("'", "\"", $str);
+        $str = str_replace("`", "\"", $str);
         $str = substr($str, 0, -1);
+
         return $str;
     }
 

@@ -174,7 +174,8 @@ class ProductPageController extends PageController
                 ['color'=>'#8a6d3b', 'textStyle' => ['fontSize' => '14'] ],
                 ['color'=>'#3e3354', 'textStyle' => ['fontSize' => '14'] ],
             ],
-            'fontName' => "Maven Pro"
+            'fontName' => "Maven Pro",
+            'enableInteractivity' => false,
         ]);
 
 
