@@ -8,6 +8,7 @@ use PetFoodDB\Command\Tools\TooManySearchResultsException;
 use PetFoodDB\Model\PetFood;
 use PetFoodDB\Traits\ArrayTrait;
 use PetFoodDB\Traits\StringHelperTrait;
+use Symfony\Component\DomCrawler\Crawler;
 use Goutte\Client;
 
 class ChewyPriceLookup implements PriceLookupInterface
@@ -40,6 +41,7 @@ class ChewyPriceLookup implements PriceLookupInterface
 
             $rawResults = $this->parseAllChewyPriceDataFromBaseProductUrl($url);
 
+
             $data = $this->parseRawChewyData($rawResults);
             if ($data) {
                 $data['productUrl'] = $url;
@@ -48,6 +50,7 @@ class ChewyPriceLookup implements PriceLookupInterface
         } else if (!$skipChewySearch) {
             //otherwise search
             $searchTerm = $this->getProducChewySearchTerm($product);
+
 
             try {
                 $data = $this->searchChewyPrice($searchTerm);
@@ -211,6 +214,7 @@ class ChewyPriceLookup implements PriceLookupInterface
 
         $scripts = $crawler->filter('script')->each(function($node) use (&$urls) {
             $text = $node->text();
+
             $check = "var itemData = {";
             if ($this->contains($text, "canonicalURL")) {
 
@@ -219,6 +223,7 @@ class ChewyPriceLookup implements PriceLookupInterface
                 $str = substr($text, $pos + strlen($check) - 1);
                 $str = $this->fixJson($str);
                 $dataArr = json_decode($str, true);
+
 
                 foreach ($dataArr as $item) {
                     $urls[] = [
@@ -231,49 +236,40 @@ class ChewyPriceLookup implements PriceLookupInterface
 
         });
 
-        foreach ($urls as $url) {
-            $data = @$this->parseSingleChewyPriceFromUrl($url['url']); //ignore jsonld parsing
-            $data[0]['price'] = str_replace("$", "", $url['price']);
-            $rows = array_merge($rows, $data);
-        }
 
-        return $rows;
-    }
+        $allProductVariationUrls = $urls;
+        foreach ($allProductVariationUrls as $info) {
+            $url = $info['url'];
 
-    protected function parseSingleChewyPriceFromUrl($url) {
-        $micrometaParser = new \Jkphl\Micrometa($url);
-        $micrometaObjectData = $micrometaParser->toObject();
+            $crawler = $this->getUrlCrawler($url);
+            $price = trim($crawler->filter('span.ga-eec__price')->text());
 
+            $name = trim($crawler->filter('.ga-eec__name')->text());
+            $ounces = $this->parseChewyWeight($name);
 
-        $items = $micrometaObjectData->items;
+            $price = floatval(str_replace('$', '', $price));
+            $priceOunce = null;
 
-        $rows = [];
-
-        foreach ($items as $item) {
-            $properties = $item->properties;
-
-            $offers = $this->getArrayValue($properties, 'offers', []);
-            $nameArr = $this->getArrayValue($properties, 'name', []);
-            $name = isset($nameArr[0]) ? $nameArr[0] : "";
-
-
-            if ($offers || $name) {
-                $prices = [];
-                foreach ($offers as $offer) {
-                    $price = $this->getArrayValue($offer->properties, 'price', [null])[0];
-                    $prices[] = $price;
-                }
-                $rows[] = [
-                    'url' => $url,
-                    'name' => $name,
-                    'price' => implode(", ", $prices)
-                ];
+            if ($ounces && $price) {
+                $priceOunce = floatval($price) / $ounces;
             }
 
+            $result = [
+                'name' => $name,
+                'price' => $price, //$priceOunce,
+                'url' => $url
+            ];
+
+            $rows[] = $result;
+
         }
 
         return $rows;
+
     }
+
+
+    
 
     protected function fixJson($str) {
         $str = trim(preg_replace('/\s\s+/', ' ', $str));
