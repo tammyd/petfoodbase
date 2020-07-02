@@ -151,17 +151,21 @@ class ChewyPriceLookup implements PriceLookupInterface
         }
 
         $ppOunces = array_filter($ppOunces);
+        if ($ppOunces) {
 
-        $low = round(min($ppOunces),2);
-        $high = round(max($ppOunces),2);
+            $low = round(min($ppOunces), 2);
+            $high = round(max($ppOunces), 2);
 
 
-        return [
-            'low' => $low,
-            'high' => $high,
-            'avg' => round(array_sum($ppOunces) / count($ppOunces),2),
-            'name' => $rows[0]['name']
-        ];
+            return [
+                'low' => $low,
+                'high' => $high,
+                'avg' => round(array_sum($ppOunces) / count($ppOunces), 2),
+                'name' => $rows[0]['name']
+            ];
+        } else {
+            return [];
+        }
     }
 
     public function getProducChewySearchTerm(PetFood $product) {
@@ -269,7 +273,7 @@ class ChewyPriceLookup implements PriceLookupInterface
     }
 
 
-    
+
 
     protected function fixJson($str) {
         $str = trim(preg_replace('/\s\s+/', ' ', $str));
