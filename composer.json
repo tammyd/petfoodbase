@@ -1,6 +1,6 @@
 {
     "name": "tammyd/PetFoodBase",
-    "version": "0.9.81",
+    "version": "0.9.90",
     "authors": [
         {
             "name": "Tammy D",
@@ -25,10 +25,7 @@
         "symfony/class-loader": "2.5.*",
         "symfony/serializer": "2.5.*",
         "symfony/console": "3.*",
-        "exeu/apai-io": "~2.0",
         "phpunit/phpunit": "*",
-
-        "vdb/php-spider": "0.2",
         "symfony/yaml": "^3.0",
         "symfony/var-dumper": "^3.0",
         "fabpot/goutte": "^3.1",
