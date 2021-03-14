@@ -55,7 +55,8 @@ class PetFoodExtension extends \Twig_Extension
             new \Twig_SimpleFilter('overall_rating', [$this, 'overallRating'], ['is_safe'=>[true]]),
             new \Twig_SimpleFilter('brand_rating', [$this, 'brandRating'], ['is_safe'=>[true]]),
             new \Twig_SimpleFilter('price_per_oz', [$this, 'priceOunceSummary'], ['is_safe'=>[true]]),
-            new \Twig_SimpleFilter('chewy_url', [$this, 'chewyAffiliateUrl'], ['is_safe'=>[true]]),
+            new \Twig_SimpleFilter('chewy_url_old', [$this, 'chewyAffiliateUrl'], ['is_safe'=>[true]]),
+            new \Twig_SimpleFilter('chewy_url', [$this, 'chewyRedirectUrl'], ['is_safe'=>[true]]),
         ];
     }
 
@@ -121,6 +122,20 @@ class PetFoodExtension extends \Twig_Extension
         $result = is_string($source) ? sprintf($template, $source, $url) : sprintf($template, $url);
 
         return $result;
+    }
+
+    public function chewyRedirectUrl($chewyUrl, $source = null) {
+
+        $chewyPath = str_replace("https://www.chewy.com/", "", $chewyUrl);
+        $chewyPath = str_replace("https://chewy.com/", "", $chewyPath);
+        $chewyPath = urlencode($chewyPath);
+
+        $source = $source ? $source : "none";
+        $url = sprintf("/chewy/%s/%s", $source, $chewyPath);
+        $url = str_replace('//', '/', $url);
+
+
+        return $url;
     }
 
     public function amazonUrl(PetFood $petFood, $target = "_blank", $classes = "", $text = null, $eventType='link') {

@@ -104,8 +104,8 @@ class PetFood
         $dry = array_map(function ($x) use ($dryFactor) { return $x * $dryFactor; }, $wet);
         $dry['moisture'] = 0.0;
 
-        //for products with large initial moisture %s, the differences past 100% become significantly amplified
-        //therefore, we'll normalize to to the initial % of totals.
+        //For products with large initial moisture %s, the differences past 100% become significantly amplified.
+        //Therefore we'll normalize to the initial % of totals.
         $wetSum = array_sum($wet);
         $drySum = array_sum($dry);
         $mult = $wetSum / $drySum;

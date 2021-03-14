@@ -56,6 +56,20 @@ class PageController extends BaseController
         return $this;
     }
 
+    static function makeChewyAffiliateUrl($pubref, $chewyPath) {
+        $https = urlencode("https://www.chewy.com/");
+        $template = "https://prf.hn/click/camref:1011l4bA9/pubref:%s/destination:%s%s";
+
+        $result = sprintf($template, $pubref, $https, $chewyPath);
+        return $result;
+    }
+
+    public function chewyAction($pubref, $chewyPath) {
+
+        $redirectTo = self::makeChewyAffiliateUrl($pubref, $chewyPath);
+        $this->app->redirect($redirectTo);
+    }
+
 
 
     public function fourOhFourAction() {

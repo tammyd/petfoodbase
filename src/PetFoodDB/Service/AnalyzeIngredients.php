@@ -88,30 +88,8 @@ class AnalyzeIngredients
 
 
     static function getNonSeafoodProteins() {
-        $nonSeafoodProteins = [
-            'goat',
-            'chicken',
-            'chicken breast',
-            'turkey',
-            'beef',
-            'duck',
-            'lamb',
-            'bison',
-            'mutton',
-            'rabbit',
-            'venison',
-            'wild boar',
-            'pork',
-            'guineafowl',
-            'quail',
-            'brushtail',
-            'buffalo',
-            'eel',
-            'pheasant',
-            'boar',
-            'kangaroo',
-            'alligator'
-        ];
+        $nonSeafoodProteins = ['goat', 'chicken', 'chicken breast', 'turkey', 'beef', 'duck', 'lamb', 'bison', 'mutton', 'rabbit',
+            'venison', 'wild boar', 'pork', 'guineafowl', 'quail', 'brushtail', 'buffalo', 'eel', 'pheasant', 'boar', 'kangaroo', 'alligator'];
         return $nonSeafoodProteins;
     }
 
