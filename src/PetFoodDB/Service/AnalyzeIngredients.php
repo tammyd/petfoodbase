@@ -27,7 +27,7 @@ class AnalyzeIngredients
         return ['heart', 'thigh', 'liver', 'lung', 'liver', 'giblets', 'meal', 'white meat', 'filets', 'red meat', 'meat meal',
             'whole meat', 'cutlets', 'tripe', 'meat', '(boneless, skinless breast)', 'livers', 'gizzards', 'gizzard', 'hearts', 'necks',
             'giblets (liver, heart, kidney)', 'with ground bone', '(ground with bone)', 'kidney', 'lungs', 'trachea', 'skin',
-            'with bone'];
+            'with bone', 'spleen'];
     }
 
     static function getSeafoodProteins() {
