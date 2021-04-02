@@ -88,9 +88,18 @@ class BrandAnalysis extends BaseService
             return $product->getDiscontinued() ? null : $product->getUpdated();
         }, $products);
         $dates = array_filter($dates);
-        $min = min($dates);
-        
+        $min = count($dates) > 0 ? min($dates):null;
+
         return $min;
+    }
+
+    public function isDiscontinued($brand) {
+        $catfoodService = $this->catFoodService;
+        $products = $catfoodService->getByBrand($brand);
+        $current = array_filter($products, function ($p) {
+            return !$p->getDiscontinued();
+        });
+        return count($current) < 1;
     }
 
 
