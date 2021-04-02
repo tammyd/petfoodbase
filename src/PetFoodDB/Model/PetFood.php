@@ -320,6 +320,11 @@ class PetFood
         return $this->discontinued;
     }
 
+    public function isDiscontinued()
+    {
+        return $this->getDiscontinued();
+    }
+
     /**
      * @param boolean $discontinued
      *

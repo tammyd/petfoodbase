@@ -100,6 +100,7 @@ class AdminTopListsController extends AdminController
 
         $data = $brandService->getAllData();
 
+
         //sort on brand score
         usort($data, function($a, $b) {
             $aScore = $a['rank'];
@@ -109,10 +110,12 @@ class AdminTopListsController extends AdminController
 
         $displayData = [];
         foreach ($data as $i=>$row) {
+            $lastUpdated = $brandService->getLastUpdated($row['brand']);
             $entry = [
                 'rank' => $row['rank'],
                 'brand' => $row['brand'],
-                'score' => $row['avg_total_score']
+                'score' => $row['avg_total_score'],
+                'updated' => $lastUpdated
             ];
             $displayData[] = $entry;
         }

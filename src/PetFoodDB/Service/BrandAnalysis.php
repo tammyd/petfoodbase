@@ -80,6 +80,20 @@ class BrandAnalysis extends BaseService
         return $rows;
     }
 
+    public function getLastUpdated($brand) {
+        /* @var \PetFoodDB\Service\PetFoodService $catfoodService */
+        $catfoodService = $this->catFoodService;
+        $products = $catfoodService->getByBrand($brand);
+        $dates = array_map(function($product) {
+            return $product->getDiscontinued() ? null : $product->getUpdated();
+        }, $products);
+        $dates = array_filter($dates);
+        $min = min($dates);
+        
+        return $min;
+    }
+
+
     public function rateBrand ($brand) {
         $brandData = $this->getBrandData($brand);
 

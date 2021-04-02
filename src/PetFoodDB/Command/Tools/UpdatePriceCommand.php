@@ -52,6 +52,9 @@ class UpdatePriceCommand extends ContainerAwareCommand
                 if ($product->getId() < $minId) {
                     continue;
                 }
+                if ($product->getDiscontinued()) {
+                    continue;
+                }
                 $result = $this->updateCatFood($product, $skipSearch);
                 $results[] = $result;
                 dump($result);
