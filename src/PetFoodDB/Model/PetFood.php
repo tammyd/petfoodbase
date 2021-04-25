@@ -25,6 +25,9 @@ class PetFood
     protected $source;
     protected $updated;
     protected $discontinued;
+    protected $raw;
+    protected $veterinary;
+    protected $baby;
 
     protected $ingredients;
     protected $amazonPurchaseTemplate = 'http://www.amazon.com/exec/obidos/ASIN/%s/catfood00b-20';
@@ -164,7 +167,10 @@ class PetFood
             'brand' => $this->getBrand(),
             'flavor' => $this->getFlavor(),
             'ingredients' => $this->ingredients,
-            'discontinued' => $this->discontinued
+            'discontinued' => $this->discontinued,
+            'raw' => $this->raw,
+            'baby' => $this->baby,
+            'veterinary' => $this->veterinary
         ];
 
         if ($this->getId()) {
@@ -332,6 +338,60 @@ class PetFood
     {
         $this->discontinued = (bool) $discontinued;
 
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRaw()
+    {
+        return $this->raw;
+    }
+
+    /**
+     * @param boolean $raw
+     * @return PetFood
+     */
+    public function setRaw($raw)
+    {
+        $this->raw = (bool)$raw;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getVeterinary()
+    {
+        return $this->veterinary;
+    }
+
+    /**
+     * @param boolean $veterinary
+     * @return PetFood
+     */
+    public function setVeterinary($veterinary)
+    {
+        $this->veterinary = (bool) $veterinary;
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getBaby()
+    {
+        return $this->baby;
+    }
+
+    /**
+     * @param boolean $baby
+     * @return PetFood
+     */
+    public function setBaby($baby)
+    {
+        $this->baby = (bool) $baby;
         return $this;
     }
 

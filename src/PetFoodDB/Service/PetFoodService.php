@@ -237,7 +237,6 @@ class PetFoodService extends BaseService
     public function update(PetFood $catfood)
     {
         $dbModel = $catfood->dbModel();
-        
         return $this->db->catfood[$dbModel['id']]->update($dbModel);
 
     }

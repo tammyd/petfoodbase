@@ -216,7 +216,7 @@ class AdminController extends PageController
             $url = $this->updatePath . '?' . http_build_query($submittedVars);
             $this->app->redirect($url);
         }
-        
+
         $service->update($catFood);
         
         $this->updateSubmittedShopData($id, $submittedVars);
@@ -292,13 +292,12 @@ class AdminController extends PageController
                 $data[$field] = null;
             }
         }
-        
-        if (isset($input['discontinued']) && $input['discontinued'] == 'on') {
-            $data['discontinued'] = 1;
-        } else {
-            $data['discontinued'] = 0;
-        }
 
+        $data['discontinued'] =  (isset($input['discontinued']) && $input['discontinued'] == 'on')  ? 1 : 0;
+        $data['raw'] =  (isset($input['raw']) && $input['raw'] == 'on')  ? 1 : 0;
+        $data['baby'] =  (isset($input['baby']) && $input['baby'] == 'on')  ? 1 : 0;
+        $data['veterinary'] =  (isset($input['veterinary']) && $input['veterinary'] == 'on')  ? 1 : 0;
+        
 
         if ($action == 'insert') {
             $data['updated'] = new \DateTime();
