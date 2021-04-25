@@ -113,14 +113,16 @@ class AdminTopListsController extends AdminController
 
         $displayData = [];
         foreach ($data as $i=>$row) {
-                $lastUpdated = $brandService->getLastUpdated($row['brand']);
-                $entry = [
-                    'rank' => $row['rank'],
-                    'brand' => $row['brand'],
-                    'score' => $row['avg_total_score'],
-                    'updated' => $lastUpdated
-                ];
-                $displayData[] = $entry;
+            $lastUpdated = $brandService->getLastUpdated($row['brand']);
+            $entry = [
+                'rank' => $row['rank'],
+                'brand' => $row['brand'],
+                'score' => $row['avg_total_score'],
+                'wet' => $row['num_wet'] ? $row['num_wet']  : 0 ,
+                'dry' => $row['num_dry'] ? $row['num_dry']: 0,
+                'updated' => $lastUpdated
+            ];
+            $displayData[] = $entry;
         }
 
         $renderData = [
