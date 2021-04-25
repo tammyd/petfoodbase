@@ -65,8 +65,7 @@ trait DBTrait
 "updated" DATETIME DEFAULT (CURRENT_TIMESTAMP) ,
 "ingredients" VARCHAR,
 "discontinued" BOOL DEFAULT 0,
-"catfood" VARCHAR DEFAULT catfood,
-"parserClass" VARCHAR);';
+"catfood" VARCHAR DEFAULT catfood);';
 
         $sqlCommands[] = 'CREATE TABLE "shop" ("id" INTEGER PRIMARY KEY  NOT NULL  UNIQUE , "amazon" TEXT, "walmart" TEXT, "petsmart" TEXT, "petco" TEXT, "chewy" TEXT);';
         $sqlCommands[] = 'CREATE TABLE "prices" ("id" INTEGER PRIMARY KEY  NOT NULL ,"min" FLOAT DEFAULT (0) ,"max" FLOAT DEFAULT (0) ,"avg" FLOAT DEFAULT (0) ,"url" TEXT,"date" DATETIME);';

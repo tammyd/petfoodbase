@@ -103,7 +103,7 @@ class AdminTopListsController extends AdminController
             $discontinued = $this->get('brand.analysis')->isDiscontinued($row['brand']);
             return !$discontinued;
         });
-        
+
         //sort on brand score
         usort($data, function($a, $b) {
             $aScore = $a['rank'];

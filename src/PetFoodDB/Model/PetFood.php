@@ -26,7 +26,6 @@ class PetFood
     protected $updated;
     protected $discontinued;
 
-    public $parserClass;
     protected $ingredients;
     protected $amazonPurchaseTemplate = 'http://www.amazon.com/exec/obidos/ASIN/%s/catfood00b-20';
 
@@ -165,7 +164,6 @@ class PetFood
             'brand' => $this->getBrand(),
             'flavor' => $this->getFlavor(),
             'ingredients' => $this->ingredients,
-            'parserClass' => $this->parserClass,
             'discontinued' => $this->discontinued
         ];
 
@@ -353,18 +351,6 @@ class PetFood
     public function getIngredients()
     {
         return $this->ingredients;
-    }
-
-    /**
-     * @param mixed $parserClass
-     *
-     * @return $this
-     */
-    public function setParserClass($parserClass)
-    {
-        $this->parserClass = $parserClass;
-
-        return $this;
     }
 
     public function getIsDryFood() {
