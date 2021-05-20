@@ -272,7 +272,6 @@ class PageController extends BaseController
         $dryRating = $this->calculateAverageRating($dry);
 
         $brandId = $this->cleanText(strtolower($products[0]->getBrand()));
-        $amazonTemplate = "partials/brands/amazon/$brandId.html.twig";
         $infoTemplate = "partials/brands/$brandId.html.twig";
 
         $brandData = $brandAnalysis->getBrandData($brand);
@@ -298,7 +297,8 @@ class PageController extends BaseController
             'brandRating' => $brandRating,
             'hideDryProductPrices' => !$dryPurchaseInfo,
             'hideWetProductPrices' => !$wetPurchaseInfo,
-            'chewySource' => $this->makeChewySource($brand)
+            'chewySource' => $this->makeChewySource($brand),
+            'isVetBrand' => $this->isBrandAllVet(array_merge($wet, $dry))
             
         ];
 
@@ -313,6 +313,15 @@ class PageController extends BaseController
         $source = str_replace(' ', '_', $source);
         return "brand_$source";
 
+    }
+
+    protected function isBrandAllVet($products) {
+        foreach ($products as $prod) {
+            if (!$prod->getVeterinary()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     protected function getChewyBrandUrl($brandInfo, $products) {
