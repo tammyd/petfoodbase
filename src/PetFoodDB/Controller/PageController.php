@@ -281,6 +281,9 @@ class PageController extends BaseController
         $chewyUrl = $this->getChewyBrandUrl($brandInfo, array_merge($wet, $dry));
         $brandInfo['chewy'] = $chewyUrl;
 
+        $lastUpdated = $this->daysSinceAppProductsUpdated(array_merge($wet, $dry));
+
+
         $data = [
             'img' => $brandId,
             'brand' => $brandInfo,
@@ -298,9 +301,11 @@ class PageController extends BaseController
             'hideDryProductPrices' => !$dryPurchaseInfo,
             'hideWetProductPrices' => !$wetPurchaseInfo,
             'chewySource' => $this->makeChewySource($brand),
-            'isVetBrand' => $this->isBrandAllVet(array_merge($wet, $dry))
+            'isVetBrand' => $this->isBrandAllVet(array_merge($wet, $dry)),
+            'lastUpdated' => $lastUpdated
             
         ];
+        
 
         $this->render('brand.html.twig', $data);
     }
@@ -322,6 +327,21 @@ class PageController extends BaseController
             }
         }
         return true;
+    }
+
+    protected function daysSinceAppProductsUpdated($products) {
+        $lastUpdated = null;
+        foreach ($products as $prod) {
+            $date = strtotime($prod->getUpdated());
+            if (is_null($lastUpdated) || $date < $lastUpdated) {
+                $lastUpdated = $date;
+            }
+        }
+        $origin = new \DateTime(date("M Y", $lastUpdated));
+        $target = new \DateTime(date("M Y"));
+
+        $interval = $origin->diff($target);
+        return $interval->days;
     }
 
     protected function getChewyBrandUrl($brandInfo, $products) {
