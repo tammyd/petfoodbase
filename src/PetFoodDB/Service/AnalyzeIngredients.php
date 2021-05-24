@@ -51,6 +51,10 @@ class AnalyzeIngredients
         return ["corn", "rice", "wheat", "starch", "flour", "soy", 'maize'];
     }
 
+    static function getFakeFillers() {
+        return ["wheat grass", "wheatgrass"];
+    }
+
     static function getPreservatives() {
 
         return ['bha', 'bht', 'ethoxyquin', 'propyl gallate', 'tbhq'];
@@ -259,11 +263,36 @@ class AnalyzeIngredients
 
     }
 
+    static function contains($haystack, $needle, $caseSensitive=true)
+    {
+        if (!$caseSensitive) {
+            $haystack = strtolower($haystack);
+            $needle = strtolower($needle);
+        }
+
+        return strpos($haystack, $needle) !== false;
+    }
+
+    static function containsAny($haystack, array $needles, $caseSensitive=true)
+    {
+        foreach ($needles as $needle) {
+            if (self::contains($haystack, $needle, $caseSensitive)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     static function isIngredientFiller($ingredient) {
         $phrases = self::getFillers();
+        $fakes = self::getFakeFillers();
+
         foreach ($phrases as $phrase) {
             if (strpos(strtolower($ingredient), $phrase) !== false) {
-                return true;
+                if (!self::containsAny($ingredient, $fakes, false)) {
+                    return true;
+                }
             }
         }
 
