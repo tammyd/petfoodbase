@@ -4,6 +4,7 @@
 namespace PetFoodDB\Twig;
 
 use PetFoodDB\Service\NewAnalysisService;
+use Twig\TwigFunction;
 
 class StatsExtension extends \Twig_Extension
 {
@@ -36,22 +37,59 @@ class StatsExtension extends \Twig_Extension
             new \Twig_SimpleFilter('inferior', [$this, 'wrapInferior'], ['is_safe'=>[true]]),
             new \Twig_SimpleFilter('allergen', [$this, 'wrapAllergen'], ['is_safe'=>[true]]),
             new \Twig_SimpleFilter('quality', [$this, 'wrapQuality'], ['is_safe'=>[true]]),
-            new \Twig_SimpleFilter('review_highlights', [$this, 'reviewHighlights'], ['is_safe'=>[true]])
+            new \Twig_SimpleFilter('review_highlights', [$this, 'reviewHighlights'], ['is_safe'=>[true]]),
+            new \Twig_SimpleFilter('dump', [$this, 'dump'], ['is_safe'=>[true]]),
         ];
     }
 
-    public function reviewHighlights($productStats) {
+    public function getFunctions()
+    {
+        $functions = parent::getFunctions();
+        $functions[] = new \Twig\TwigFunction('has_highlights', [$this, 'hasHighlights']);
+
+        return $functions;
+    }
+
+    public function hasHighlights($productStats, $analysis) {
+        $highlights = $this->getHighlights($productStats, $analysis);
+        return count($highlights) > 0;
+    }
+
+
+    public function dump($var) {
+        ob_start();
+        dump($var);
+        $d = ob_get_clean();
+        return "<span>$d</span>";
+    }
+
+    protected function getHighlights($productStats, $analysis) {
         $highlights = [];
 
+        if (isset($analysis['quality'][0])) {
+            $highlights[] = "First ingredient is a quality protein.";
+        }
+
+        if (empty($analysis['questionable'])) {
+            $highlights[] = "Contains no questionable ingredients or fillers.";
+        }
+
         if ($this->isSignificantlyAboveAverage($productStats['protein'])) {
-            $highlights[] = "contains significantly more protein than average";
+            $highlights[] = "Contains significantly more protein than average.";
         }
         if ($this->isSignificantlyBelowAverage($productStats['carbohydrates'])) {
-            $highlights[] = "contains significantly fewer carbs than average";
+            $highlights[] = "Contains significantly fewer carbs than average.";
         }
 
-        if (count($highlights) < 1) return "";
+        return $highlights;
+    }
 
+    public function reviewHighlights($productStats, $analysis) {
+        $highlights = $this->getHighlights($productStats, $analysis);
+
+        if (count($highlights) < 1) {
+            return "";
+        }
 
         $html = "<ul>";
         foreach ($highlights as $point) {
