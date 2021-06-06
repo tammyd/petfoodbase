@@ -66,13 +66,13 @@ class AdminTopListsController extends AdminController
 
         $this->validateCredentials();
         $ranker = $this->get('catfood.ranker');
-        $products = $ranker->getTopWet(8);
+        $products = $ranker->getTopWet(9);
 
 
         $data = [
             'products' => $products,
             'title' => "Top Wet Products",
-            'info' => "Top wet products. Sorted by score, the diff (protein - carbs)"
+            'info' => "Top wet products. Sorted by score, then diff (protein - carbs)"
         ];
 
         $this->render('admin/admin-product-list.html.twig', $data);

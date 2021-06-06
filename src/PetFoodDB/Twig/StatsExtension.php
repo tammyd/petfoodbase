@@ -7,6 +7,8 @@ use PetFoodDB\Service\NewAnalysisService;
 
 class StatsExtension extends \Twig_Extension
 {
+
+
     /**
      * @var \Slim\Slim
      */
@@ -33,8 +35,76 @@ class StatsExtension extends \Twig_Extension
             new \Twig_SimpleFilter('stat_display', [$this, 'statDisplay'], ['is_safe'=>[true]]),
             new \Twig_SimpleFilter('inferior', [$this, 'wrapInferior'], ['is_safe'=>[true]]),
             new \Twig_SimpleFilter('allergen', [$this, 'wrapAllergen'], ['is_safe'=>[true]]),
-            new \Twig_SimpleFilter('quality', [$this, 'wrapQuality'], ['is_safe'=>[true]])
+            new \Twig_SimpleFilter('quality', [$this, 'wrapQuality'], ['is_safe'=>[true]]),
+            new \Twig_SimpleFilter('review_highlights', [$this, 'reviewHighlights'], ['is_safe'=>[true]])
         ];
+    }
+
+    public function reviewHighlights($productStats) {
+        $highlights = [];
+
+        if ($this->isSignificantlyAboveAverage($productStats['protein'])) {
+            $highlights[] = "contains significantly more protein than average";
+        }
+        if ($this->isSignificantlyBelowAverage($productStats['carbohydrates'])) {
+            $highlights[] = "contains significantly fewer carbs than average";
+        }
+
+        if (count($highlights) < 1) return "";
+
+
+        $html = "<ul>";
+        foreach ($highlights as $point) {
+            $html .= "<li><h5 class='unbold' style='margin-bottom: 0px; margin-top: 0px;'>$point</h5></li>";
+        }
+        $html .= "</ul>";
+        return $html;
+
+    }
+
+    protected function isAverage($diff) {
+        return  abs($diff) <= NewAnalysisService::STAT_ABOVE_AVERAGE_SD;
+    }
+
+    protected function isAboveAverageButNotSignificantly($diff) {
+        $abs = abs($diff);
+        if ($abs > NewAnalysisService::STAT_ABOVE_AVERAGE_SD) {
+            if ($abs <= NewAnalysisService::STAT_SIG_ABOVE_SD) {
+                return $diff > 0;
+            }
+        }
+
+        return false;
+    }
+
+    protected function isBelowAverageButNotSignificantly($diff) {
+        $abs = abs($diff);
+        if ($abs > NewAnalysisService::STAT_ABOVE_AVERAGE_SD) {
+            if ($abs <= NewAnalysisService::STAT_SIG_ABOVE_SD) {
+                return $diff <= 0;
+            }
+        }
+
+        return false;
+    }
+
+    protected function isSignificantlyAboveAverage($diff) {
+        $abs = abs($diff);
+        if ($abs > NewAnalysisService::STAT_SIG_ABOVE_SD) {
+            return $diff > 0;
+        }
+
+        return false;
+    }
+
+
+    protected function isSignificantlyBelowAverage($diff) {
+        $abs = abs($diff);
+        if ($abs > NewAnalysisService::STAT_SIG_ABOVE_SD) {
+            return $diff <= 0;
+        }
+
+        return false;
     }
 
     protected function displayChoser($diff, $phrases) {
@@ -63,6 +133,7 @@ class StatsExtension extends \Twig_Extension
 
     public function carbDisplay($value) {
 
+
         $phrases = [
             -2 => $this->wrapWithClass("significantly fewer carbohydrates than average", "rating bold text-orig-success"),
             -1 => $this->wrapWithClass("fewer carbohydrates than average", "rating text-orig-success"),
@@ -71,7 +142,7 @@ class StatsExtension extends \Twig_Extension
             2 => $this->wrapWithClass("significantly more carbohydrates than average", "rating bold text-danger")
         ];
 
-        return $this->displayChoser($value, $phrases, true);
+        return $this->displayChoser($value, $phrases);
     }
 
     public function proteinDisplay($value) {

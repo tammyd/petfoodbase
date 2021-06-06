@@ -49,9 +49,8 @@ class PetFoodExtension extends \Twig_Extension
             new \Twig_SimpleFilter('petfood_image_max', [$this, 'imageUrlMax'], ['is_safe'=>[true]]),
             new \Twig_SimpleFilter('petfood_url', [$this, 'petfoodUrl'], ['is_safe'=>[true]]),
             new \Twig_SimpleFilter('brand_url', [$this, 'brandUrl'], ['is_safe'=>[true]]),
-            new \Twig_SimpleFilter('paws', [$this, 'paws'], ['is_safe'=>[true]]),
+            new \Twig_SimpleFilter('paws', [$this, 'paws2'], ['is_safe'=>[true]]),
             new \Twig_SimpleFilter('petfood_amazon_url', [$this, 'amazonUrl'], ['is_safe'=>[true]]),
-            new \Twig_SimpleFilter('pinterest', [$this, 'pinterestData'], ['is_safe'=>[true]]),
             new \Twig_SimpleFilter('overall_rating', [$this, 'overallRating'], ['is_safe'=>[true]]),
             new \Twig_SimpleFilter('brand_rating', [$this, 'brandRating'], ['is_safe'=>[true]]),
             new \Twig_SimpleFilter('price_per_oz', [$this, 'priceOunceSummary'], ['is_safe'=>[true]]),
@@ -212,6 +211,18 @@ class PetFoodExtension extends \Twig_Extension
         $html = "";
         for ($i=0; $i<$number; $i++) {
             $html .= "<i class='fa fa-paw $class' aria-hidden='true'></i>";
+        }
+
+        return $html;
+    }
+
+    public function paws2($number, $class = null) {
+        $html = "";
+        for ($i=0; $i<$number; $i++) {
+            $html .= "<i class='fa fa-paw $class' aria-hidden='true'></i>";
+        }
+        for ($i = 0; $i<5-$number; $i++) {
+            $html .= "<i class='fa fa-paw null-paws' aria-hidden='true'></i>";
         }
 
         return $html;
