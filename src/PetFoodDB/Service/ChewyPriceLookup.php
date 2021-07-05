@@ -35,6 +35,7 @@ class ChewyPriceLookup implements PriceLookupInterface
         $shopUrls = $this->shopService->getAll($product->getId());
 
 
+
         $data = [];
         if (isset($shopUrls['chewy']) && $shopUrls['chewy']) {
             $url = $shopUrls['chewy'];
@@ -43,6 +44,7 @@ class ChewyPriceLookup implements PriceLookupInterface
 
 
             $data = $this->parseRawChewyData($rawResults);
+
             if ($data) {
                 $data['productUrl'] = $url;
                 $data['url'] = $url;
@@ -144,7 +146,6 @@ class ChewyPriceLookup implements PriceLookupInterface
             return [];
         }
 
-
         $ppOunces = [];
         foreach ($rows as $row) {
             $ppOunces[] = $this->parseChewyPricePerOunce($row);
@@ -199,8 +200,15 @@ class ChewyPriceLookup implements PriceLookupInterface
         preg_match("/([\d\.]+)-lb/", $name, $lb);
         preg_match("/of (\d+)/", $name, $count);
 
+        if (!$lb) {
+            preg_match("/([\d\.]+)lb/", $name, $lb);
+        }
+
         if (!$oz) {
             preg_match("/([\d\.]+)\soz/", $name, $oz);
+        }
+        if (!$oz) {
+            preg_match("/([\d\.]+)oz/", $name, $oz);
         }
 
         $totalOunces = isset($oz[1]) ? $oz[1] : 0;
