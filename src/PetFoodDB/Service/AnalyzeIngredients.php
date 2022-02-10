@@ -48,7 +48,7 @@ class AnalyzeIngredients
     }
 
     static function getFillers() {
-        return ["corn", "rice", "wheat", "starch", "flour", "soy", 'maize'];
+        return ["corn", "rice", "wheat", "starch", "flour", "soy", 'maize', "oatmeal", "barley", "sorghum"];
     }
 
     static function getFakeFillers() {
