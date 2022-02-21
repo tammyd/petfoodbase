@@ -37,7 +37,7 @@ class AnalyzeIngredients
             'yellowfin tuna', 'seabream', 'catfish', 'sea bream', 'menhaden fish', 'ahi tuna', 'sardine', 'arctic char',
             'sardines', 'basa', 'saba', 'mackerel', 'trevally', 'barramundi', 'shrimp', 'crab', 'polluck', 'bonito', 'hoki', 'krill', 'pilchard',
             'acadian redﬁsh', 'atlantic monkfish', 'silver hake', 'blue whiting', 'rockfish', 'big redeye', 'barramundi','shirasu', 'skipjack', 'skipjack tuna',
-            'threadfin bream', 'red bigeye', 'unagi', 'hake'
+            'threadfin bream', 'red bigeye', 'unagi', 'hake', 'kahawai'
         ];
 
         return $seafood;
