@@ -112,7 +112,7 @@ class AnalyzeIngredients
             'corn' => ['corn', 'cornmeal', 'corn meal', 'corn starch'],
             'wheat gluten' => ['wheat gluten'],
             'soy' => ['soy'],
-            'dairy' => ['dairy', 'milk', 'cheese'],
+            'dairy' => ['dairy', 'milk', 'cheese', 'whey'],
             'eggs' => ['eggs', 'egg'],
             'artifical colors' => self::getArtificialColors(),
             'meat by-products'=> ['meat by-products']
