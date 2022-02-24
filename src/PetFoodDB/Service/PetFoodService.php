@@ -342,11 +342,11 @@ class PetFoodService extends BaseService
         return false;
     }
 
-    protected function getChewyUrl(PetFood $product) {
-        $data =  $this->db->prices[$product->getId()];
+    public function getChewyUrl(PetFood $product) {
+        $data =  $this->db->shop[$product->getId()];
         if ($data) {
             $arr = iterator_to_array($data);
-            return $arr['avg'];
+            return $arr['chewy'];
         }
         return false;
     }

@@ -413,6 +413,16 @@ class PetFood
         return $this->ingredients;
     }
 
+    /**
+     * @param string $ingredients
+     * @return PetFood
+     */
+    public function setIngredients($ingredients)
+    {
+        $this->ingredients = $ingredients;
+        return $this;
+    }
+
     public function getIsDryFood() {
         $wet = $this->getWetPercentages();
         return $wet['moisture'] <= self::WET_DRY_PERCENT;
