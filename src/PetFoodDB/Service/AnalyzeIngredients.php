@@ -525,6 +525,32 @@ class AnalyzeIngredients
         return $ick ? $ick : false;
     }
 
+    public static function hasAnyFillers(PetFood $catFood) {
+        $ingredients = self::parseIngredients($catFood);
+        $ick = [];
+        foreach ($ingredients as $ingredient) {
+            $ingredient = self::stripBrackets($ingredient);
+            if (self::isIngredientFiller($ingredient)) {
+                $ick[] = $ingredient;
+            }
+        }
+
+        return $ick ? $ick : false;
+    }
+
+    public static function hasAnyByProducts(PetFood $catFood) {
+        $ingredients = self::parseIngredients($catFood);
+        $ick = [];
+        foreach ($ingredients as $ingredient) {
+            $ingredient = self::stripBrackets($ingredient);
+            if (self::isIngredientByProduct($ingredient)) {
+                $ick[] = $ingredient;
+            }
+        }
+
+        return $ick ? $ick : false;
+    }
+
 
     public function calcIngredientScore(PetFood $catFood) {
 
@@ -571,22 +597,33 @@ class AnalyzeIngredients
             $this->getLogger()->debug($catFood->getId() . ": Reducing 1 from ingredient score b/c byproduct or filler is top");
         }
 
-        $ingredientScore -= 0.5 * $otherByProducts;
-        $this->getLogger()->debug($catFood->getId() . ": Reducing " . 0.5 * $otherByProducts . " from ingredient score b/c $otherByProducts other by products");
+        if ($otherByProducts) {
+            $ingredientScore -= 0.5 * $otherByProducts;
+            $this->getLogger()->debug($catFood->getId() . ": Reducing " . 0.5 * $otherByProducts . " from ingredient score b/c $otherByProducts other by products in top 5");
+        } elseif(self::hasAnyByProducts() && !$topByProduct) {
+            //new - has by products outside of top 5
+            $this->getLogger()->debug($catFood->getId() . ": Reducing 0.25 from ingredient score b/c has byproducts outside of top 5");
+        }
 
         if ($hasFillers) {
-            $this->getLogger()->debug($catFood->getId() . ": Reducing 0.5 from ingredient score b/c has fillers");
+            $this->getLogger()->debug($catFood->getId() . ": Reducing 0.5 from ingredient score b/c has fillers in top 5");
             $ingredientScore -= 0.5;
+        } elseif (self::hasAnyFillers($catFood) && !$topFiller) {
+            //new - has fillers after top 5
+            $this->getLogger()->debug($catFood->getId() . ": Reducing 0.25 from ingredient score b/c has fillers outside of top 5");
+            $ingredientScore -= 0.25;
         }
 
-        $numIngredients = count(self::parseIngredients($catFood));
-        if ($numIngredients < 15) {
-            $this->getLogger()->debug($catFood->getId() . ": Adding 1.5 to ingredient score b/c has $numIngredients ingredients (ie < 15)");
-            $ingredientScore += 1.5;
-        } elseif ($numIngredients < 20) {
-            $this->getLogger()->debug($catFood->getId() . ": Adding 1 to ingredient score b/c has $numIngredients ingredients (ie < 20)");
-            $ingredientScore += 1.0;
-        }
+
+        //new - dont care about # of ingredients.
+//        $numIngredients = count(self::parseIngredients($catFood));
+//        if ($numIngredients < 15) {
+//            $this->getLogger()->debug($catFood->getId() . ": Adding 1.5 to ingredient score b/c has $numIngredients ingredients (ie < 15)");
+//            $ingredientScore += 1.5;
+//        } elseif ($numIngredients < 20) {
+//            $this->getLogger()->debug($catFood->getId() . ": Adding 1 to ingredient score b/c has $numIngredients ingredients (ie < 20)");
+//            $ingredientScore += 1.0;
+//        }
 
         if (self::hasUndesierablePreservative($catFood)) {
             $ingredientScore -= 1.0;
