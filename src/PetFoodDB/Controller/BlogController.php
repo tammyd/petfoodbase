@@ -96,7 +96,6 @@ class BlogController extends PageController
 
         $template = $this->getArrayValue($meta, 'template', 'post.html.twig');
 
-        
         $this->render($template, $data);
     }
 

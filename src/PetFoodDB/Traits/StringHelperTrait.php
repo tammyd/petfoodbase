@@ -122,6 +122,7 @@ trait StringHelperTrait
 
         return $text;
     }
+
     
 
 

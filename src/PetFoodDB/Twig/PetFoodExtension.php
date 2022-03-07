@@ -6,7 +6,6 @@ namespace PetFoodDB\Twig;
 
 use PetFoodDB\Model\PetFood;
 use PetFoodDB\Service\BrandAnalysis;
-use PetFoodDB\Traits\StringHelperTrait;
 
 class PetFoodExtension extends \Twig_Extension
 {
@@ -14,8 +13,6 @@ class PetFoodExtension extends \Twig_Extension
     protected $baseUrl;
     protected $dryFoodPlaceholderImg;
     protected $wetFoodPlaceholderImg;
-
-    use StringHelperTrait;
 
 
     public function setBaseUrl($baseUrl) {
@@ -130,11 +127,9 @@ class PetFoodExtension extends \Twig_Extension
 
         $chewyPath = str_replace("https://www.chewy.com/", "", $chewyUrl);
         $chewyPath = str_replace("https://chewy.com/", "", $chewyPath);
-        $chewyPath = urlencode($chewyPath);
 
-        $source = $this->slugify($this->cleanText($source));
-        $punctuation = ['.', ',', '?', '.'];
-        $chewyPath = str_replace($punctuation, "", $chewyPath);
+
+        $chewyPath = urlencode($chewyPath);
 
         $source = $source ? $source : "none";
         $url = sprintf("/chewy/%s/%s", $source, $chewyPath);
