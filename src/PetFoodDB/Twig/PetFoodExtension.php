@@ -129,14 +129,15 @@ class PetFoodExtension extends \Twig_Extension
         $chewyPath = str_replace("https://chewy.com/", "", $chewyPath);
 
 
-        $chewyPath = urlencode($chewyPath);
+        $chewyPath = urlencode(urlencode($chewyPath)); //double encode for do? not sure.
 
         $source = $source ? $source : "none";
         $url = sprintf("/chewy/%s/%s", $source, $chewyPath);
         $url = str_replace('//', '/', $url);
 
-
+        
         return $url;
+
     }
 
     public function amazonUrl(PetFood $petFood, $target = "_blank", $classes = "", $text = null, $eventType='link') {
