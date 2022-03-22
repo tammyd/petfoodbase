@@ -583,7 +583,7 @@ class PageController extends BaseController
 
         $pageData = array_merge($defaultData, $data);
 
-        $this->app->response->headers->replace(['Cache-Control'=>"public, s-maxage=$cache max-age=$cache"]);
+        $this->app->response->headers->replace(['Cache-Control'=>"max-age=$cache, public"]);
 
         $this->app->render($template, $pageData);
     }

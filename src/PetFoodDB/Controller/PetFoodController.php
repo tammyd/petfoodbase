@@ -136,7 +136,7 @@ class PetFoodController extends BaseController
 
 
         $maxAge = 7*24*60*60;
-        $this->getResponse()->headers()->set('Cache-Control', "public, max-age=$maxAge, s-max-age=$maxAge");
+        $this->getResponse()->headers()->set('Cache-Control', "max-age=$maxAge, public");
         try {
             $this->getResponse()->setBody($this->get('catfood.serializer')->serialize($list, 'json'));
         } catch (\UnexpectedValueException $e) {
