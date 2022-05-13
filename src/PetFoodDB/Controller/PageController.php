@@ -228,6 +228,8 @@ class PageController extends BaseController
 
         $analysis = $this->get('analysis.access');
         $brandAnalysis = $this->get('brand.analysis');
+        $ingredientAnalysisService = $this->get('ingredient.analysis');
+        $rankerService = $this->get('catfood.ranker');
 
         $products = $this->catFoodService->getByBrand($brand);
 
@@ -239,6 +241,7 @@ class PageController extends BaseController
 
         $wet = [];
         $dry = [];
+        $kitten = [];
         $discontinued = [];
         foreach ($products as $product) {
             $stats = $analysis->getProductAnalysis($product);
@@ -249,6 +252,9 @@ class PageController extends BaseController
             $product->addExtraData('stats', $stats);
             $product = $productController->getAllProductDetails($product);
 
+            $product->addExtraData('primaryProteins', $ingredientAnalysisService->getPrimaryProteins($product));
+            $product = $rankerService->getAllProductData($product);
+
             if ($product->getDiscontinued()) {
                 $discontinued[] = $product;
             }
@@ -258,11 +264,17 @@ class PageController extends BaseController
                 } else {
                     $dry[] = $product;
                 }
+
+                if ($product->getBaby()) {
+                    $kitten[] = $product;
+                }
             }
         }
 
-        usort($wet, [$this, 'rankByName']);
-        usort($dry, [$this, 'rankByName']);
+
+        usort($wet, [$this, 'rankProduct']);
+        usort($dry, [$this, 'rankProduct']);
+        usort($kitten, [$this, 'rankProduct']);
         usort($discontinued, [$this, 'rankByName']);
 
         $dryPurchaseInfo = $brandAnalysis->hasAnyPurchaseInfo($brand, 'dry');
@@ -270,6 +282,7 @@ class PageController extends BaseController
 
         $wetRating = $this->calculateAverageRating($wet);
         $dryRating = $this->calculateAverageRating($dry);
+        $kittenRating = $this->calculateAverageRating($kitten);
 
         $brandId = $this->cleanText(strtolower($products[0]->getBrand()));
         $infoTemplate = "partials/brands/$brandId.html.twig";
@@ -283,6 +296,22 @@ class PageController extends BaseController
 
         $lastUpdated = $this->daysSinceAppProductsUpdated(array_merge($wet, $dry));
 
+        //remove the types of food handled differently for display
+        $wet = array_diff($wet, $kitten, $discontinued);
+        $dry = array_diff($dry, $kitten, $discontinued);
+        $kitten = array_diff($kitten, $discontinued);
+
+        usort($wet, [$this, 'rankProduct']);
+        usort($dry, [$this, 'rankProduct']);
+        usort($kitten, [$this, 'rankProduct']);
+
+        $topX = 3;
+        $topWetAdult = array_slice($wet, 0, $topX);
+        $topDryAdult = array_slice($dry, 0, $topX);
+        $topKitten = array_slice($kitten, 0, $topX);
+        $remainWet = array_diff($wet, $topWetAdult);
+        $remainDry = array_diff($dry, $topDryAdult);
+        $remainKitten = array_diff($dry, $topKitten);
 
         $data = [
             'img' => $brandId,
@@ -290,9 +319,11 @@ class PageController extends BaseController
             'brandInfo' => $brandData,
             'wet'=>$wet,
             'dry'=>$dry,
+            'kitten'=>$kitten,
             'discontinued' => $discontinued,
             'wetRating' => $wetRating,
             'dryRating' => $dryRating,
+            'kittenRating' => $kittenRating,
             'seo'=>$this->getBrandSEO($products),
             'reviewNavClass' => 'active',
             'template' => $this->templateExists($infoTemplate) ? $infoTemplate : null,
@@ -302,12 +333,21 @@ class PageController extends BaseController
             'hideWetProductPrices' => !$wetPurchaseInfo,
             'chewySource' => $this->makeChewySource($brand),
             'isVetBrand' => $this->isBrandAllVet(array_merge($wet, $dry)),
-            'lastUpdated' => $lastUpdated
+            'lastUpdated' => $lastUpdated,
+            'topWetAdult' => $topWetAdult,
+            'topDryAdult' => $topDryAdult,
+            'topKitten' => $topKitten,
+            'otherWet' => $remainWet,
+            'otherDry' => $remainDry,
+            'otherKitten' => $remainKitten,
+            'topX' => $topX
             
         ];
+
+//        dump($data); die();
         
 
-        $this->render('brand.html.twig', $data);
+        $this->render('brand3.html.twig', $data);
     }
 
     protected function makeChewySource($brand) {
@@ -362,7 +402,7 @@ class PageController extends BaseController
         }
     }
 
-    //rank by id
+    //rank by name
     public function rankByName($productA, $productB) {
         $n1 = $productA->getFlavor();
         $n2 = $productB->getFlavor();
@@ -486,6 +526,7 @@ class PageController extends BaseController
     {
         $this->app->contentType("text/xml");
         $baseUrl = $this->getRequest()->getUrl();
+
         $sitemapUtls = $this->get('sitemap.utils');
 
         if ($this->endsWith($baseUrl, "/")) {
