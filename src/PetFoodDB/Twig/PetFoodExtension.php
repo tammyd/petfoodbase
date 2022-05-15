@@ -270,11 +270,11 @@ class PetFoodExtension extends \Twig_Extension
 
         switch ($score) {
             case 1:case 2: case 3: case 4:
-                $text =  "a significantly below average";
+                $text =  "a significantly below-average";
                 $class = "text-danger";
                 break;
             case 5:
-                $text = "a below average";
+                $text = "a below-average";
                 $class = "text-warning";
                 break;
             case 6:
@@ -282,11 +282,11 @@ class PetFoodExtension extends \Twig_Extension
                 $class = "text-muted";
                 break;
             case 7:
-                $text =  "an above average";
+                $text =  "an above-average";
                 $class = "text-primary";
                 break;
             case 8:case 9:case 10:
-                $text = "a significantly above average";
+                $text = "a significantly above-average";
                 $class = "text-orig-success";
                 break;
         }
@@ -303,11 +303,11 @@ class PetFoodExtension extends \Twig_Extension
         $class = "";
         switch ($brandRating) {
             case BrandAnalysis::SIG_ABOVE_AVG:
-                $text = "a significantly above average";
+                $text = "a significantly above-average";
                 $class = "text-saavg";
                 break;
             case BrandAnalysis::ABOVE_AVG:
-                $text = "an above average";
+                $text = "an above-average";
                 $class = "text-aavg";
                 break;
             case BrandAnalysis::AVG:
@@ -315,11 +315,11 @@ class PetFoodExtension extends \Twig_Extension
                 $class = "text-avg";
                 break;
             case BrandAnalysis::BELOW_AVG:
-                $text = "a below average";
+                $text = "a below-average";
                 $class = "text-bavg";
                 break;
             case BrandAnalysis::SIG_BELOW_AVG:
-                $text =  "a significantly below average";
+                $text =  "a significantly below-average";
                 $class = "text-sbavg";
                 break;
 

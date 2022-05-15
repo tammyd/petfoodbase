@@ -48,16 +48,16 @@ class AnalyzeIngredients
     }
 
     static function getFillers() {
-        return ["corn", "rice", "wheat", "starch", "flour", "soy", 'maize'];
+        return ["corn", "rice", "wheat", "starch", "flour", "soy", 'maize', 'mill run'];
     }
 
     static function getFakeFillers() {
-        return ["wheat grass", "wheatgrass"];
+        return ["wheat grass", "wheatgrass", 'tapioca starch', 'brown rice'];
     }
 
     static function getPreservatives() {
 
-        return ['bha', 'bht', 'ethoxyquin', 'propyl gallate', 'tbhq'];
+        return ['bha', 'bht', 'ethoxyquin', 'propyl gallate', 'tbhq', 'propylene glycol'];
 
     }
 
