@@ -605,7 +605,7 @@ class PageController extends BaseController
         if ($this->getParameter('app.debug')) {
             $cache = 15; //15 second cache
         } else {
-            $cache = 3 * 60 * 60; //3 hour cache
+            $cache = 24 * 60 * 60; //3 hour cache
         }
 
 
