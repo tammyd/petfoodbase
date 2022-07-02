@@ -199,7 +199,11 @@ class PetFood
 
     public function getSlug() {
 
-        return urlencode($this->getFlavor());
+        $url = urlencode($this->getFlavor());
+        if ($this->contains($url, "/")) { //DO server php doesn't do this?
+            $url = str_replace("/", '%2F', $url);
+        }
+        return $url;
     }
     
     //All calories calculations: http://petfood.aafco.org/CalorieContent.aspx#caloriecontent

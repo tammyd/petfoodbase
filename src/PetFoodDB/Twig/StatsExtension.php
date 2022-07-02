@@ -9,6 +9,12 @@ use Twig\TwigFunction;
 class StatsExtension extends \Twig_Extension
 {
 
+    const FIRST_ING_QUALITY_PROTEIN = "First ingredient is a quality protein.";
+    const NO_QUESTIONABLE_ING = "Contains no questionable ingredients or fillers.";
+    const SIG_HIGH_PROTEIN = "Contains significantly more protein than average.";
+    const SIG_LESS_CARBS = "Contains significantly fewer carbs than average.";
+
+
 
     /**
      * @var \Slim\Slim
@@ -63,22 +69,22 @@ class StatsExtension extends \Twig_Extension
         return "<span>$d</span>";
     }
 
-    protected function getHighlights($productStats, $analysis) {
+    static public function getHighlights($productStats, $analysis) {
         $highlights = [];
 
         if (isset($analysis['quality'][0])) {
-            $highlights[] = "First ingredient is a quality protein.";
+            $highlights[] = self::FIRST_ING_QUALITY_PROTEIN; //  "First ingredient is a quality protein.";
         }
 
         if (empty($analysis['questionable'])) {
-            $highlights[] = "Contains no questionable ingredients or fillers.";
+            $highlights[] = self::NO_QUESTIONABLE_ING; //"Contains no questionable ingredients or fillers.";
         }
 
-        if ($this->isSignificantlyAboveAverage($productStats['protein'])) {
-            $highlights[] = "Contains significantly more protein than average.";
+        if (self::isSignificantlyAboveAverage($productStats['protein'])) {
+            $highlights[] = self::SIG_HIGH_PROTEIN; //"Contains significantly more protein than average.";
         }
-        if ($this->isSignificantlyBelowAverage($productStats['carbohydrates'])) {
-            $highlights[] = "Contains significantly fewer carbs than average.";
+        if (self::isSignificantlyBelowAverage($productStats['carbohydrates'])) {
+            $highlights[] = self::SIG_LESS_CARBS; //"Contains significantly fewer carbs than average.";
         }
 
         return $highlights;
@@ -126,7 +132,7 @@ class StatsExtension extends \Twig_Extension
         return false;
     }
 
-    protected function isSignificantlyAboveAverage($diff) {
+    static function isSignificantlyAboveAverage($diff) {
         $abs = abs($diff);
         if ($abs > NewAnalysisService::STAT_SIG_ABOVE_SD) {
             return $diff > 0;
@@ -136,7 +142,7 @@ class StatsExtension extends \Twig_Extension
     }
 
 
-    protected function isSignificantlyBelowAverage($diff) {
+    static function isSignificantlyBelowAverage($diff) {
         $abs = abs($diff);
         if ($abs > NewAnalysisService::STAT_SIG_ABOVE_SD) {
             return $diff <= 0;
