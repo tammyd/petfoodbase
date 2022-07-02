@@ -7,6 +7,7 @@ use PetFoodDB\Service\AnalyzeIngredients;
 use PetFoodDB\Traits\ArrayTrait;
 use PetFoodDB\Traits\StringHelperTrait;
 use PetFoodDB\Controller\BaseController;
+use PetFoodDB\Twig\StatsExtension;
 use Symfony\Component\Filesystem\Filesystem;
 use \Symfony\Component\VarDumper\VarDumper;
 
@@ -18,6 +19,7 @@ class PageController extends BaseController
     protected $petType = 'cat';
 
     protected $stats;
+    protected $templateConfig;
 
     //services
     protected $catFoodService;
@@ -31,6 +33,7 @@ class PageController extends BaseController
         parent::__construct($app);
         $this->catFoodService = $this->get('catfood');
         $this->stats = $this->catFoodService->getStats();
+        $this->templateConfig = $this->get('template.config');
 
         $authKey = $this->get('api.auth')->getInitAuthKey();
         $_SESSION['authKey'] = $authKey;
@@ -243,6 +246,15 @@ class PageController extends BaseController
         $dry = [];
         $kitten = [];
         $discontinued = [];
+        $vetFood = [];
+
+        $brandSummary = [
+            StatsExtension::SIG_LESS_CARBS => 0,
+            StatsExtension::SIG_HIGH_PROTEIN => 0,
+            StatsExtension::NO_QUESTIONABLE_ING => 0,
+            StatsExtension::FIRST_ING_QUALITY_PROTEIN => 0
+        ];
+        $summaryKeys = array_keys($brandSummary);
         foreach ($products as $product) {
             $stats = $analysis->getProductAnalysis($product);
 
@@ -268,7 +280,21 @@ class PageController extends BaseController
                 if ($product->getBaby()) {
                     $kitten[] = $product;
                 }
+
+                if ($product->getVeterinary()) {
+                    $vetFood[] = $product;
+                }
             }
+
+            $productSummary = StatsExtension::getHighlights($product->getExtraData('stats'), $product->getExtraData('analysis'));
+
+            foreach($summaryKeys as $key) {
+                if (in_array($key, $productSummary)) {
+                    $brandSummary[$key]++;
+                }
+            }
+
+
         }
 
 
@@ -276,6 +302,12 @@ class PageController extends BaseController
         usort($dry, [$this, 'rankProduct']);
         usort($kitten, [$this, 'rankProduct']);
         usort($discontinued, [$this, 'rankByName']);
+        usort($vetFood  , [$this, 'rankByName']);
+
+        //remove the types of food handled differently for display
+        $wet = array_diff($wet, $kitten, $discontinued, $vetFood);
+        $dry = array_diff($dry, $kitten, $discontinued, $vetFood);
+        $kitten = array_diff($kitten, $discontinued, $vetFood);
 
         $dryPurchaseInfo = $brandAnalysis->hasAnyPurchaseInfo($brand, 'dry');
         $wetPurchaseInfo = $brandAnalysis->hasAnyPurchaseInfo($brand, 'wet');
@@ -296,10 +328,7 @@ class PageController extends BaseController
 
         $lastUpdated = $this->daysSinceAppProductsUpdated(array_merge($wet, $dry));
 
-        //remove the types of food handled differently for display
-        $wet = array_diff($wet, $kitten, $discontinued);
-        $dry = array_diff($dry, $kitten, $discontinued);
-        $kitten = array_diff($kitten, $discontinued);
+
 
         usort($wet, [$this, 'rankProduct']);
         usort($dry, [$this, 'rankProduct']);
@@ -311,7 +340,7 @@ class PageController extends BaseController
         $topKitten = array_slice($kitten, 0, $topX);
         $remainWet = array_diff($wet, $topWetAdult);
         $remainDry = array_diff($dry, $topDryAdult);
-        $remainKitten = array_diff($dry, $topKitten);
+        $remainKitten = array_diff($kitten, $topKitten);
 
         $data = [
             'img' => $brandId,
@@ -320,6 +349,7 @@ class PageController extends BaseController
             'wet'=>$wet,
             'dry'=>$dry,
             'kitten'=>$kitten,
+            'vet' => $vetFood,
             'discontinued' => $discontinued,
             'wetRating' => $wetRating,
             'dryRating' => $dryRating,
@@ -340,11 +370,11 @@ class PageController extends BaseController
             'otherWet' => $remainWet,
             'otherDry' => $remainDry,
             'otherKitten' => $remainKitten,
+            'summary' => $brandSummary,
             'topX' => $topX
             
         ];
-
-//        dump($data); die();
+        
         
 
         $this->render('brand3.html.twig', $data);
@@ -605,8 +635,10 @@ class PageController extends BaseController
         if ($this->getParameter('app.debug')) {
             $cache = 15; //15 second cache
         } else {
-            $cache = 24 * 60 * 60; //3 hour cache
+            $cache = 24 * 60 * 60; //24 hour cache
         }
+
+
 
 
         $baseSeo = $this->getBaseSEO();
@@ -619,6 +651,7 @@ class PageController extends BaseController
             'minimalMobile' => true,
             'shareText' => urlencode($baseSeo['title']),
             'shareImage' => urlencode($baseSeo['siteImage']),
+            'ezoic' => $this->getParameter('ads.ezoic'),
 
         ];
 
@@ -626,6 +659,7 @@ class PageController extends BaseController
 
         $this->app->response->headers->replace(['Cache-Control'=>"max-age=$cache, public"]);
         $this->app->response->headers->replace(['CDN-Cache-Control'=>"max-age=$cache, public"]);
+
 
         $this->app->render($template, $pageData);
     }
